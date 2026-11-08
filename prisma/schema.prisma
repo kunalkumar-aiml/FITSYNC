@@ -1,0 +1,173 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "client"
+  previewFeatures = ["queryCompiler"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Unit {
+  CM
+  IN
+}
+
+enum FitPreference {
+  SLIM
+  REGULAR
+  RELAXED
+  OVERSIZED
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  VERIFIED
+  DEPRECATED
+}
+
+enum FitOutcome {
+  TOO_TIGHT
+  PERFECT
+  TOO_LOOSE
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String
+  name          String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  profile       UserProfile?
+  measurement   BodyMeasurement?
+  recommendations Recommendation[]
+  savedBrands   SavedBrand[]
+  feedback      UserFeedback[]
+}
+
+model UserProfile {
+  id            String         @id @default(cuid())
+  userId        String         @unique
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fitCategory   String?
+  preferredUnit Unit           @default(CM)
+  fitPreference FitPreference  @default(REGULAR)
+  updatedAt     DateTime       @updatedAt
+}
+
+// All measurements stored in centimetres (cm) and kilograms. Unit conversion happens at the edges.
+model BodyMeasurement {
+  id         String   @id @default(cuid())
+  userId     String   @unique
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  heightCm   Float?
+  weightKg   Float?
+  chestCm    Float?
+  waistCm    Float?
+  hipsCm     Float?
+  shoulderCm Float?
+  armLengthCm Float?
+  inseamCm   Float?
+  neckCm     Float?
+  thighCm    Float?
+  updatedAt  DateTime @updatedAt
+}
+
+model Brand {
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  name       String
+  region     String   // INTERNATIONAL | INDIAN
+  isDemo     Boolean  @default(false)
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  sizeCharts BrandSizeChart[]
+  savedBy    SavedBrand[]
+}
+
+model ClothingCategory {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  // Which body dimensions matter for this category (JSON array of keys, e.g. ["chest","shoulder","waist"])
+  dimensions Json
+  sizeCharts BrandSizeChart[]
+}
+
+model BrandSizeChart {
+  id           String   @id @default(cuid())
+  brandId      String
+  brand        Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  categoryId   String
+  category     ClothingCategory @relation(fields: [categoryId], references: [id])
+  fitCut       String   @default("REGULAR") // garment cut as sold by brand: SLIM | REGULAR | RELAXED | OVERSIZED
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  versions     BrandSizeChartVersion[]
+  @@unique([brandId, categoryId, fitCut])
+}
+
+// Rows: [{ "label": "M", "chestCm": 102, "waistCm": 96, ... }]  — these are GARMENT measurements.
+model BrandSizeChartVersion {
+  id             String   @id @default(cuid())
+  chartId        String
+  chart          BrandSizeChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
+  version        Int
+  rows           Json
+  measurementType String  @default("GARMENT") // GARMENT | BODY (what the brand's published numbers describe)
+  status         VerificationStatus @default(UNVERIFIED)
+  sourceUrl      String?
+  sourceNote     String?
+  verifiedAt     DateTime?
+  verifiedById   String?
+  createdAt      DateTime @default(now())
+  recommendations Recommendation[]
+  @@unique([chartId, version])
+}
+
+model Recommendation {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chartVersionId String
+  chartVersion BrandSizeChartVersion @relation(fields: [chartVersionId], references: [id])
+  fitPreference FitPreference
+  recommendedSize String?
+  confidence  Float?
+  insufficientData Boolean @default(false)
+  result      Json     // full structured engine output
+  inputSnapshot Json   // body measurements used (cm) at the time
+  createdAt   DateTime @default(now())
+  feedback    UserFeedback[]
+  @@index([userId, createdAt])
+}
+
+model SavedBrand {
+  userId  String
+  brandId String
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  brand   Brand @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  @@id([userId, brandId])
+}
+
+model UserFeedback {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recommendationId String
+  recommendation Recommendation @relation(fields: [recommendationId], references: [id], onDelete: Cascade)
+  purchasedSize  String
+  outcome        FitOutcome
+  review         String?
+  createdAt      DateTime @default(now())
+  @@index([recommendationId])
+}

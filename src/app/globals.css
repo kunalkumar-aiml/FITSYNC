@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: 23 23 23;          /* #171717 */
+  --paper: 250 249 246;     /* #FAF9F6 */
+  --surface: 255 255 255;
+  --line: 228 226 220;
+  --muted: 115 113 108;
+  --accent: 139 124 255;    /* #8B7CFF */
+  --accent-ink: 23 23 23;
+  --good: 52 148 98;
+  --warn: 196 130 20;
+  --bad: 200 66 66;
+  color-scheme: light;
+}
+[data-theme="dark"] {
+  --ink: 244 242 237;
+  --paper: 23 23 23;
+  --surface: 32 32 33;
+  --line: 56 56 58;
+  --muted: 160 158 152;
+  --accent: 160 148 255;
+  --accent-ink: 23 23 23;
+  --good: 94 200 150;
+  --warn: 232 176 80;
+  --bad: 240 120 120;
+  color-scheme: dark;
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body { @apply bg-paper text-ink font-sans antialiased; min-height: 100dvh; }
+h1, h2, h3 { letter-spacing: -0.035em; }
+::selection { background: rgb(var(--accent) / 0.35); }
+
+:focus-visible { outline: 2px solid rgb(var(--accent)); outline-offset: 2px; border-radius: 6px; }
+
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-5 h-11 text-sm font-medium transition active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none select-none; }
+  .btn-primary { @apply bg-ink text-paper hover:opacity-90; }
+  .btn-accent { @apply bg-accent text-accent-ink hover:opacity-90; }
+  .btn-ghost { @apply border border-line bg-surface hover:border-ink/40; }
+  .btn-quiet { @apply text-muted hover:text-ink; }
+  .card { @apply rounded-xl2 border border-line bg-surface shadow-card; }
+  .input { @apply w-full h-11 rounded-xl border border-line bg-surface px-3.5 text-[15px] placeholder:text-muted/70 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30; }
+  .label { @apply block text-sm font-medium mb-1.5; }
+  .chip { @apply inline-flex items-center gap-1.5 rounded-full border border-line px-2.5 py-0.5 text-xs text-muted; }
+  .container-x { @apply mx-auto w-full max-w-6xl px-5 sm:px-8; }
+}
+
+.skeleton { background: linear-gradient(90deg, rgb(var(--line) / .5), rgb(var(--line) / .9), rgb(var(--line) / .5)); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 12px; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+/* room for the mobile tab bar + iOS home indicator */
+.pb-safe { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+@media (min-width: 768px) { .pb-safe { padding-bottom: 3rem; } }
