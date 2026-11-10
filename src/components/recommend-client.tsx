@@ -8,19 +8,24 @@ import { DataBadge, DIM_NAMES, FitChip, FIT_NAMES } from "./badges";
 import { EaseRuler } from "./ease-ruler";
 import type { ChartRow, Dimension, FitPreference, RecommendationResult } from "@/lib/engine";
 
-type BrandOpt = { slug: string; name: string; isDemo: boolean; categories: { slug: string; name: string }[] };
+type Gender = "MEN" | "WOMEN" | "UNISEX";
+type BrandOpt = { slug: string; name: string; isDemo: boolean; categories: { slug: string; name: string; gender: Gender }[] };
+const GENDER_NAMES: Record<Gender, string> = { MEN: "Men’s", WOMEN: "Women’s", UNISEX: "Unisex" };
 type Resp = {
   id: string | null; brand: { name: string; isDemo: boolean }; category: { name: string }; fitCut: string;
-  chart: { status: string; sourceUrl: string | null; sourceNote: string | null; rows: ChartRow[] };
+  gender: Gender; region: string; productLine: string; options: { region: string; productLine: string; gender: Gender }[];
+  chart: { status: string; measurementType: "BODY" | "GARMENT"; sourceType: string; sourceUrl: string | null; sourceNote: string | null; rows: ChartRow[] };
   result: RecommendationResult;
 };
 
-export function RecommendClient({ brands, categories, defaultFit, initialBrand, initialCategory }: {
-  brands: BrandOpt[]; categories: { slug: string; name: string }[]; defaultFit: FitPreference; initialBrand?: string; initialCategory?: string;
+export function RecommendClient({ brands, categories, defaultFit, initialBrand, initialCategory, defaultGender }: {
+  brands: BrandOpt[]; categories: { slug: string; name: string }[]; defaultFit: FitPreference; initialBrand?: string; initialCategory?: string; defaultGender: Gender | null;
 }) {
   const toast = useToast();
   const [category, setCategory] = useState(initialCategory && categories.some((c) => c.slug === initialCategory) ? initialCategory : categories[0].slug);
-  const available = useMemo(() => brands.filter((b) => b.categories.some((c) => c.slug === category)), [brands, category]);
+  const [gender, setGender] = useState<Gender | null>(defaultGender);
+  const hasData = (b: BrandOpt) => b.categories.some((c) => c.slug === category && (gender === null || c.gender === gender || c.gender === "UNISEX"));
+  const available = brands; // unavailable brands stay selectable so we can say "data unavailable" honestly
   const [brand, setBrand] = useState(initialBrand ?? "");
   const [fit, setFit] = useState<FitPreference>(defaultFit);
   const [busy, setBusy] = useState(false);
@@ -29,11 +34,11 @@ export function RecommendClient({ brands, categories, defaultFit, initialBrand, 
   const [error, setError] = useState<string | null>(null);
   const chosen = available.find((b) => b.slug === brand) ?? available[0];
 
-  async function run(save: boolean) {
-    if (!chosen) return;
+  async function run(save: boolean, region?: string) {
+    if (!chosen || !gender) { setError("Choose men’s, women’s or unisex sizing first."); return; }
     setBusy(true); setError(null);
     try {
-      const r = await api<Resp>("/api/recommendations", { method: "POST", json: { brandSlug: chosen.slug, categorySlug: category, fitPreference: fit, save } });
+      const r = await api<Resp>("/api/recommendations", { method: "POST", json: { brandSlug: chosen.slug, categorySlug: category, fitPreference: fit, gender, ...(region ? { region } : {}), save } });
       setData(r);
       if (save) { setSavedId(r.id); toast("success", "Recommendation saved"); } else setSavedId(null);
     } catch (e) { setError(e instanceof ClientError ? e.message : "Couldn’t get a recommendation. Check your connection."); }
@@ -54,13 +59,22 @@ export function RecommendClient({ brands, categories, defaultFit, initialBrand, 
             ))}
           </div>
         </div>
+        <div>
+          <span className="label">Sizing type</span>
+          <div className="inline-flex rounded-full border border-line p-1 bg-surface" role="radiogroup" aria-label="Sizing type">
+            {(Object.keys(GENDER_NAMES) as Gender[]).map((g) => (
+              <button key={g} role="radio" aria-checked={gender === g} onClick={() => { setGender(g); setData(null); }}
+                className={`px-4 py-1.5 rounded-full text-sm ${gender === g ? "bg-ink text-paper" : "text-muted"}`}>{GENDER_NAMES[g]}</button>
+            ))}
+          </div>
+        </div>
         <div className="grid sm:grid-cols-2 gap-4">
           <div>
             <label className="label" htmlFor="brand">Brand</label>
             <select id="brand" className="input" value={chosen?.slug ?? ""} onChange={(e) => { setBrand(e.target.value); setData(null); }} disabled={!available.length}>
-              {available.map((b) => <option key={b.slug} value={b.slug}>{b.name}</option>)}
+              {available.map((b) => <option key={b.slug} value={b.slug}>{b.name}{hasData(b) ? "" : " (data unavailable)"}</option>)}
             </select>
-            {!available.length && <p className="mt-1.5 text-sm text-muted">No brand has a {categories.find((c) => c.slug === category)?.name.toLowerCase()} chart yet.</p>}
+            {chosen && !hasData(chosen) && <p className="mt-1.5 text-sm text-warn">No official {categories.find((c) => c.slug === category)?.name.toLowerCase()} chart for {chosen.name} in this sizing type yet.</p>}
           </div>
           <div>
             <label className="label" htmlFor="fit">Fit</label>
@@ -69,7 +83,7 @@ export function RecommendClient({ brands, categories, defaultFit, initialBrand, 
             </select>
           </div>
         </div>
-        <button className="btn btn-primary" onClick={() => run(false)} disabled={busy || !chosen}>{busy && <Loader2 size={16} className="animate-spin" />}Get my size</button>
+        <button className="btn btn-primary" onClick={() => run(false)} disabled={busy || !chosen || !gender}>{busy && <Loader2 size={16} className="animate-spin" />}Get my size</button>
         {error && <div role="alert" className="rounded-xl border border-bad/40 bg-bad/10 px-3.5 py-2.5 text-sm">{error} {error.includes("measurements") && <Link href="/profile" className="underline">Add measurements</Link>}</div>}
       </div>
 
@@ -78,11 +92,17 @@ export function RecommendClient({ brands, categories, defaultFit, initialBrand, 
       {data && res && (
         <section className="card mt-6 p-5 sm:p-7" aria-live="polite">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="font-semibold">{data.brand.name} · {data.category.name}</h2>
+            <h2 className="font-semibold">{data.brand.name} · {data.category.name} <span className="text-muted font-normal text-sm">· {GENDER_NAMES[data.gender]} · {data.region}{data.productLine ? ` · ${data.productLine}` : ""}</span></h2>
             <DataBadge status={data.chart.status} demo={data.brand.isDemo} />
           </div>
 
           {res.status === "ok" && <Ok data={data} res={res} />}
+          {data.options.filter((o) => o.region !== data.region || o.productLine !== data.productLine).length > 0 && (
+            <p className="mt-4 text-sm text-muted">Other sizing systems for this brand:{" "}
+              {[...new Map(data.options.filter((o) => o.region !== data.region).map((o) => [o.region, o])).values()].map((o) => (
+                <button key={o.region} className="underline mr-2 text-ink" onClick={() => run(false, o.region)}>{o.region}</button>))}
+            </p>
+          )}
           {res.status === "no_compatible_size" && (
             <div className="mt-4"><p className="text-xl font-semibold">No size fits well</p><p className="mt-2 text-muted">{res.explanation}</p></div>
           )}
@@ -133,6 +153,11 @@ function Ok({ data, res }: { data: Resp; res: Extract<RecommendationResult, { st
           band={{ min: primary.bodyCm + primary.idealRange.min, max: primary.bodyCm + primary.idealRange.max }} recommended={res.recommendedSize} />
       </div>
       <p className="mt-3 text-sm text-muted">{res.explanation}</p>
+      <p className="mt-2 text-sm">
+        <span className="text-muted">You asked for:</span> <strong>{FIT_NAMES[res.fitPreference]}</strong>
+        {res.achievedFit && <> · <span className="text-muted">this size should give a</span> <strong>{res.achievedFit === "TIGHTER_THAN_SLIM" ? "very close" : res.achievedFit === "LOOSER_THAN_OVERSIZED" ? "very loose" : FIT_NAMES[res.achievedFit]}</strong> <span className="text-muted">fit</span></>}
+        {!res.achievedFit && data.chart.measurementType === "BODY" && <span className="text-muted"> · This chart lists body sizes, so the final fit depends on how the garment is cut. Check the product’s fit notes.</span>}
+      </p>
       {res.alternatives[0] && res.alternatives[0].score > 0.5 && (
         <p className="mt-3 text-sm">Next closest: <strong>{res.alternatives[0].size}</strong> <span className="text-muted">(match {Math.round(res.alternatives[0].score * 100)}%)</span></p>
       )}

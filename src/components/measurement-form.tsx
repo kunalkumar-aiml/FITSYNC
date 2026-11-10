@@ -35,7 +35,8 @@ const FITS: { v: FitPreference; label: string; hint: string }[] = [
   { v: "OVERSIZED", label: "Oversized", hint: "Deliberately big" },
 ];
 
-export type FormInitial = Partial<Record<Key, number | null>> & { unit: Unit; fitPreference: FitPreference };
+export type Gender = "MEN" | "WOMEN" | "UNISEX";
+export type FormInitial = Partial<Record<Key, number | null>> & { unit: Unit; fitPreference: FitPreference; gender?: Gender | null };
 
 export function MeasurementForm({ initial, welcome }: { initial: FormInitial; welcome?: boolean }) {
   const router = useRouter();
@@ -43,6 +44,7 @@ export function MeasurementForm({ initial, welcome }: { initial: FormInitial; we
   const [step, setStep] = useState(0);
   const [unit, setUnit] = useState<Unit>(initial.unit);
   const [fit, setFit] = useState<FitPreference>(initial.fitPreference);
+  const [gender, setGender] = useState<Gender | null>(initial.gender ?? null);
   const [busy, setBusy] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<Key, string>>>({});
   const [vals, setVals] = useState<Record<Key, string>>(() => {
@@ -91,7 +93,7 @@ export function MeasurementForm({ initial, welcome }: { initial: FormInitial; we
     for (let i = 0; i < STEPS.length; i++) if (!validateStep(i)) { setStep(i); return; }
     setBusy(true);
     try {
-      const json: Record<string, unknown> = { unit, fitPreference: fit };
+      const json: Record<string, unknown> = { unit, fitPreference: fit, fitCategory: gender };
       for (const k of Object.keys(vals) as Key[]) json[k] = vals[k] === "" ? null : parseFloat(vals[k]);
       await api("/api/measurements", { method: "PUT", json });
       toast("success", "Fit profile saved");
@@ -127,6 +129,16 @@ export function MeasurementForm({ initial, welcome }: { initial: FormInitial; we
                   className={`px-4 py-1.5 rounded-full text-sm ${unit === u ? "bg-ink text-paper" : "text-muted"}`}>{u === "CM" ? "Centimetres" : "Inches"}</button>
               ))}
             </div>
+          </div>
+          <div>
+            <span className="label">Which size charts should we use?</span>
+            <div role="radiogroup" aria-label="Sizing type" className="inline-flex rounded-full border border-line p-1 bg-surface">
+              {([["MEN", "Men’s"], ["WOMEN", "Women’s"], ["UNISEX", "Unisex"]] as [Gender, string][]).map(([g, l]) => (
+                <button key={g} type="button" role="radio" aria-checked={gender === g} onClick={() => setGender(g)}
+                  className={`px-4 py-1.5 rounded-full text-sm ${gender === g ? "bg-ink text-paper" : "text-muted"}`}>{l}</button>
+              ))}
+            </div>
+            <p className="mt-1.5 text-xs text-muted">Brands size men’s and women’s clothing differently, so we never mix them.</p>
           </div>
           <div>
             <span className="label">How do you like your clothes to fit?</span>

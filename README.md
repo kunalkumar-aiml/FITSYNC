@@ -29,14 +29,30 @@ Pure TypeScript, deterministic, runs on server and in the browser.
 5. Per-dimension score, weighted total, ranking, tight/loose labels, confidence, plain-language explanation.
 6. Missing required measurement (body or chart) returns `insufficient_data`. Nothing fits returns `no_compatible_size`. Unverified charts cap confidence at 55% and show a warning.
 
-## Data policy
-No real brand charts are bundled. `prisma/seed.ts` lists the brands and three clearly-labelled **demo** brands with made-up numbers. Add real charts in `/admin` (CSV paste, source URL/note required to verify). Each edit is a new version; the latest *verified* version is used.
+## Brand size data (real, sourced, never invented)
+- Charts live in `prisma/data/charts.json` and are loaded by `npm run db:seed`. Every chart records its **official source URL**, source type, original unit and retrieval date. Rows are stored in cm; inches are converted on seed/import.
+- Seeded charts are **UNVERIFIED**. A human opens the source URL, compares, and clicks **Verify** in `/admin`. Nothing is ever auto-verified. Verified charts lift the confidence cap.
+- Brands with no retrievable official table are recorded as **DATA UNAVAILABLE** (with the reason). They are shown separately in Compare and never get an invented size.
+- Charts are separated by **gender** (men's / women's / unisex), **region** (IN, GLOBAL, ASIA, ...), **product line** and the garment's **cut**. Men's and women's are never mixed. Body-measurement charts (ranges) and garment-measurement charts are handled differently by the engine.
+- Demo brands (fictional numbers) are only created with `SEED_DEMO=true`, are typed `DEMO`, and are hidden when `NODE_ENV=production` unless `SHOW_DEMO_BRANDS=true`.
+
+### Adding more brands (admin)
+`/admin` → **Import a size chart (CSV)**. Copy the table from the brand's size guide, e.g.
+```
+label,chest,waist,hips
+S,35-37.5,29-32,35-37.5
+M,37.5-41,32-35,37.5-41
+```
+Pick brand, category, men's/women's, region, whether numbers describe the body or the garment, the source's unit and source URL. Use **Validate & preview** first. Open-ended values (`<31`, `51.5+`) are rejected on purpose. Each import becomes a new unverified version; old versions are kept.
+
+### Engine inputs, in plain words
+`preferred fit` (what you want) is separate from `garment cut` (how the brand cuts that garment) and `achieved fit` (what the recommended size should actually give, judged from garment ease; unknown for body-measurement charts). If a brand only sells a relaxed cut and you want slim, you are told no size fits, rather than getting a bad pick.
 
 ## Project layout
-`src/lib/engine` engine + tests · `src/app/api` REST routes · `src/app/*` pages · `src/components` UI · `prisma/` schema, migration, seed · `tests/` API integration tests · `.github/workflows/ci.yml`.
+`src/lib/engine` engine + tests · `src/app/api` REST routes · `src/app/*` pages · `src/components` UI · `prisma/` schema, migrations, seed, `prisma/data/charts.json` · `tests/` API integration tests · `.github/workflows/ci.yml`.
 
 ## Known limitations
-- No real verified brand charts yet (you must add them).
+- Only Nike (tops) has official charts so far, and they are unverified until you verify them. All other brands are DATA UNAVAILABLE until charts are added.
 - No email verification or password reset (needs an email provider such as Resend; not built).
 - No Google sign-in (needs OAuth credentials; not built).
 - No product-URL checker or product-measurement pages; no recently-viewed list. Brand + category flow only.

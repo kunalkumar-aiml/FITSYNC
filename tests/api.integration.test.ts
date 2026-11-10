@@ -88,7 +88,7 @@ d("FITSYNC API", () => {
   });
 
   it("returns an engine result with the chart's data status", async () => {
-    await user.req("PUT", "/api/measurements", { unit: "CM", chestCm: 98, waistCm: 84, shoulderCm: 45 });
+    await user.req("PUT", "/api/measurements", { unit: "CM", chestCm: 98, waistCm: 84, shoulderCm: 45, fitCategory: "MEN" });
     const r = await user.req("POST", "/api/recommendations", { brandSlug: demoBrand, categorySlug: "tshirt", fitPreference: "REGULAR" });
     expect(r.status).toBe(200);
     expect(r.json.data.result.status).toBe("ok");
@@ -104,23 +104,61 @@ d("FITSYNC API", () => {
     expect(JSON.stringify(a.json.data.result)).toBe(JSON.stringify(b.json.data.result));
   });
 
-  it("is honest when there is no chart", async () => {
+  it("is honest when there is no chart: DATA_UNAVAILABLE with the reason, never a guess", async () => {
     const r = await user.req("POST", "/api/recommendations", { brandSlug: "zara", categorySlug: "tshirt" });
     expect(r.status).toBe(404);
-    expect(r.json.error.message).toMatch(/don't have a size chart/);
+    expect(r.json.error.details.code).toBe("DATA_UNAVAILABLE");
+    expect(r.json.error.message.length).toBeGreaterThan(10);
   });
 
-  it("returns insufficient_data for categories needing missing measurements", async () => {
-    // demo brands only have T-shirt charts, so use compare for jeans: expect no rows rather than invented data
-    const r = await user.req("POST", "/api/compare", { categorySlug: "jeans" });
+  it("requires a sizing type (men's / women's / unisex) and never mixes them", async () => {
+    await other.req("POST", "/api/auth/register", { email: `gender-${run}@test.local`, password: pw });
+    await other.req("PUT", "/api/measurements", { unit: "CM", chestCm: 98, waistCm: 84, shoulderCm: 45 });
+    const r = await other.req("POST", "/api/recommendations", { brandSlug: "nike", categorySlug: "tshirt" });
+    expect(r.status).toBe(422);
+    expect(r.json.error.details.code).toBe("GENDER_REQUIRED");
+    const men = await user.req("POST", "/api/recommendations", { brandSlug: "nike", categorySlug: "tshirt", gender: "MEN" });
+    const women = await user.req("POST", "/api/recommendations", { brandSlug: "nike", categorySlug: "tshirt", gender: "WOMEN" });
+    expect(men.status).toBe(200); expect(women.status).toBe(200);
+    expect(men.json.data.gender).toBe("MEN"); expect(women.json.data.gender).toBe("WOMEN");
+    expect(men.json.data.result.recommendedSize).not.toBe(women.json.data.result.recommendedSize);
+  });
+
+  it("serves real sourced Nike data: official source recorded, unverified until a human verifies", async () => {
+    const r = await user.req("POST", "/api/recommendations", { brandSlug: "nike", categorySlug: "tshirt", gender: "MEN" });
+    expect(r.json.data.chart.sourceType).toBe("OFFICIAL_SITE");
+    expect(r.json.data.chart.sourceUrl).toMatch(/^https:\/\/www\.nike\.com\//);
+    expect(r.json.data.chart.status).toBe("UNVERIFIED");
+    expect(r.json.data.chart.measurementType).toBe("BODY");
+    expect(r.json.data.result.status).toBe("ok");
+    expect(r.json.data.result.confidence).toBeLessThanOrEqual(0.55);
+    expect(r.json.data.options.length).toBeGreaterThan(1); // GLOBAL + ASIA
+    const asia = await user.req("POST", "/api/recommendations", { brandSlug: "nike", categorySlug: "tshirt", gender: "MEN", region: "ASIA" });
+    expect(asia.json.data.region).toBe("ASIA");
+  });
+
+  it("does not use a tops chart for categories it does not cover (Nike jeans)", async () => {
+    const r = await user.req("POST", "/api/recommendations", { brandSlug: "nike", categorySlug: "jeans", gender: "MEN" });
+    expect(r.status).toBe(404);
+    expect(r.json.error.details.code).toBe("DATA_UNAVAILABLE");
+  });
+
+  it("compare lists brands with no data separately instead of inventing sizes", async () => {
+    const r = await user.req("POST", "/api/compare", { categorySlug: "jeans", gender: "MEN" });
     expect(r.status).toBe(200);
     expect(r.json.data.rows).toEqual([]);
+    expect(r.json.data.unavailable.length).toBeGreaterThan(5);
+    expect(r.json.data.unavailable.some((u: any) => u.brand.slug === "zara")).toBe(true);
   });
 
   it("compares across brands from data, not hardcoded values", async () => {
-    const r = await user.req("POST", "/api/compare", { categorySlug: "tshirt", fitPreference: "REGULAR" });
+    const r = await user.req("POST", "/api/compare", { categorySlug: "tshirt", fitPreference: "REGULAR", gender: "MEN" });
     expect(r.status).toBe(200);
-    expect(r.json.data.rows.length).toBeGreaterThanOrEqual(3);
+    expect(r.json.data.rows.length).toBeGreaterThanOrEqual(4); // 3 demo brands + Nike
+    expect(r.json.data.rows.some((x: any) => x.brand.slug === "nike")).toBe(true);
+    expect(r.json.data.unavailable.some((u: any) => u.brand.slug === "zara")).toBe(true);
+    expect((await user.req("POST", "/api/compare", { categorySlug: "tshirt" })).status).toBe(200); // falls back to profile gender
+    expect((await other.req("POST", "/api/compare", { categorySlug: "tshirt" })).status).toBe(422); // no gender chosen
     const sizes = r.json.data.rows.map((x: any) => x.result.recommendedSize);
     expect(new Set(sizes).size).toBeGreaterThan(1); // different brands, different sizes for the same body
   });
@@ -169,32 +207,66 @@ d("FITSYNC API", () => {
     expect(b.status).toBe(201);
     const slug = b.json.data.slug;
 
-    const dup = await admin.req("POST", "/api/admin/size-charts", { brandSlug: slug, categorySlug: "tshirt", measurementType: "GARMENT", rows: [{ label: "M", chest: 100 }, { label: "m", chest: 104 }] });
+    const dup = await admin.req("POST", "/api/admin/size-charts", { brandSlug: slug, categorySlug: "tshirt", measurementType: "GARMENT", rows: [{ label: "M", chest: 100 }, { label: "m", chest: 104 }], sourceNote: "test" });
     expect(dup.status).toBe(400);
 
-    const v = await admin.req("POST", "/api/admin/size-charts", { brandSlug: slug, categorySlug: "tshirt", measurementType: "GARMENT", rows: [{ label: "M", chest: 100 }, { label: "L", chest: 106 }] });
+    const v = await admin.req("POST", "/api/admin/size-charts", { brandSlug: slug, categorySlug: "tshirt", measurementType: "GARMENT", rows: [{ label: "M", chest: 100 }, { label: "L", chest: 106 }], sourceNote: "test chart" });
     expect(v.status).toBe(201);
     expect(v.json.data.status).toBe("UNVERIFIED");
     expect(v.json.data.version).toBe(1);
 
-    expect((await admin.req("PUT", `/api/admin/size-charts/${v.json.data.id}`, { status: "VERIFIED" })).status).toBe(400);
+    // a chart can't even be created without a recorded source
+    const noSource = await admin.req("POST", "/api/admin/size-charts", { brandSlug: slug, categorySlug: "shirt", measurementType: "GARMENT", rows: [{ label: "M", chest: 100 }, { label: "L", chest: 106 }] });
+    expect(noSource.status).toBe(400);
     const ok = await admin.req("PUT", `/api/admin/size-charts/${v.json.data.id}`, { status: "VERIFIED", sourceUrl: "https://example.com/size-guide" });
     expect(ok.status).toBe(200);
     expect(ok.json.data.verifiedAt).toBeTruthy();
 
-    const v2 = await admin.req("POST", "/api/admin/size-charts", { brandSlug: slug, categorySlug: "tshirt", measurementType: "GARMENT", rows: [{ label: "M", chest: 101 }, { label: "L", chest: 107 }] });
+    const v2 = await admin.req("POST", "/api/admin/size-charts", { brandSlug: slug, categorySlug: "tshirt", measurementType: "GARMENT", rows: [{ label: "M", chest: 101 }, { label: "L", chest: 107 }], sourceNote: "test chart v2" });
     expect(v2.json.data.version).toBe(2); // history preserved, not overwritten
 
     // latest VERIFIED version wins over a newer unverified one
-    const rec = await user.req("POST", "/api/recommendations", { brandSlug: slug, categorySlug: "tshirt" });
+    const rec = await user.req("POST", "/api/recommendations", { brandSlug: slug, categorySlug: "tshirt", gender: "UNISEX" });
     expect(rec.json.data.chart.status).toBe("VERIFIED");
     expect(rec.json.data.chart.version).toBe(1);
 
     // deprecated charts are not used
     await admin.req("PUT", `/api/admin/size-charts/${v.json.data.id}`, { status: "DEPRECATED" });
-    const rec2 = await user.req("POST", "/api/recommendations", { brandSlug: slug, categorySlug: "tshirt" });
+    const rec2 = await user.req("POST", "/api/recommendations", { brandSlug: slug, categorySlug: "tshirt", gender: "UNISEX" });
     expect(rec2.json.data.chart.version).toBe(2);
     expect(rec2.json.data.chart.status).toBe("UNVERIFIED");
+  });
+
+  it("CSV import: validates first, saves nothing on errors, and always saves as unverified", async () => {
+    const adminEmail = (process.env.ADMIN_EMAILS ?? "admin@test.local").split(",")[0];
+    await admin.req("POST", "/api/auth/login", { email: adminEmail, password: pw });
+    const b = await admin.req("POST", "/api/admin/brands", { name: `Csv Brand ${run}`, region: "INDIAN" });
+    const slug = b.json.data.slug;
+    const meta = { brandSlug: slug, categorySlug: "tshirt", gender: "WOMEN", region: "IN", productLine: "Basics", measurementType: "BODY", originalUnit: "IN", sourceType: "OFFICIAL_SITE", sourceUrl: "https://example.com/size-guide" };
+
+    const bad = await admin.req("POST", "/api/admin/size-charts/import", { ...meta, csv: "label,chest\nS,<31\nM,abc" });
+    expect(bad.status).toBe(400);
+    expect(bad.json.error.details.errors.length).toBeGreaterThanOrEqual(2);
+    expect((await user.req("POST", "/api/recommendations", { brandSlug: slug, categorySlug: "tshirt", gender: "WOMEN" })).status).toBe(404); // nothing saved
+
+    const csv = "label,chest,waist\nS,32.5-35.5,26-29\nM,35.5-38,29-31.5\nL,38-41,31.5-34.5";
+    const dry = await admin.req("POST", "/api/admin/size-charts/import", { ...meta, csv, dryRun: true });
+    expect(dry.status).toBe(200);
+    expect(dry.json.data.rows[0].chest).toBeCloseTo(82.6, 1); // inches converted to cm
+    expect((await user.req("POST", "/api/recommendations", { brandSlug: slug, categorySlug: "tshirt", gender: "WOMEN" })).status).toBe(404); // dry run saved nothing
+
+    const saved = await admin.req("POST", "/api/admin/size-charts/import", { ...meta, csv });
+    expect(saved.status).toBe(201);
+    expect(saved.json.data.version.status).toBe("UNVERIFIED");
+    expect(saved.json.data.version.sourceType).toBe("OFFICIAL_SITE");
+    const rec = await user.req("POST", "/api/recommendations", { brandSlug: slug, categorySlug: "tshirt", gender: "WOMEN" });
+    expect(rec.status).toBe(200);
+    expect(rec.json.data.region).toBe("IN");
+    expect((await user.req("POST", "/api/admin/size-charts/import", { ...meta, csv })).status).toBe(403);
+    expect((await admin.req("GET", "/api/admin/coverage")).status).toBe(200);
+    // an official-site import without a URL is refused
+    const noUrl = await admin.req("POST", "/api/admin/size-charts/import", { ...meta, sourceUrl: undefined, csv });
+    expect(noUrl.status).toBe(400);
   });
 
   it("rate-limits repeated login attempts", async () => {

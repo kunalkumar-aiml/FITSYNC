@@ -50,3 +50,14 @@ Vercel → Project → Settings → Domains → add `yourdomain.in`; set the DNS
 - Code: Vercel → Deployments → pick last good one → **Promote to Production** (instant), then `git revert` the bad commit.
 - Database: migrations are forward-only. Use the *expand/contract* pattern: add columns/tables first (old code keeps working), deploy code, remove old columns in a later release. Never rename/drop in the same release as code that depends on it. Neon supports point-in-time restore; take a branch/snapshot before risky migrations.
 - Create migrations locally with `npx prisma migrate dev --name what_changed`, commit the generated folder.
+
+## 10. Updating an existing deployment with the real-brand-data release
+```bash
+git pull   # or copy the updated files over your project folder
+npm install
+npx prisma migrate deploy      # additive migration 20261109000000_real_brand_data; keeps users, measurements, history
+npm run db:seed                # adds sourced charts (UNVERIFIED) + "data unavailable" notes; safe to repeat
+git add -A && git commit -m "Real brand size data, gender/region charts, CSV import" && git push
+```
+Then open `/admin`, check each chart against its source URL, and press **Verify**.
+Demo brands are hidden on Vercel automatically. Set `SHOW_DEMO_BRANDS=true` only if you want them visible.

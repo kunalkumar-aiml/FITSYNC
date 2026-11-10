@@ -9,12 +9,12 @@ export const POST = route(async (req: Request) => {
   const user = await requireUser();
   rateLimit(`rec:${user.id}`, 60, 60_000);
   const input = await parseBody(req, recommendSchema);
-  const { loaded, result, body, fitPreference } = await runRecommendation(user.id, input.brandSlug, input.categorySlug, input.fitPreference);
+  const { loaded, result, body, fitPreference } = await runRecommendation(user.id, input.brandSlug, input.categorySlug, { fitPreference: input.fitPreference, gender: input.gender, region: input.region });
   const saved = input.save ? await saveRecommendation(user.id, loaded.version.id, fitPreference, result, body) : null;
   return ok({
     id: saved?.id ?? null,
-    brand: loaded.brand, category: loaded.category, fitCut: loaded.fitCut,
-    chart: { version: loaded.version.version, status: loaded.version.status, measurementType: loaded.version.measurementType, sourceUrl: loaded.version.sourceUrl, sourceNote: loaded.version.sourceNote, verifiedAt: loaded.version.verifiedAt, rows: loaded.chart.rows },
+    brand: loaded.brand, category: loaded.category, fitCut: loaded.fitCut, gender: loaded.gender, region: loaded.region, productLine: loaded.productLine, options: loaded.options,
+    chart: { version: loaded.version.version, sourceType: loaded.version.sourceType, retrievedAt: loaded.version.retrievedAt, status: loaded.version.status, measurementType: loaded.version.measurementType, sourceUrl: loaded.version.sourceUrl, sourceNote: loaded.version.sourceNote, verifiedAt: loaded.version.verifiedAt, rows: loaded.chart.rows },
     result,
   });
 });

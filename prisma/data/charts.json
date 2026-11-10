@@ -1,0 +1,307 @@
+{
+ "charts": [
+  {
+   "brand": "nike",
+   "category": "tshirt",
+   "gender": "MEN",
+   "region": "ASIA",
+   "productLine": "Tops & T-shirts (Asian sizing)",
+   "fitCut": "REGULAR",
+   "measurementType": "BODY",
+   "unit": "IN",
+   "sourceType": "OFFICIAL_SITE",
+   "sourceUrl": "https://www.nike.com/lu/en/size-fit/mens-tops-asian-alpha",
+   "sourceNote": "Nike size & fit page. Body measurements. Open-ended sizes XXS (<31) and 5XL (51.5+) omitted. Values as printed, incl. 4XL waist 43-45. Retrieved 2026-11-09.",
+   "rows": [
+    {
+     "label": "XS",
+     "chest": 31,
+     "chestMax": 33.5,
+     "waist": 26,
+     "waistMax": 28.5,
+     "hips": 32,
+     "hipsMax": 34
+    },
+    {
+     "label": "S",
+     "chest": 33.5,
+     "chestMax": 36,
+     "waist": 28.5,
+     "waistMax": 31,
+     "hips": 34,
+     "hipsMax": 36
+    },
+    {
+     "label": "M",
+     "chest": 36,
+     "chestMax": 38,
+     "waist": 31,
+     "waistMax": 33.5,
+     "hips": 36,
+     "hipsMax": 38
+    },
+    {
+     "label": "L",
+     "chest": 38,
+     "chestMax": 40.5,
+     "waist": 33.5,
+     "waistMax": 36,
+     "hips": 38,
+     "hipsMax": 40
+    },
+    {
+     "label": "XL",
+     "chest": 40.5,
+     "chestMax": 43,
+     "waist": 36,
+     "waistMax": 38,
+     "hips": 40,
+     "hipsMax": 42
+    },
+    {
+     "label": "2XL",
+     "chest": 43,
+     "chestMax": 45.5,
+     "waist": 38,
+     "waistMax": 41,
+     "hips": 42,
+     "hipsMax": 44
+    },
+    {
+     "label": "3XL",
+     "chest": 45.5,
+     "chestMax": 49,
+     "waist": 41,
+     "waistMax": 44,
+     "hips": 44,
+     "hipsMax": 46.5
+    },
+    {
+     "label": "4XL",
+     "chest": 49,
+     "chestMax": 51.5,
+     "waist": 43,
+     "waistMax": 45,
+     "hips": 46.5,
+     "hipsMax": 48.5
+    }
+   ]
+  },
+  {
+   "brand": "nike",
+   "category": "tshirt",
+   "gender": "MEN",
+   "region": "GLOBAL",
+   "productLine": "Tops & Tees (alpha)",
+   "fitCut": "REGULAR",
+   "measurementType": "BODY",
+   "unit": "IN",
+   "sourceType": "OFFICIAL_SITE",
+   "sourceUrl": "https://www.nike.com/size-fit/mens_tops_alpha",
+   "sourceNote": "Nike size & fit page. Body measurements, regular height sizes only (Tall variants excluded). Retrieved 2026-11-09.",
+   "rows": [
+    {
+     "label": "XXS",
+     "chest": 28.1,
+     "chestMax": 31.5,
+     "waist": 22.5,
+     "waistMax": 25.5,
+     "hips": 28.5,
+     "hipsMax": 31.5
+    },
+    {
+     "label": "XS",
+     "chest": 31.5,
+     "chestMax": 35,
+     "waist": 25.5,
+     "waistMax": 29,
+     "hips": 31.5,
+     "hipsMax": 35
+    },
+    {
+     "label": "S",
+     "chest": 35,
+     "chestMax": 37.5,
+     "waist": 29,
+     "waistMax": 32,
+     "hips": 35,
+     "hipsMax": 37.5
+    },
+    {
+     "label": "M",
+     "chest": 37.5,
+     "chestMax": 41,
+     "waist": 32,
+     "waistMax": 35,
+     "hips": 37.5,
+     "hipsMax": 41
+    },
+    {
+     "label": "L",
+     "chest": 41,
+     "chestMax": 44,
+     "waist": 35,
+     "waistMax": 38,
+     "hips": 41,
+     "hipsMax": 44
+    },
+    {
+     "label": "XL",
+     "chest": 44,
+     "chestMax": 48.5,
+     "waist": 38,
+     "waistMax": 43,
+     "hips": 44,
+     "hipsMax": 47
+    },
+    {
+     "label": "2XL",
+     "chest": 48.5,
+     "chestMax": 53.5,
+     "waist": 43,
+     "waistMax": 47.5,
+     "hips": 47,
+     "hipsMax": 50.5
+    },
+    {
+     "label": "3XL",
+     "chest": 53.5,
+     "chestMax": 58,
+     "waist": 47.5,
+     "waistMax": 52.5,
+     "hips": 50.5,
+     "hipsMax": 53.5
+    },
+    {
+     "label": "4XL",
+     "chest": 58,
+     "chestMax": 63,
+     "waist": 52.5,
+     "waistMax": 57,
+     "hips": 53.5,
+     "hipsMax": 58.5
+    }
+   ]
+  },
+  {
+   "brand": "nike",
+   "category": "tshirt",
+   "gender": "WOMEN",
+   "region": "GLOBAL",
+   "productLine": "Women's Tops & Tees (alpha)",
+   "fitCut": "REGULAR",
+   "measurementType": "BODY",
+   "unit": "IN",
+   "sourceType": "OFFICIAL_SITE",
+   "sourceUrl": "https://www.nike.com/size-fit/womens-tops-alpha",
+   "sourceNote": "Nike size & fit page, body measurements (bust/waist/hip in inches), XS-XXL. Values cross-checked against a retailer copy of the same chart; hip row matches Nike HK's official page. Needs a human check against the live page before verifying. Retrieved 2026-11-09.",
+   "rows": [
+    {
+     "label": "XS",
+     "chest": 29.5,
+     "chestMax": 32.5,
+     "waist": 23.5,
+     "waistMax": 26,
+     "hips": 33,
+     "hipsMax": 35.5
+    },
+    {
+     "label": "S",
+     "chest": 32.5,
+     "chestMax": 35.5,
+     "waist": 26,
+     "waistMax": 29,
+     "hips": 35.5,
+     "hipsMax": 38.5
+    },
+    {
+     "label": "M",
+     "chest": 35.5,
+     "chestMax": 38,
+     "waist": 29,
+     "waistMax": 31.5,
+     "hips": 38.5,
+     "hipsMax": 41
+    },
+    {
+     "label": "L",
+     "chest": 38,
+     "chestMax": 41,
+     "waist": 31.5,
+     "waistMax": 34.5,
+     "hips": 41,
+     "hipsMax": 44
+    },
+    {
+     "label": "XL",
+     "chest": 41,
+     "chestMax": 44.5,
+     "waist": 34.5,
+     "waistMax": 38.5,
+     "hips": 44,
+     "hipsMax": 47
+    },
+    {
+     "label": "2XL",
+     "chest": 44.5,
+     "chestMax": 48.5,
+     "waist": 38.5,
+     "waistMax": 42.5,
+     "hips": 47,
+     "hipsMax": 50
+    }
+   ]
+  }
+ ],
+ "unavailable": [
+  {
+   "brand": "zara",
+   "note": "Size guides are rendered per product page by JavaScript and could not be read as a brand-wide official table."
+  },
+  {
+   "brand": "hm",
+   "note": "H&M publishes size guides inside product pages. No official table could be retrieved; only third-party copies were found, which are not used."
+  },
+  {
+   "brand": "uniqlo",
+   "note": "UNIQLO publishes size charts per product page. No brand-wide official table was retrievable."
+  },
+  {
+   "brand": "levis",
+   "note": "Official Levi's size guide could not be retrieved as a table. Only third-party copies were found, which are not used."
+  },
+  {
+   "brand": "adidas",
+   "note": "Only retailer copies of the adidas chart were found. The official adidas India table was not retrievable, so nothing is used."
+  },
+  {
+   "brand": "puma",
+   "note": "PUMA's official page exposed only size-conversion tables (DE/UK/US). Body-measurement rows appeared only on retailer sites, which are not used."
+  },
+  {
+   "brand": "bewakoof",
+   "note": "Bewakoof shows size charts per product (garment measurements). No brand-wide official table was retrievable."
+  },
+  {
+   "brand": "snitch",
+   "note": "No official size chart could be retrieved."
+  },
+  {
+   "brand": "the-souled-store",
+   "note": "No official size chart could be retrieved."
+  },
+  {
+   "brand": "max-fashion",
+   "note": "No official size chart could be retrieved."
+  },
+  {
+   "brand": "westside",
+   "note": "No official size chart could be retrieved."
+  },
+  {
+   "brand": "nike",
+   "note": "Only tops (T-shirt) charts have been added. Shirts, hoodies and trousers are not yet added for Nike."
+  }
+ ],
+ "researchedAt": "2026-11-09"
+}

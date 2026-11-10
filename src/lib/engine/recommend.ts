@@ -2,7 +2,7 @@ import { BODY_CHART_OFFSET, MIN_ACCEPTABLE_SCORE, UNVERIFIED_CONFIDENCE_CAP } fr
 import { validateBody } from "./validate";
 import type {
   BodyMeasurements, CategoryConfig, ChartRow, Dimension, DimensionResult, DimensionRule,
-  EaseRange, FitLabel, FitPreference, RecommendationResult, SizeChart, SizeScore,
+  AchievedFit, EaseRange, FitLabel, FitPreference, RecommendationResult, SizeChart, SizeScore,
 } from "./types";
 
 export type RecommendInput = {
@@ -53,6 +53,18 @@ function rangeFor(
   return chartType === "GARMENT" ? rule.ease[pref] : BODY_CHART_OFFSET[pref];
 }
 
+/** The value (cm) a size row represents for this body, plus its published range if any. */
+function resolveChartValue(row: ChartRow, key: Dimension, bodyCm: number, type: SizeChart["measurementType"]) {
+  const lo = row[key];
+  if (lo === undefined) return null;
+  const hi = row[`${key}Max` as `${Dimension}Max`];
+  if (hi === undefined || hi < lo) return { value: lo, range: undefined };
+  // BODY ranges: you are inside the range -> perfect; outside -> distance to the nearest edge.
+  // GARMENT ranges are unusual; use the midpoint.
+  const value = type === "BODY" ? Math.min(hi, Math.max(lo, bodyCm)) : (lo + hi) / 2;
+  return { value, range: [lo, hi] as [number, number] };
+}
+
 function scoreSize(row: ChartRow, input: RecommendInput): SizeScore {
   const { body, chart, category, fitPreference } = input;
   const dims: DimensionResult[] = [];
@@ -63,9 +75,10 @@ function scoreSize(row: ChartRow, input: RecommendInput): SizeScore {
   for (const [key, rule] of Object.entries(category.dimensions) as [Dimension, DimensionRule][]) {
     totalWeight += rule.weight;
     const b = body[key];
-    const c = row[key];
-    if (b === undefined || c === undefined) { skipped.push(key); continue; }
-    const res = scoreDimension(key, b, c, rule, rangeFor(chart.measurementType, rule, fitPreference));
+    const resolved = b === undefined ? null : resolveChartValue(row, key, b, chart.measurementType);
+    if (b === undefined || !resolved) { skipped.push(key); continue; }
+    const res = scoreDimension(key, b, resolved.value, rule, rangeFor(chart.measurementType, rule, fitPreference));
+    if (resolved.range) res.chartRange = resolved.range;
     dims.push(res);
     usedWeight += rule.weight;
     total += res.score * rule.weight;
@@ -161,6 +174,8 @@ export function recommend(input: RecommendInput): RecommendationResult {
     recommendedSize: best.label,
     fitPreference,
     confidence,
+    garmentCut: chart.garmentCut ?? null,
+    achievedFit: achievedFit(best, chart.measurementType, category),
     compatibility,
     alternatives: ranking.slice(1, 3).map((r) => ({ size: r.label, score: r.score })),
     ranking,
@@ -168,6 +183,25 @@ export function recommend(input: RecommendInput): RecommendationResult {
     warnings,
     dataStatus,
   };
+}
+
+/** Which fit preference's ideal ease range the chosen size's primary measurement falls into. */
+function achievedFit(best: SizeScore, type: SizeChart["measurementType"], category: CategoryConfig): AchievedFit {
+  if (type !== "GARMENT") return null; // body charts: the real fit depends on the garment's cut, which the chart does not say
+  const primary = best.dimensions.find((d) => category.dimensions[d.dimension]?.required) ?? best.dimensions[0];
+  const rule = primary && category.dimensions[primary.dimension];
+  if (!primary || !rule) return null;
+  const ease = primary.differenceCm;
+  const order: FitPreference[] = ["SLIM", "REGULAR", "RELAXED", "OVERSIZED"];
+  const first = rule.ease[order[0]];
+  const last = rule.ease[order[3]];
+  if (ease < first.min) return "TIGHTER_THAN_SLIM";
+  if (ease > last.max) return "LOOSER_THAN_OVERSIZED";
+  // pick the preference whose range centre is closest to the achieved ease
+  return order.reduce((a, b) => {
+    const mid = (p: FitPreference) => (rule.ease[p].min + rule.ease[p].max) / 2;
+    return Math.abs(mid(b) - ease) < Math.abs(mid(a) - ease) ? b : a;
+  });
 }
 
 function describeProblem(s: SizeScore): string {
@@ -179,7 +213,9 @@ function describeProblem(s: SizeScore): string {
 function explain(best: SizeScore, type: SizeChart["measurementType"], pref: FitPreference): string {
   const parts = best.dimensions.map((d) => {
     const what = type === "GARMENT" ? "garment" : "chart";
-    return `${d.dimension}: ${what} ${round1(d.chartCm)} cm vs body ${round1(d.bodyCm)} cm (${fmt(d.differenceCm)} cm) → ${d.label}`;
+    const shown = d.chartRange ? `${round1(d.chartRange[0])}–${round1(d.chartRange[1])}` : `${round1(d.chartCm)}`;
+    const gap = d.chartRange ? (d.differenceCm === 0 ? "inside the range" : `${fmt(d.differenceCm)} cm outside the range`) : `${fmt(d.differenceCm)} cm`;
+    return `${d.dimension}: ${what} ${shown} cm vs body ${round1(d.bodyCm)} cm (${gap}) → ${d.label}`;
   });
   const head = `Size ${best.label} gives the best overall match for a ${pref.toLowerCase()} fit.`;
   const how = type === "GARMENT"

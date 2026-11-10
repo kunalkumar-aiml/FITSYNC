@@ -18,6 +18,8 @@ jobs:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/fitsync
       AUTH_SECRET: ci-secret-ci-secret-ci-secret-ci-secret-1234
       ADMIN_EMAILS: admin@test.local
+      SEED_DEMO: "true"
+      SHOW_DEMO_BRANDS: "true"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

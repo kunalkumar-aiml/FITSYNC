@@ -32,6 +32,20 @@ enum VerificationStatus {
   DEPRECATED
 }
 
+enum Gender {
+  MEN
+  WOMEN
+  UNISEX
+}
+
+enum SourceType {
+  OFFICIAL_SITE
+  OFFICIAL_PDF
+  STORE_MEASURED
+  MANUAL_ENTRY
+  DEMO
+}
+
 enum FitOutcome {
   TOO_TIGHT
   PERFECT
@@ -91,6 +105,7 @@ model Brand {
   createdAt  DateTime @default(now())
   sizeCharts BrandSizeChart[]
   savedBy    SavedBrand[]
+  coverageNotes BrandCoverageNote[]
 }
 
 model ClothingCategory {
@@ -108,11 +123,14 @@ model BrandSizeChart {
   brand        Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
   categoryId   String
   category     ClothingCategory @relation(fields: [categoryId], references: [id])
-  fitCut       String   @default("REGULAR") // garment cut as sold by brand: SLIM | REGULAR | RELAXED | OVERSIZED
+  gender       Gender   @default(UNISEX)
+  region       String   @default("GLOBAL") // sizing system / market: IN, GLOBAL, ASIA, US, EU, UK...
+  productLine  String   @default("")       // e.g. "Tops & Tees (alpha)"; empty when the brand has one chart
+  fitCut       String   @default("REGULAR") // the GARMENT's cut as sold by the brand (not the user's preference)
   active       Boolean  @default(true)
   createdAt    DateTime @default(now())
   versions     BrandSizeChartVersion[]
-  @@unique([brandId, categoryId, fitCut])
+  @@unique([brandId, categoryId, gender, region, productLine, fitCut], map: "BrandSizeChart_identity_key")
 }
 
 // Rows: [{ "label": "M", "chestCm": 102, "waistCm": 96, ... }]  — these are GARMENT measurements.
@@ -123,6 +141,9 @@ model BrandSizeChartVersion {
   version        Int
   rows           Json
   measurementType String  @default("GARMENT") // GARMENT | BODY (what the brand's published numbers describe)
+  sourceType     SourceType @default(MANUAL_ENTRY)
+  originalUnit   Unit     @default(CM)        // unit the source used; rows are always stored in cm
+  retrievedAt    DateTime?
   status         VerificationStatus @default(UNVERIFIED)
   sourceUrl      String?
   sourceNote     String?
@@ -170,4 +191,16 @@ model UserFeedback {
   review         String?
   createdAt      DateTime @default(now())
   @@index([recommendationId])
+}
+
+// Records that a brand/category/gender was checked and no usable official data exists (shown as DATA UNAVAILABLE).
+model BrandCoverageNote {
+  id         String   @id @default(cuid())
+  brandId    String
+  brand      Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  categoryId String?
+  gender     Gender?
+  note       String
+  checkedAt  DateTime @default(now())
+  @@index([brandId])
 }

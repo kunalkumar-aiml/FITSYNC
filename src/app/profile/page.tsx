@@ -13,7 +13,7 @@ export default async function Page({ searchParams }: { searchParams: { welcome?:
   return (
     <MeasurementForm welcome={searchParams.welcome === "1" && !m}
       initial={{
-        unit: p?.preferredUnit ?? "CM", fitPreference: p?.fitPreference ?? "REGULAR",
+        unit: p?.preferredUnit ?? "CM", gender: (p?.fitCategory as "MEN" | "WOMEN" | "UNISEX" | null) ?? null, fitPreference: p?.fitPreference ?? "REGULAR",
         heightCm: m?.heightCm, weightKg: m?.weightKg, chestCm: m?.chestCm, waistCm: m?.waistCm, hipsCm: m?.hipsCm,
         shoulderCm: m?.shoulderCm, armLengthCm: m?.armLengthCm, inseamCm: m?.inseamCm, neckCm: m?.neckCm, thighCm: m?.thighCm,
       }} />

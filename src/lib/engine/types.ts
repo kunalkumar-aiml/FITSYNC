@@ -11,8 +11,14 @@ export type Unit = "CM" | "IN";
 /** Body measurements, always in centimetres. */
 export type BodyMeasurements = Partial<Record<Dimension | "height", number>> & { weightKg?: number };
 
-/** One row of a brand chart. Values are in centimetres. */
-export type ChartRow = { label: string } & Partial<Record<Dimension, number>>;
+/**
+ * One row of a brand chart. Values are in centimetres.
+ * `chest: 92` is a single value (or the lower bound); `chestMax: 96` makes it a range 92-96.
+ */
+export type ChartRow = { label: string } & Partial<Record<Dimension, number>> & Partial<Record<`${Dimension}Max`, number>>;
+
+export type Gender = "MEN" | "WOMEN" | "UNISEX";
+export type AchievedFit = FitPreference | "TIGHTER_THAN_SLIM" | "LOOSER_THAN_OVERSIZED" | null;
 
 /**
  * GARMENT: the numbers describe the finished garment (e.g. full chest circumference of the T-shirt).
@@ -23,6 +29,8 @@ export type MeasurementType = "GARMENT" | "BODY";
 export type DataStatus = "VERIFIED" | "UNVERIFIED" | "DEPRECATED";
 
 export type SizeChart = {
+  /** the garment's cut as sold, e.g. a brand's "relaxed fit" T-shirt line */
+  garmentCut?: FitPreference;
   rows: ChartRow[];
   measurementType: MeasurementType;
   status: DataStatus;
@@ -52,7 +60,9 @@ export type DimensionResult = {
   dimension: Dimension;
   bodyCm: number;
   chartCm: number;
-  /** garment - body (cm) */
+  /** published range for this size, when the brand gives ranges */
+  chartRange?: [number, number];
+  /** garment - body (cm). For ranges: distance from your body to the nearest edge (0 when you are inside the range). */
   differenceCm: number;
   idealRange: EaseRange;
   label: FitLabel;
@@ -73,6 +83,10 @@ export type RecommendationResult =
       recommendedSize: string;
       fitPreference: FitPreference;
       confidence: number;
+      /** The garment's cut as sold by the brand (not your preference). */
+      garmentCut: FitPreference | null;
+      /** The fit this size should actually give you, judged from the primary measurement. null when it can't be known (body-measurement charts). */
+      achievedFit: AchievedFit;
       compatibility: Partial<Record<Dimension, FitLabel>>;
       alternatives: { size: string; score: number }[];
       ranking: SizeScore[];
