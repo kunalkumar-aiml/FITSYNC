@@ -1,0 +1,55 @@
+{
+ "marketplace": "nykaa-man",
+ "marketplaceDomain": "www.nykaaman.com",
+ "brand": "bewakoof",
+ "productName": "Bewakoof Mens Dark Navy Blue Gyomi Stone Hashira Graphic T-Shirt",
+ "productUrl": "https://www.nykaaman.com/bewakoof-mens-dark-navy-blue-gyomi-stone-hashira-graphic-t-shirt/p/17108563",
+ "retrievedAt": "2026-11-10",
+ "extractionMethod": "WEB_FETCH_TEXT",
+ "unitShown": "cm",
+ "columns": [
+  "Size",
+  "CHEST",
+  "SHOULDER",
+  "LENGTH",
+  "SLEEVE LENGTH"
+ ],
+ "rows": [
+  [
+   "S",
+   96.5,
+   42.5,
+   69.2,
+   20.3
+  ],
+  [
+   "M",
+   101.6,
+   44.5,
+   71.1,
+   21.0
+  ],
+  [
+   "L",
+   106.7,
+   46.4,
+   73.0,
+   21.6
+  ],
+  [
+   "XL",
+   111.8,
+   48.3,
+   74.9,
+   22.2
+  ],
+  [
+   "2XL",
+   116.8,
+   50.2,
+   76.2,
+   22.9
+  ]
+ ],
+ "note": "Listing shows every size as 'Sold Out' at retrieval time; the measurement table is still published. Column semantics (garment vs body) and the garment's fit/cut are not stated on the page."
+}

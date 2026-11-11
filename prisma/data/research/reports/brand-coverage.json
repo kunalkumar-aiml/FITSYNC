@@ -1,0 +1,2127 @@
+[
+  {
+    "brand": "zara",
+    "name": "Zara",
+    "cells": [
+      {
+        "category": "tshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "tshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      }
+    ],
+    "productSpecificCharts": 0
+  },
+  {
+    "brand": "hm",
+    "name": "H&M",
+    "cells": [
+      {
+        "category": "tshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "tshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      }
+    ],
+    "productSpecificCharts": 0
+  },
+  {
+    "brand": "uniqlo",
+    "name": "Uniqlo",
+    "cells": [
+      {
+        "category": "tshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "tshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      }
+    ],
+    "productSpecificCharts": 0
+  },
+  {
+    "brand": "levis",
+    "name": "Levi's",
+    "cells": [
+      {
+        "category": "tshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "tshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      }
+    ],
+    "productSpecificCharts": 0
+  },
+  {
+    "brand": "nike",
+    "name": "Nike",
+    "cells": [
+      {
+        "category": "tshirt",
+        "gender": "MEN",
+        "status": "UNVERIFIED",
+        "regions": [
+          "ASIA",
+          "GLOBAL"
+        ]
+      },
+      {
+        "category": "tshirt",
+        "gender": "WOMEN",
+        "status": "UNVERIFIED",
+        "regions": [
+          "GLOBAL",
+          "ASIA"
+        ]
+      },
+      {
+        "category": "shirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      }
+    ],
+    "productSpecificCharts": 0
+  },
+  {
+    "brand": "adidas",
+    "name": "Adidas",
+    "cells": [
+      {
+        "category": "tshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "tshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      }
+    ],
+    "productSpecificCharts": 0
+  },
+  {
+    "brand": "puma",
+    "name": "Puma",
+    "cells": [
+      {
+        "category": "tshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "tshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      }
+    ],
+    "productSpecificCharts": 0
+  },
+  {
+    "brand": "bewakoof",
+    "name": "Bewakoof",
+    "cells": [
+      {
+        "category": "tshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "tshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      }
+    ],
+    "productSpecificCharts": 2
+  },
+  {
+    "brand": "snitch",
+    "name": "Snitch",
+    "cells": [
+      {
+        "category": "tshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "tshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      }
+    ],
+    "productSpecificCharts": 0
+  },
+  {
+    "brand": "the-souled-store",
+    "name": "The Souled Store",
+    "cells": [
+      {
+        "category": "tshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "tshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      }
+    ],
+    "productSpecificCharts": 0
+  },
+  {
+    "brand": "max-fashion",
+    "name": "Max Fashion",
+    "cells": [
+      {
+        "category": "tshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "tshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      }
+    ],
+    "productSpecificCharts": 0
+  },
+  {
+    "brand": "westside",
+    "name": "Westside",
+    "cells": [
+      {
+        "category": "tshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "tshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      }
+    ],
+    "productSpecificCharts": 0
+  },
+  {
+    "brand": "savana",
+    "name": "Savana",
+    "cells": [
+      {
+        "category": "tshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "tshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "hoodie",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jeans",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "polo",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "sweatshirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "jacket",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "top",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "chinos",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "joggers",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "shorts",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "skirt",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "MEN",
+        "status": "MISSING",
+        "regions": []
+      },
+      {
+        "category": "dress",
+        "gender": "WOMEN",
+        "status": "MISSING",
+        "regions": []
+      }
+    ],
+    "productSpecificCharts": 0
+  }
+]

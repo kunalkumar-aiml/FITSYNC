@@ -1,0 +1,24 @@
+{
+ "marketplace": "flipkart",
+ "marketplaceDomain": "www.flipkart.com",
+ "brand": "arbour",
+ "productName": "Arbour Men Military Camouflage Round Neck Cotton Blend Multicolor T-Shirt",
+ "productUrl": "https://www.flipkart.com/arbour-military-camouflage-men-round-neck-multicolor-t-shirt/p/itma1b143012298e",
+ "retrievedAt": "2026-11-10",
+ "extractionMethod": "WEB_SEARCH_SNIPPET",
+ "unitShown": "inch",
+ "statedFit": "Slim fit",
+ "rowsText": [
+  "M: Chest 36 inch | Length 28 inch | Shoulder 16 inch",
+  "L: Chest 38 | Length 28.5 | Shoulder 17",
+  "XL: Chest 40 | Length 29.5 | Shoulder 18",
+  "XXL: Chest 42 | Length 30 | Shoulder 19",
+  "3XL: Chest 44 | Length 30.5 | Shoulder 19.5",
+  "4XL: Chest 46 | Length 31 | Shoulder 20",
+  "5XL: Chest 48 | Length 31.5 | Shoulder 20.5",
+  "6XL: Chest 50 | Length 32 | Shoulder 21",
+  "7XL: Chest 52 | Length 32.5 | Shoulder 22",
+  "8XL: Chest 54 | Length 33 | Shoulder 22.5"
+ ],
+ "note": "Listing also says 'This product runs one size smaller'. It does not say whether Chest/Shoulder are body or garment measurements. Brand is written 'Arbour' in the title and 'ARBOR' elsewhere on the page; the title spelling is used."
+}

@@ -1,0 +1,108 @@
+{
+  "brand": "nike",
+  "category": "tshirt",
+  "gender": "MEN",
+  "region": "ASIA",
+  "productLine": "Tops & T-shirts (Asian sizing)",
+  "fitCut": "REGULAR",
+  "measurementType": "BODY",
+  "measurementSemantics": {},
+  "ambiguousDimensions": [],
+  "sourceType": "OFFICIAL_SITE",
+  "sourceUrl": "https://www.nike.com/lu/en/size-fit/mens-tops-asian-alpha",
+  "sourceDomain": "www.nike.com",
+  "extractionMethod": "WEB_FETCH_TEXT",
+  "retrievedAt": "2026-11-09",
+  "originalUnit": "IN",
+  "storedUnit": "CM",
+  "verificationStatus": "UNVERIFIED",
+  "columnLabels": {},
+  "product": null,
+  "notes": "Nike size & fit page. Body measurements. Open-ended sizes XXS (<31) and 5XL (51.5+) omitted. Values as printed, incl. 4XL waist 43-45. Retrieved 2026-11-09.",
+  "csvFile": "nike__tshirt__men__asia__5e198eb563831a70.csv",
+  "sizeLabels": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+  ],
+  "unit": "CM",
+  "rows": [
+    {
+      "label": "XS",
+      "chest": 78.7,
+      "chestMax": 85.1,
+      "waist": 66,
+      "waistMax": 72.4,
+      "hips": 81.3,
+      "hipsMax": 86.4
+    },
+    {
+      "label": "S",
+      "chest": 85.1,
+      "chestMax": 91.4,
+      "waist": 72.4,
+      "waistMax": 78.7,
+      "hips": 86.4,
+      "hipsMax": 91.4
+    },
+    {
+      "label": "M",
+      "chest": 91.4,
+      "chestMax": 96.5,
+      "waist": 78.7,
+      "waistMax": 85.1,
+      "hips": 91.4,
+      "hipsMax": 96.5
+    },
+    {
+      "label": "L",
+      "chest": 96.5,
+      "chestMax": 102.9,
+      "waist": 85.1,
+      "waistMax": 91.4,
+      "hips": 96.5,
+      "hipsMax": 101.6
+    },
+    {
+      "label": "XL",
+      "chest": 102.9,
+      "chestMax": 109.2,
+      "waist": 91.4,
+      "waistMax": 96.5,
+      "hips": 101.6,
+      "hipsMax": 106.7
+    },
+    {
+      "label": "2XL",
+      "chest": 109.2,
+      "chestMax": 115.6,
+      "waist": 96.5,
+      "waistMax": 104.1,
+      "hips": 106.7,
+      "hipsMax": 111.8
+    },
+    {
+      "label": "3XL",
+      "chest": 115.6,
+      "chestMax": 124.5,
+      "waist": 104.1,
+      "waistMax": 111.8,
+      "hips": 111.8,
+      "hipsMax": 118.1
+    },
+    {
+      "label": "4XL",
+      "chest": 124.5,
+      "chestMax": 130.8,
+      "waist": 109.2,
+      "waistMax": 114.3,
+      "hips": 118.1,
+      "hipsMax": 123.2
+    }
+  ]
+}

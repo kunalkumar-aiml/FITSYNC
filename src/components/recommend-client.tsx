@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Loader2, Save, TriangleAlert } from "lucide-react";
 import { api, ClientError } from "@/lib/client";
 import { useToast } from "./toast";
@@ -9,11 +9,11 @@ import { EaseRuler } from "./ease-ruler";
 import type { ChartRow, Dimension, FitPreference, RecommendationResult } from "@/lib/engine";
 
 type Gender = "MEN" | "WOMEN" | "UNISEX";
-type BrandOpt = { slug: string; name: string; isDemo: boolean; categories: { slug: string; name: string; gender: Gender }[] };
+type BrandOpt = { slug: string; name: string; isDemo: boolean; hasProducts?: boolean; categories: { slug: string; name: string; gender: Gender }[] };
 const GENDER_NAMES: Record<Gender, string> = { MEN: "Men’s", WOMEN: "Women’s", UNISEX: "Unisex" };
 type Resp = {
   id: string | null; brand: { name: string; isDemo: boolean }; category: { name: string }; fitCut: string;
-  gender: Gender; region: string; productLine: string; options: { region: string; productLine: string; gender: Gender }[];
+  gender: Gender; region: string; productLine: string; product: { name: string; marketplaces: string[] } | null; pendingProductChart: boolean; options: { region: string; productLine: string; gender: Gender }[];
   chart: { status: string; measurementType: "BODY" | "GARMENT"; sourceType: string; sourceUrl: string | null; sourceNote: string | null; rows: ChartRow[] };
   result: RecommendationResult;
 };
@@ -24,21 +24,30 @@ export function RecommendClient({ brands, categories, defaultFit, initialBrand, 
   const toast = useToast();
   const [category, setCategory] = useState(initialCategory && categories.some((c) => c.slug === initialCategory) ? initialCategory : categories[0].slug);
   const [gender, setGender] = useState<Gender | null>(defaultGender);
-  const hasData = (b: BrandOpt) => b.categories.some((c) => c.slug === category && (gender === null || c.gender === gender || c.gender === "UNISEX"));
+  const hasData = (b: BrandOpt) => b.categories.some((c) => c.slug === category && (gender === null || c.gender === gender || c.gender === "UNISEX")) || !!b.hasProducts;
   const available = brands; // unavailable brands stay selectable so we can say "data unavailable" honestly
   const [brand, setBrand] = useState(initialBrand ?? "");
   const [fit, setFit] = useState<FitPreference>(defaultFit);
   const [busy, setBusy] = useState(false);
+  const [products, setProducts] = useState<{ id: string; name: string; listedOn: { marketplace: string }[]; fitCut: string; fitCutStated: boolean }[]>([]);
+  const [productId, setProductId] = useState("");
   const [data, setData] = useState<Resp | null>(null);
   const [savedId, setSavedId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const chosen = available.find((b) => b.slug === brand) ?? available[0];
+  useEffect(() => {
+    setProductId(""); setProducts([]);
+    if (!chosen?.hasProducts) return;
+    let live = true;
+    api<typeof products>(`/api/brands/${chosen.slug}/products?category=${category}`).then((p) => live && setProducts(p)).catch(() => {});
+    return () => { live = false; };
+  }, [chosen?.slug, category]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function run(save: boolean, region?: string) {
     if (!chosen || !gender) { setError("Choose men’s, women’s or unisex sizing first."); return; }
     setBusy(true); setError(null);
     try {
-      const r = await api<Resp>("/api/recommendations", { method: "POST", json: { brandSlug: chosen.slug, categorySlug: category, fitPreference: fit, gender, ...(region ? { region } : {}), save } });
+      const r = await api<Resp>("/api/recommendations", { method: "POST", json: { brandSlug: chosen.slug, categorySlug: category, fitPreference: fit, gender, ...(region ? { region } : {}), ...(productId ? { productId } : {}), save } });
       setData(r);
       if (save) { setSavedId(r.id); toast("success", "Recommendation saved"); } else setSavedId(null);
     } catch (e) { setError(e instanceof ClientError ? e.message : "Couldn’t get a recommendation. Check your connection."); }
@@ -83,6 +92,16 @@ export function RecommendClient({ brands, categories, defaultFit, initialBrand, 
             </select>
           </div>
         </div>
+        {products.length > 0 && (
+          <div>
+            <label className="label" htmlFor="product">Specific product <span className="text-muted font-normal">(optional)</span></label>
+            <select id="product" className="input" value={productId} onChange={(e) => { setProductId(e.target.value); setData(null); }}>
+              <option value="">Brand-level size chart</option>
+              {products.map((p) => <option key={p.id} value={p.id}>{p.name} ({p.listedOn.map((l) => l.marketplace).join(", ")})</option>)}
+            </select>
+            <p className="mt-1 text-xs text-muted">A product’s own chart is used instead of the brand chart once its measurements are verified.</p>
+          </div>
+        )}
         <button className="btn btn-primary" onClick={() => run(false)} disabled={busy || !chosen || !gender}>{busy && <Loader2 size={16} className="animate-spin" />}Get my size</button>
         {error && <div role="alert" className="rounded-xl border border-bad/40 bg-bad/10 px-3.5 py-2.5 text-sm">{error} {error.includes("measurements") && <Link href="/profile" className="underline">Add measurements</Link>}</div>}
       </div>
@@ -93,8 +112,11 @@ export function RecommendClient({ brands, categories, defaultFit, initialBrand, 
         <section className="card mt-6 p-5 sm:p-7" aria-live="polite">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="font-semibold">{data.brand.name} · {data.category.name} <span className="text-muted font-normal text-sm">· {GENDER_NAMES[data.gender]} · {data.region}{data.productLine ? ` · ${data.productLine}` : ""}</span></h2>
-            <DataBadge status={data.chart.status} demo={data.brand.isDemo} />
+            <div className="flex flex-wrap items-center gap-1.5"><span className="chip">{data.product ? "Product-specific chart" : "Brand-level chart"}</span><DataBadge status={data.chart.status} demo={data.brand.isDemo} /></div>
           </div>
+          {data.product && <p className="mt-1 text-xs text-muted">{data.product.name} · listed on {data.product.marketplaces.join(", ")}</p>}
+          {data.pendingProductChart && <p className="mt-2 text-sm text-warn">This product has its own chart, but it is not verified yet, so the brand-level chart was used instead.</p>}
+          {res && res.status === "ok" && res.provisional && <p role="status" className="mt-3 rounded-xl border border-warn/40 bg-warn/10 px-3.5 py-2 text-sm">Provisional result: it relies on a chart that is not fully verified or on partial measurements. Treat it as a guide.</p>}
 
           {res.status === "ok" && <Ok data={data} res={res} />}
           {data.options.filter((o) => o.region !== data.region || o.productLine !== data.productLine).length > 0 && (
@@ -141,8 +163,8 @@ function Ok({ data, res }: { data: Resp; res: Extract<RecommendationResult, { st
           <div className="mt-2 text-sm text-muted">{FIT_NAMES[res.fitPreference]} fit</div>
         </div>
         <div className="w-44">
-          <div className="flex justify-between text-xs text-muted"><span>Confidence</span><span className="tabular-nums">{Math.round(res.confidence * 100)}%</span></div>
-          <div className="mt-1 h-2 rounded-full bg-line overflow-hidden"><div className="h-full bg-accent" style={{ width: `${res.confidence * 100}%` }} /></div>
+          <div className="flex justify-between text-xs text-muted"><span title="An experimental heuristic, not a probability. It has not been validated against real fit data yet.">Fit match score (experimental)</span><span className="tabular-nums">{Math.round(res.fitMatchScore * 100)}%</span></div>
+          <div className="mt-1 h-2 rounded-full bg-line overflow-hidden"><div className="h-full bg-accent" style={{ width: `${res.fitMatchScore * 100}%` }} /></div>
         </div>
       </div>
       <div className="mt-5 flex flex-wrap gap-2">

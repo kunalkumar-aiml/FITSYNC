@@ -1,4 +1,4 @@
-import { BODY_CHART_OFFSET, MIN_ACCEPTABLE_SCORE, UNVERIFIED_CONFIDENCE_CAP } from "./config";
+import { BODY_CHART_OFFSET, MIN_ACCEPTABLE_SCORE, UNVERIFIED_SCORE_CAP } from "./config";
 import { validateBody } from "./validate";
 import type {
   BodyMeasurements, CategoryConfig, ChartRow, Dimension, DimensionResult, DimensionRule,
@@ -74,6 +74,7 @@ function scoreSize(row: ChartRow, input: RecommendInput): SizeScore {
   let totalWeight = 0;
   for (const [key, rule] of Object.entries(category.dimensions) as [Dimension, DimensionRule][]) {
     totalWeight += rule.weight;
+    if (chart.ambiguousDimensions?.includes(key)) { skipped.push(key); continue; } // meaning unknown: never compared
     const b = body[key];
     const resolved = b === undefined ? null : resolveChartValue(row, key, b, chart.measurementType);
     if (b === undefined || !resolved) { skipped.push(key); continue; }
@@ -119,6 +120,14 @@ export function recommend(input: RecommendInput): RecommendationResult {
       explanation: `Add your ${missingBody.join(", ")} measurement to get a ${category.name.toLowerCase()} recommendation.`,
     };
   }
+  const ambiguous = (chart.ambiguousDimensions ?? []).filter((d) => category.dimensions[d]);
+  const blocked = required.filter((d) => ambiguous.includes(d));
+  if (blocked.length) {
+    return {
+      status: "insufficient_data", missing: blocked, dataStatus, warnings,
+      explanation: `This chart's ${blocked.join(", ")} measurement is ambiguous (the source does not say whether it is a body or garment measurement), so it is excluded until an admin confirms its meaning.`,
+    };
+  }
   const usableRows = chart.rows.filter((row) => required.every((d) => row[d] !== undefined));
   if (usableRows.length === 0) {
     return {
@@ -157,14 +166,15 @@ export function recommend(input: RecommendInput): RecommendationResult {
   if (second && margin < 0.05) {
     warnings.push(`You are between ${best.label} and ${second.label}. Choose ${best.label} for the closer match, or the other if you prefer a different feel.`);
   }
+  if (ambiguous.length) warnings.push(`Ignored ambiguous measurement(s): ${ambiguous.join(", ")}.`);
   if (best.coverage < 1) {
     warnings.push(`Based on ${Math.round(best.coverage * 100)}% of the measurements for this category. Add more measurements to improve accuracy.`);
   }
 
   const marginFactor = 0.85 + 0.15 * Math.min(1, margin / 0.15);
-  let confidence = best.score * (0.5 + 0.5 * best.coverage) * marginFactor;
-  if (dataStatus === "UNVERIFIED") confidence = Math.min(confidence * 0.7, UNVERIFIED_CONFIDENCE_CAP);
-  confidence = round2(Math.max(0, Math.min(1, confidence)));
+  let fitMatchScore = best.score * (0.5 + 0.5 * best.coverage) * marginFactor;
+  if (dataStatus === "UNVERIFIED") fitMatchScore = Math.min(fitMatchScore * 0.7, UNVERIFIED_SCORE_CAP);
+  fitMatchScore = round2(Math.max(0, Math.min(1, fitMatchScore)));
 
   const compatibility: Partial<Record<Dimension, FitLabel>> = {};
   for (const d of best.dimensions) compatibility[d.dimension] = d.label;
@@ -173,7 +183,10 @@ export function recommend(input: RecommendInput): RecommendationResult {
     status: "ok",
     recommendedSize: best.label,
     fitPreference,
-    confidence,
+    fitMatchScore,
+    provisional: dataStatus !== "VERIFIED" || ambiguous.length > 0 || best.coverage < 0.6,
+    chartScope: chart.scope ?? "BRAND",
+    ambiguousExcluded: ambiguous,
     garmentCut: chart.garmentCut ?? null,
     achievedFit: achievedFit(best, chart.measurementType, category),
     compatibility,

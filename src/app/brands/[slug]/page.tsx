@@ -19,14 +19,14 @@ export default async function BrandPage({ params }: { params: { slug: string } }
   const [charts, saved] = await Promise.all([
     db.brandSizeChart.findMany({
       where: { brandId: brand.id, active: true },
-      include: { category: true, versions: { where: { status: { not: "DEPRECATED" } }, orderBy: { version: "desc" } } },
+      include: { category: true, product: { include: { listings: { include: { marketplace: true } } } }, versions: { where: { status: { not: "DEPRECATED" } }, orderBy: { version: "desc" } } },
     }),
     user ? db.savedBrand.findUnique({ where: { userId_brandId: { userId: user.id, brandId: brand.id } } }) : null,
   ]);
   const usable = charts.filter((c) => c.versions.length);
   const note = (await db.brandCoverageNote.findFirst({ where: { brandId: brand.id }, orderBy: { checkedAt: "desc" } }))?.note;
   const GENDER = { MEN: "Men’s", WOMEN: "Women’s", UNISEX: "Unisex" } as const;
-  const SRC = { OFFICIAL_SITE: "Official site", OFFICIAL_PDF: "Official PDF", STORE_MEASURED: "Store-measured", MANUAL_ENTRY: "Manual entry", DEMO: "Demo" } as const;
+  const SRC = { OFFICIAL_SITE: "Official site", OFFICIAL_PDF: "Official PDF", OFFICIAL_PRODUCT_PAGE: "Official product page", MARKETPLACE_LISTING: "Marketplace listing", STORE_MEASURED: "Store-measured", MANUAL_ENTRY: "Manual entry", DEMO: "Demo" } as const;
 
   return (
     <div className="container-x py-8 sm:py-12">
@@ -54,9 +54,11 @@ export default async function BrandPage({ params }: { params: { slug: string } }
         return (
           <section key={c.id} className="card mt-8 p-5 sm:p-6">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2 className="text-xl font-semibold">{c.category.name} <span className="text-muted font-normal text-base">· {GENDER[c.gender]} · {c.region}{c.productLine ? ` · ${c.productLine}` : ""} · {FIT_NAMES[c.fitCut]} cut</span></h2>
+              <h2 className="text-xl font-semibold">{c.product ? c.product.name : c.category.name} <span className="text-muted font-normal text-base">· {GENDER[c.gender]} · {c.region}{c.productLine ? ` · ${c.productLine}` : ""} · {FIT_NAMES[c.fitCut]} cut</span></h2>
               <DataBadge status={v.status} demo={brand.isDemo} />
             </div>
+            {c.product && <p className="mt-1 text-sm"><span className="chip">Product-specific</span> <span className="text-muted">Brand: {brand.name} · sold on {c.product.listings.map((l) => l.marketplace?.name ?? "brand site").join(", ")}. This chart applies to this product only.</span></p>}
+            {Array.isArray(v.ambiguousDimensions) && v.ambiguousDimensions.length > 0 && <p className="mt-2 text-sm text-warn">Ambiguous: the source does not say whether {(v.ambiguousDimensions as string[]).join(", ")} are body or garment measurements. They are not used for recommendations yet.</p>}
             <p className="mt-1 text-sm text-muted">{v.measurementType === "GARMENT" ? "Garment measurements (the clothing itself), in cm." : "Body measurements the size is made for, in cm."}</p>
             <div className="mt-4 overflow-x-auto">
               <table className="w-full text-sm tabular-nums">

@@ -46,8 +46,8 @@ describe("recommendation engine", () => {
     if (r.status !== "ok") throw new Error("expected ok");
     expect(Object.keys(r.compatibility).sort()).toEqual(["chest", "shoulder", "waist"]);
     expect(r.explanation).toContain(`Size ${r.recommendedSize}`);
-    expect(r.confidence).toBeGreaterThan(0.5);
-    expect(r.confidence).toBeLessThanOrEqual(1);
+    expect(r.fitMatchScore).toBeGreaterThan(0.5);
+    expect(r.fitMatchScore).toBeLessThanOrEqual(1);
   });
 
   it("flags tight and loose areas", () => {
@@ -73,7 +73,7 @@ describe("recommendation engine", () => {
     const full = recommend({ body, chart: garmentChart(), category: tshirt, fitPreference: "REGULAR" });
     const partial = recommend({ body: { chest: 98 }, chart: garmentChart(), category: tshirt, fitPreference: "REGULAR" });
     if (full.status !== "ok" || partial.status !== "ok") throw new Error("expected ok");
-    expect(partial.confidence).toBeLessThan(full.confidence);
+    expect(partial.fitMatchScore).toBeLessThan(full.fitMatchScore);
     expect(partial.warnings.join(" ")).toMatch(/measurements for this category/);
   });
 
@@ -87,7 +87,7 @@ describe("recommendation engine", () => {
   it("caps confidence and warns for unverified data", () => {
     const r = recommend({ body, chart: garmentChart("UNVERIFIED"), category: tshirt, fitPreference: "REGULAR" });
     if (r.status !== "ok") throw new Error("expected ok");
-    expect(r.confidence).toBeLessThanOrEqual(0.55);
+    expect(r.fitMatchScore).toBeLessThanOrEqual(0.55);
     expect(r.warnings.join(" ")).toMatch(/not verified/);
     expect(r.dataStatus).toBe("UNVERIFIED");
   });

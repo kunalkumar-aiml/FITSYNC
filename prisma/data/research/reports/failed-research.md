@@ -1,0 +1,30 @@
+# Failed or incomplete research
+
+- **savana** · official size guide (women's tops) · `SOURCE_UNAVAILABLE` (2026-11-10)
+  - Search returned no official savana page; only unrelated third-party brands' charts. Nothing used.
+- **bewakoof** · Myntra product listing size chart · `SOURCE_UNAVAILABLE` (2026-11-10)
+  - Search did not return any Myntra page. Myntra product pages are rendered by JavaScript. No data used.
+- **myntra** · marketplace product listings · `SOURCE_UNAVAILABLE` (2026-11-10)
+  - No Myntra product page was returned by two searches; Myntra pages are JavaScript-rendered. Not circumvented. No data used.
+- **zara** · Zara size guide · `SOURCE_UNAVAILABLE` (2026-11-09)
+  - Guides render per product page by JavaScript; no official table readable. (not re-attempted in V3 unless stated above)
+- **hm** · H&M size guide · `SOURCE_UNAVAILABLE` (2026-11-09)
+  - Guides sit inside product pages; only third-party copies found (not used). (not re-attempted in V3 unless stated above)
+- **uniqlo** · UNIQLO size chart · `SOURCE_UNAVAILABLE` (2026-11-09)
+  - Charts are per product page; no brand-wide official table readable. (not re-attempted in V3 unless stated above)
+- **levis** · Levi's size guide · `SOURCE_UNAVAILABLE` (2026-11-09)
+  - No official table readable; third-party copies not used. (not re-attempted in V3 unless stated above)
+- **adidas** · adidas size chart · `SOURCE_UNAVAILABLE` (2026-11-09)
+  - Only retailer copies found; official table not readable (not used). (not re-attempted in V3 unless stated above)
+- **puma** · PUMA size chart · `SOURCE_UNAVAILABLE` (2026-11-09)
+  - Official page exposed only size-conversion tables; body rows only on retailer sites (not used). (not re-attempted in V3 unless stated above)
+- **snitch** · Snitch size chart · `SOURCE_UNAVAILABLE` (2026-11-09)
+  - No official chart readable. (not re-attempted in V3 unless stated above)
+- **the-souled-store** · The Souled Store size chart · `SOURCE_UNAVAILABLE` (2026-11-09)
+  - No official chart readable. (not re-attempted in V3 unless stated above)
+- **max-fashion** · Max Fashion size chart · `SOURCE_UNAVAILABLE` (2026-11-09)
+  - No official chart readable. (not re-attempted in V3 unless stated above)
+- **westside** · Westside size chart · `SOURCE_UNAVAILABLE` (2026-11-09)
+  - No official chart readable. (not re-attempted in V3 unless stated above)
+- **bewakoof** · Bewakoof brand-level size guide · `SOURCE_UNAVAILABLE` (2026-11-09)
+  - Bewakoof shows charts per product only; no brand-wide official table readable. (not re-attempted in V3 unless stated above)

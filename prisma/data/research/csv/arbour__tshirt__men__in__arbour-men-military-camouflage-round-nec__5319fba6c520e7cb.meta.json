@@ -1,0 +1,49 @@
+{
+  "brand": "arbour",
+  "category": "tshirt",
+  "gender": "MEN",
+  "region": "IN",
+  "productLine": "",
+  "fitCut": "SLIM",
+  "measurementType": "GARMENT",
+  "measurementSemantics": {
+    "chest": "AMBIGUOUS",
+    "shoulder": "AMBIGUOUS",
+    "garmentLength": "GARMENT_LENGTH",
+    "sleeveLength": "GARMENT_LENGTH"
+  },
+  "ambiguousDimensions": [
+    "chest",
+    "shoulder"
+  ],
+  "sourceType": "MARKETPLACE_LISTING",
+  "sourceUrl": "https://www.flipkart.com/arbour-military-camouflage-men-round-neck-multicolor-t-shirt/p/itma1b143012298e",
+  "sourceDomain": "www.flipkart.com",
+  "extractionMethod": "WEB_SEARCH_SNIPPET",
+  "retrievedAt": "2026-11-10",
+  "originalUnit": "IN",
+  "storedUnit": "CM",
+  "verificationStatus": "UNVERIFIED",
+  "columnLabels": {},
+  "product": {
+    "name": "Arbour Men Military Camouflage Round Neck Cotton Blend Multicolor T-Shirt",
+    "marketplace": "flipkart",
+    "url": "https://www.flipkart.com/arbour-military-camouflage-men-round-neck-multicolor-t-shirt/p/itma1b143012298e",
+    "brand": "arbour",
+    "fitCutStatedOnListing": true
+  },
+  "notes": "Listing states 'Slim fit' and 'runs one size smaller'. Chest/shoulder/length are labelled in inches but not defined as body or garment measurements, so chest and shoulder are flagged AMBIGUOUS and excluded from automatic recommendations until a human confirms their meaning.",
+  "csvFile": "arbour__tshirt__men__in__arbour-men-military-camouflage-round-nec__5319fba6c520e7cb.csv",
+  "sizeLabels": [
+    "M",
+    "L",
+    "XL",
+    "XXL",
+    "3XL",
+    "4XL",
+    "5XL",
+    "6XL",
+    "7XL",
+    "8XL"
+  ]
+}

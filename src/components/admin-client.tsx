@@ -27,46 +27,6 @@ export function AdminClient({ brands, categories, versions, coverage }: Props) {
   return (
     <div className="space-y-8">
       <section className="card p-5">
-        <h2 className="font-semibold">Size chart versions</h2>
-        <p className="text-sm text-muted mt-1">Mark a version Verified only after checking it against the brand’s own published chart. A source is required.</p>
-        <ul className="mt-4 divide-y divide-line">
-          {versions.length === 0 && <li className="py-3 text-sm text-muted">No charts yet. Add one below.</li>}
-          {versions.map((v) => (
-            <li key={v.id} className="py-3 flex flex-wrap items-center justify-between gap-3">
-              <div className="min-w-0"><div className="font-medium">{v.brand} · {v.category} <span className="text-muted font-normal">v{v.version} · {v.gender.toLowerCase()} · {v.region}{v.productLine ? ` · ${v.productLine}` : ""} · {v.fitCut.toLowerCase()} cut</span></div>
-                <div className="text-xs text-muted truncate max-w-md">{v.sourceUrl ?? v.sourceNote ?? "No source recorded"}</div></div>
-              <div className="flex items-center gap-2"><DataBadge status={v.status} demo={v.isDemo} />
-                {v.status !== "VERIFIED" && <button className="btn btn-ghost !h-8 !px-3" disabled={busy === v.id}
-                  onClick={() => {
-                    const hasSource = v.sourceUrl || (v.sourceNote && !v.isDemo);
-                    const src = hasSource ? null : window.prompt("Source URL where this chart is published:");
-                    if (!hasSource && !src) return;
-                    act(v.id, () => api(`/api/admin/size-charts/${v.id}`, { method: "PUT", json: { status: "VERIFIED", ...(src ? { sourceUrl: src } : {}) } }).then(() => {}), "Marked verified");
-                  }}>{busy === v.id && <Loader2 size={14} className="animate-spin" />}Verify</button>}
-                {v.status !== "DEPRECATED" && <button className="btn btn-quiet !h-8 !px-3" disabled={busy === v.id}
-                  onClick={() => window.confirm("Deprecate this version? It will stop being used for recommendations.") && act(v.id, () => api(`/api/admin/size-charts/${v.id}`, { method: "PUT", json: { status: "DEPRECATED" } }).then(() => {}), "Deprecated")}>Deprecate</button>}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="card p-5">
-        <h2 className="font-semibold">Data coverage</h2>
-        <p className="text-sm text-muted mt-1">What exists per brand, category and sizing type. “Missing” means no official chart has been added (shown to shoppers as Data unavailable).</p>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full text-xs">
-            <thead><tr className="text-left text-muted border-b border-line"><th className="py-2 pr-3 font-medium">Brand</th>{categories.flatMap((c) => ["MEN", "WOMEN"].map((g) => <th key={c.slug + g} className="py-2 pr-2 font-medium whitespace-nowrap">{c.name.split(" ")[0]} {g === "MEN" ? "M" : "W"}</th>))}</tr></thead>
-            <tbody>{coverage.map((b) => (
-              <tr key={b.slug} className="border-b border-line/60"><td className="py-2 pr-3 font-medium whitespace-nowrap">{b.name}</td>
-                {categories.flatMap((c) => ["MEN", "WOMEN"].map((g) => { const cell = b.cells[`${c.slug}:${g}`]; return (
-                  <td key={c.slug + g} className="py-2 pr-2"><span className={`inline-block rounded px-1.5 py-0.5 ${cell?.status === "VERIFIED" ? "bg-good/15 text-good" : cell?.status === "UNVERIFIED" ? "bg-warn/15 text-warn" : "bg-line/50 text-muted"}`}>{cell?.status === "VERIFIED" ? "Verified" : cell?.status === "UNVERIFIED" ? "Unverified" : "Missing"}</span></td>); }))}
-              </tr>))}</tbody>
-          </table>
-        </div>
-      </section>
-
-      <section className="card p-5">
         <h2 className="font-semibold">Import a size chart (CSV)</h2>
         <p className="text-sm text-muted mt-1">Paste or upload a CSV copied from the brand’s official size guide. Saved as a new <strong>unverified</strong> version, with the source recorded. Ranges like <code>35-37.5</code> are fine; open-ended values like <code>&lt;31</code> are rejected.</p>
         <form className="mt-4 grid gap-4" onSubmit={(e) => {
@@ -93,7 +53,7 @@ export function AdminClient({ brands, categories, versions, coverage }: Props) {
             <div><label className="label" htmlFor="af">Garment cut</label><select id="af" name="fitCut" className="input" defaultValue="REGULAR">{["SLIM", "REGULAR", "RELAXED", "OVERSIZED"].map((x) => <option key={x}>{x}</option>)}</select></div>
             <div><label className="label" htmlFor="at">Numbers describe</label><select id="at" name="type" className="input"><option value="BODY">The body</option><option value="GARMENT">The garment</option></select></div>
             <div><label className="label" htmlFor="au2">Unit in the source</label><select id="au2" name="unit" className="input"><option value="CM">Centimetres</option><option value="IN">Inches</option></select></div>
-            <div><label className="label" htmlFor="as">Source type</label><select id="as" name="sourceType" className="input"><option value="OFFICIAL_SITE">Official site</option><option value="OFFICIAL_PDF">Official PDF</option><option value="STORE_MEASURED">Measured in store</option><option value="MANUAL_ENTRY">Manual entry</option></select></div>
+            <div><label className="label" htmlFor="as">Source type</label><select id="as" name="sourceType" className="input"><option value="OFFICIAL_SITE">Official site</option><option value="OFFICIAL_PRODUCT_PAGE">Official product page</option><option value="MARKETPLACE_LISTING">Marketplace listing</option><option value="OFFICIAL_PDF">Official PDF</option><option value="STORE_MEASURED">Measured in store</option><option value="MANUAL_ENTRY">Manual entry</option></select></div>
           </div>
           <div>
             <div className="flex items-center justify-between"><label className="label !mb-0" htmlFor="csv">CSV</label>

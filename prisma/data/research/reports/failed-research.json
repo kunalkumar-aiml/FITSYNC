@@ -1,0 +1,114 @@
+[
+  {
+    "brand": "savana",
+    "target": "official size guide (women's tops)",
+    "method": "web_search",
+    "status": "SOURCE_UNAVAILABLE",
+    "date": "2026-11-10",
+    "reason": "Search returned no official savana page; only unrelated third-party brands' charts. Nothing used."
+  },
+  {
+    "brand": "bewakoof",
+    "target": "Myntra product listing size chart",
+    "method": "web_search",
+    "status": "SOURCE_UNAVAILABLE",
+    "date": "2026-11-10",
+    "reason": "Search did not return any Myntra page. Myntra product pages are rendered by JavaScript. No data used."
+  },
+  {
+    "brand": "myntra",
+    "target": "marketplace product listings",
+    "method": "web_search",
+    "status": "SOURCE_UNAVAILABLE",
+    "date": "2026-11-10",
+    "reason": "No Myntra product page was returned by two searches; Myntra pages are JavaScript-rendered. Not circumvented. No data used."
+  },
+  {
+    "brand": "zara",
+    "target": "Zara size guide",
+    "method": "previous_session",
+    "status": "SOURCE_UNAVAILABLE",
+    "date": "2026-11-09",
+    "reason": "Guides render per product page by JavaScript; no official table readable. (not re-attempted in V3 unless stated above)"
+  },
+  {
+    "brand": "hm",
+    "target": "H&M size guide",
+    "method": "previous_session",
+    "status": "SOURCE_UNAVAILABLE",
+    "date": "2026-11-09",
+    "reason": "Guides sit inside product pages; only third-party copies found (not used). (not re-attempted in V3 unless stated above)"
+  },
+  {
+    "brand": "uniqlo",
+    "target": "UNIQLO size chart",
+    "method": "previous_session",
+    "status": "SOURCE_UNAVAILABLE",
+    "date": "2026-11-09",
+    "reason": "Charts are per product page; no brand-wide official table readable. (not re-attempted in V3 unless stated above)"
+  },
+  {
+    "brand": "levis",
+    "target": "Levi's size guide",
+    "method": "previous_session",
+    "status": "SOURCE_UNAVAILABLE",
+    "date": "2026-11-09",
+    "reason": "No official table readable; third-party copies not used. (not re-attempted in V3 unless stated above)"
+  },
+  {
+    "brand": "adidas",
+    "target": "adidas size chart",
+    "method": "previous_session",
+    "status": "SOURCE_UNAVAILABLE",
+    "date": "2026-11-09",
+    "reason": "Only retailer copies found; official table not readable (not used). (not re-attempted in V3 unless stated above)"
+  },
+  {
+    "brand": "puma",
+    "target": "PUMA size chart",
+    "method": "previous_session",
+    "status": "SOURCE_UNAVAILABLE",
+    "date": "2026-11-09",
+    "reason": "Official page exposed only size-conversion tables; body rows only on retailer sites (not used). (not re-attempted in V3 unless stated above)"
+  },
+  {
+    "brand": "snitch",
+    "target": "Snitch size chart",
+    "method": "previous_session",
+    "status": "SOURCE_UNAVAILABLE",
+    "date": "2026-11-09",
+    "reason": "No official chart readable. (not re-attempted in V3 unless stated above)"
+  },
+  {
+    "brand": "the-souled-store",
+    "target": "The Souled Store size chart",
+    "method": "previous_session",
+    "status": "SOURCE_UNAVAILABLE",
+    "date": "2026-11-09",
+    "reason": "No official chart readable. (not re-attempted in V3 unless stated above)"
+  },
+  {
+    "brand": "max-fashion",
+    "target": "Max Fashion size chart",
+    "method": "previous_session",
+    "status": "SOURCE_UNAVAILABLE",
+    "date": "2026-11-09",
+    "reason": "No official chart readable. (not re-attempted in V3 unless stated above)"
+  },
+  {
+    "brand": "westside",
+    "target": "Westside size chart",
+    "method": "previous_session",
+    "status": "SOURCE_UNAVAILABLE",
+    "date": "2026-11-09",
+    "reason": "No official chart readable. (not re-attempted in V3 unless stated above)"
+  },
+  {
+    "brand": "bewakoof",
+    "target": "Bewakoof brand-level size guide",
+    "method": "previous_session",
+    "status": "SOURCE_UNAVAILABLE",
+    "date": "2026-11-09",
+    "reason": "Bewakoof shows charts per product only; no brand-wide official table readable. (not re-attempted in V3 unless stated above)"
+  }
+]

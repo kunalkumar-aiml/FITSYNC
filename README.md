@@ -30,29 +30,41 @@ Pure TypeScript, deterministic, runs on server and in the browser.
 6. Missing required measurement (body or chart) returns `insufficient_data`. Nothing fits returns `no_compatible_size`. Unverified charts cap confidence at 55% and show a warning.
 
 ## Brand size data (real, sourced, never invented)
-- Charts live in `prisma/data/charts.json` and are loaded by `npm run db:seed`. Every chart records its **official source URL**, source type, original unit and retrieval date. Rows are stored in cm; inches are converted on seed/import.
-- Seeded charts are **UNVERIFIED**. A human opens the source URL, compares, and clicks **Verify** in `/admin`. Nothing is ever auto-verified. Verified charts lift the confidence cap.
-- Brands with no retrievable official table are recorded as **DATA UNAVAILABLE** (with the reason). They are shown separately in Compare and never get an invented size.
-- Charts are separated by **gender** (men's / women's / unisex), **region** (IN, GLOBAL, ASIA, ...), **product line** and the garment's **cut**. Men's and women's are never mixed. Body-measurement charts (ranges) and garment-measurement charts are handled differently by the engine.
-- Demo brands (fictional numbers) are only created with `SEED_DEMO=true`, are typed `DEMO`, and are hidden when `NODE_ENV=production` unless `SHOW_DEMO_BRANDS=true`.
+- Charts live in `prisma/data/charts.json`. Every chart records its source URL, domain, source type, extraction method, retrieval date, original unit and verification status. Rows are stored in cm; inches are converted once.
+- Research output: `prisma/data/research/` → `raw/` (as read), `normalized/` (cm JSON), `csv/` (cm CSV + `.meta.json` per chart), `reports/` (coverage, missing data, failed research, source manifest, data quality, source log).
+- **Everything imported is UNVERIFIED.** A human opens the source, compares, and presses Approve in `/admin`. Nothing is auto-verified.
+- **BODY vs GARMENT vs product-specific** are different things. If a page does not say what a number means, that dimension is flagged **AMBIGUOUS** and is excluded from recommendations until an admin resolves it (the decision is logged).
+- **Marketplaces are not brands.** Flipkart/Myntra/Nykaa Man listings are stored per product with the real brand, product name, URL and fit. There is no "Myntra size chart".
+- A **verified product chart overrides** the brand chart for that product. Unverified product charts do not override a verified brand chart.
+- Brands with no retrievable official table show **Data unavailable**.
+- Demo (fictional) brands only exist with `SEED_DEMO=true` and are hidden in production.
 
-### Adding more brands (admin)
-`/admin` → **Import a size chart (CSV)**. Copy the table from the brand's size guide, e.g.
+### Research pipeline (`src/lib/research`)
+`adapters/` (pluggable: `html-table` for official size-guide tables, `marketplace-listing` for product listings) · `extraction/` · `normalization/` · `validation/` · `ingestion/` (runner, merge/dedupe, CSV + metadata writer, reports).
+Statuses: `SUCCESS`, `PARTIAL_SUCCESS`, `SOURCE_UNAVAILABLE`, `ACCESS_RESTRICTED`, `INVALID_DATA`, `NEEDS_HUMAN_VERIFICATION`.
+```bash
+npm run research            # live run for prisma/data/research/targets.json (your machine needs internet)
+npm run research:csv        # charts.json -> csv/, metadata, normalized/, reports/
+npm run research:validate   # provenance, units, duplicates, CSV round-trip (CI runs this)
+npm run research:import     # charts.json -> database (idempotent, UNVERIFIED)
 ```
-label,chest,waist,hips
-S,35-37.5,29-32,35-37.5
-M,37.5-41,32-35,37.5-41
-```
-Pick brand, category, men's/women's, region, whether numbers describe the body or the garment, the source's unit and source URL. Use **Validate & preview** first. Open-ended values (`<31`, `51.5+`) are rejected on purpose. Each import becomes a new unverified version; old versions are kept.
+Safety: https only, allow-listed hosts (`src/lib/research/url-safety.ts`), no IPs/credentials/odd ports, DNS must resolve to public addresses, redirects re-validated, robots.txt honoured, 2 MB / 8 s limits, 401/403/429/CAPTCHA are reported as `ACCESS_RESTRICTED` and never bypassed. Admin jobs: max 5 URLs, rate limited.
+Many brand sites render charts with JavaScript; the pipeline reports those as `SOURCE_UNAVAILABLE` instead of guessing.
 
-### Engine inputs, in plain words
-`preferred fit` (what you want) is separate from `garment cut` (how the brand cuts that garment) and `achieved fit` (what the recommended size should actually give, judged from garment ease; unknown for body-measurement charts). If a brand only sells a relaxed cut and you want slim, you are told no size fits, rather than getting a bad pick.
+### Adding a chart by hand (admin)
+`/admin` → Charts tab (Approve / Reject / Resolve ambiguity / Deprecate / Preview CSV), Research tab (start/retry jobs), Coverage tab (filters + search), Brands & products tab, and **Import a size chart (CSV)** (accepts `size_label,chest_cm,...`, ranges, `_in` per column).
+
+### Engine in plain words
+`preferred fit` (what you want) ≠ `garment cut` (how the brand cuts it) ≠ `achieved fit` (what the size should give; unknown for body charts). The **Fit Match Score** is an experimental heuristic, not a probability, and has not been validated against real purchase/fit data.
 
 ## Project layout
 `src/lib/engine` engine + tests · `src/app/api` REST routes · `src/app/*` pages · `src/components` UI · `prisma/` schema, migrations, seed, `prisma/data/charts.json` · `tests/` API integration tests · `.github/workflows/ci.yml`.
 
 ## Known limitations
-- Only Nike (tops) has official charts so far, and they are unverified until you verify them. All other brands are DATA UNAVAILABLE until charts are added.
+- Official brand-level data exists only for Nike tops (unverified). Three marketplace product charts exist but their chest/shoulder meaning is ambiguous. Everything else is DATA UNAVAILABLE. See `docs/AUDIT-V3.md` and `prisma/data/research/reports/`.
+- Ease allowances and the Fit Match Score are unvalidated until real fit feedback is collected.
+- Ethnic wear and co-ord sets are not supported (no measurement mapping).
+- Research jobs run inline on the server (max 5 URLs); there is no background queue.
 - No email verification or password reset (needs an email provider such as Resend; not built).
 - No Google sign-in (needs OAuth credentials; not built).
 - No product-URL checker or product-measurement pages; no recently-viewed list. Brand + category flow only.

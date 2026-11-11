@@ -1,0 +1,116 @@
+[
+  {
+    "brand": "nike",
+    "category": "tshirt",
+    "gender": "MEN",
+    "region": "ASIA",
+    "product": null,
+    "sourceUrl": "https://www.nike.com/lu/en/size-fit/mens-tops-asian-alpha",
+    "sizes": 8,
+    "measurementType": "BODY",
+    "ambiguousDimensions": [],
+    "usableForRecommendations": true,
+    "verification": "UNVERIFIED",
+    "validationOk": true,
+    "issues": []
+  },
+  {
+    "brand": "nike",
+    "category": "tshirt",
+    "gender": "MEN",
+    "region": "GLOBAL",
+    "product": null,
+    "sourceUrl": "https://www.nike.com/size-fit/mens_tops_alpha",
+    "sizes": 9,
+    "measurementType": "BODY",
+    "ambiguousDimensions": [],
+    "usableForRecommendations": true,
+    "verification": "UNVERIFIED",
+    "validationOk": true,
+    "issues": []
+  },
+  {
+    "brand": "nike",
+    "category": "tshirt",
+    "gender": "WOMEN",
+    "region": "GLOBAL",
+    "product": null,
+    "sourceUrl": "https://www.nike.com/au/size-fit/womens-tops-alpha",
+    "sizes": 7,
+    "measurementType": "BODY",
+    "ambiguousDimensions": [],
+    "usableForRecommendations": true,
+    "verification": "UNVERIFIED",
+    "validationOk": true,
+    "issues": []
+  },
+  {
+    "brand": "nike",
+    "category": "tshirt",
+    "gender": "WOMEN",
+    "region": "ASIA",
+    "product": null,
+    "sourceUrl": "https://www.nike.com/hu/en/size-fit/womens-tops-asian-alpha",
+    "sizes": 7,
+    "measurementType": "BODY",
+    "ambiguousDimensions": [],
+    "usableForRecommendations": true,
+    "verification": "UNVERIFIED",
+    "validationOk": true,
+    "issues": []
+  },
+  {
+    "brand": "bewakoof",
+    "category": "tshirt",
+    "gender": "MEN",
+    "region": "IN",
+    "product": "Bewakoof Men's Purple Beast Within Graphic Printed Oversized T-shirt",
+    "sourceUrl": "https://www.nykaaman.com/bewakoof-men-purple-graphic-oversized-t-shirt/p/10618232",
+    "sizes": 6,
+    "measurementType": "GARMENT",
+    "ambiguousDimensions": [
+      "chest",
+      "shoulder"
+    ],
+    "usableForRecommendations": false,
+    "verification": "UNVERIFIED",
+    "validationOk": true,
+    "issues": []
+  },
+  {
+    "brand": "bewakoof",
+    "category": "tshirt",
+    "gender": "MEN",
+    "region": "IN",
+    "product": "Bewakoof Mens Dark Navy Blue Gyomi Stone Hashira Graphic T-Shirt",
+    "sourceUrl": "https://www.nykaaman.com/bewakoof-mens-dark-navy-blue-gyomi-stone-hashira-graphic-t-shirt/p/17108563",
+    "sizes": 5,
+    "measurementType": "GARMENT",
+    "ambiguousDimensions": [
+      "chest",
+      "shoulder"
+    ],
+    "usableForRecommendations": false,
+    "verification": "UNVERIFIED",
+    "validationOk": true,
+    "issues": []
+  },
+  {
+    "brand": "arbour",
+    "category": "tshirt",
+    "gender": "MEN",
+    "region": "IN",
+    "product": "Arbour Men Military Camouflage Round Neck Cotton Blend Multicolor T-Shirt",
+    "sourceUrl": "https://www.flipkart.com/arbour-military-camouflage-men-round-neck-multicolor-t-shirt/p/itma1b143012298e",
+    "sizes": 10,
+    "measurementType": "GARMENT",
+    "ambiguousDimensions": [
+      "chest",
+      "shoulder"
+    ],
+    "usableForRecommendations": false,
+    "verification": "UNVERIFIED",
+    "validationOk": true,
+    "issues": []
+  }
+]

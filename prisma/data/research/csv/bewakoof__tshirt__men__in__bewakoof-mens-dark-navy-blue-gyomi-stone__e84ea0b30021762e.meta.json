@@ -1,0 +1,44 @@
+{
+  "brand": "bewakoof",
+  "category": "tshirt",
+  "gender": "MEN",
+  "region": "IN",
+  "productLine": "",
+  "fitCut": "REGULAR",
+  "measurementType": "GARMENT",
+  "measurementSemantics": {
+    "chest": "AMBIGUOUS",
+    "shoulder": "AMBIGUOUS",
+    "garmentLength": "GARMENT_LENGTH",
+    "sleeveLength": "GARMENT_LENGTH"
+  },
+  "ambiguousDimensions": [
+    "chest",
+    "shoulder"
+  ],
+  "sourceType": "MARKETPLACE_LISTING",
+  "sourceUrl": "https://www.nykaaman.com/bewakoof-mens-dark-navy-blue-gyomi-stone-hashira-graphic-t-shirt/p/17108563",
+  "sourceDomain": "www.nykaaman.com",
+  "extractionMethod": "WEB_FETCH_TEXT",
+  "retrievedAt": "2026-11-10",
+  "originalUnit": "CM",
+  "storedUnit": "CM",
+  "verificationStatus": "UNVERIFIED",
+  "columnLabels": {},
+  "product": {
+    "name": "Bewakoof Mens Dark Navy Blue Gyomi Stone Hashira Graphic T-Shirt",
+    "marketplace": "nykaa-man",
+    "url": "https://www.nykaaman.com/bewakoof-mens-dark-navy-blue-gyomi-stone-hashira-graphic-t-shirt/p/17108563",
+    "brand": "bewakoof",
+    "fitCutStatedOnListing": false
+  },
+  "notes": "Chest, shoulder and length are labelled on the listing but never defined as body or garment measurements, so chest and shoulder are flagged AMBIGUOUS and excluded from automatic recommendations until a human confirms their meaning. Garment cut is not stated on the listing (REGULAR is a placeholder).",
+  "csvFile": "bewakoof__tshirt__men__in__bewakoof-mens-dark-navy-blue-gyomi-stone__e84ea0b30021762e.csv",
+  "sizeLabels": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ]
+}

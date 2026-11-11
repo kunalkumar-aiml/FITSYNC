@@ -1,0 +1,1682 @@
+[
+  {
+    "brand": "zara",
+    "category": "tshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "zara",
+    "category": "tshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "zara",
+    "category": "shirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "zara",
+    "category": "shirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "zara",
+    "category": "hoodie",
+    "gender": "MEN"
+  },
+  {
+    "brand": "zara",
+    "category": "hoodie",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "zara",
+    "category": "jeans",
+    "gender": "MEN"
+  },
+  {
+    "brand": "zara",
+    "category": "jeans",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "zara",
+    "category": "polo",
+    "gender": "MEN"
+  },
+  {
+    "brand": "zara",
+    "category": "polo",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "zara",
+    "category": "sweatshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "zara",
+    "category": "sweatshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "zara",
+    "category": "jacket",
+    "gender": "MEN"
+  },
+  {
+    "brand": "zara",
+    "category": "jacket",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "zara",
+    "category": "top",
+    "gender": "MEN"
+  },
+  {
+    "brand": "zara",
+    "category": "top",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "zara",
+    "category": "chinos",
+    "gender": "MEN"
+  },
+  {
+    "brand": "zara",
+    "category": "chinos",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "zara",
+    "category": "joggers",
+    "gender": "MEN"
+  },
+  {
+    "brand": "zara",
+    "category": "joggers",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "zara",
+    "category": "shorts",
+    "gender": "MEN"
+  },
+  {
+    "brand": "zara",
+    "category": "shorts",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "zara",
+    "category": "skirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "zara",
+    "category": "skirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "zara",
+    "category": "dress",
+    "gender": "MEN"
+  },
+  {
+    "brand": "zara",
+    "category": "dress",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "hm",
+    "category": "tshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "hm",
+    "category": "tshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "hm",
+    "category": "shirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "hm",
+    "category": "shirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "hm",
+    "category": "hoodie",
+    "gender": "MEN"
+  },
+  {
+    "brand": "hm",
+    "category": "hoodie",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "hm",
+    "category": "jeans",
+    "gender": "MEN"
+  },
+  {
+    "brand": "hm",
+    "category": "jeans",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "hm",
+    "category": "polo",
+    "gender": "MEN"
+  },
+  {
+    "brand": "hm",
+    "category": "polo",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "hm",
+    "category": "sweatshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "hm",
+    "category": "sweatshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "hm",
+    "category": "jacket",
+    "gender": "MEN"
+  },
+  {
+    "brand": "hm",
+    "category": "jacket",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "hm",
+    "category": "top",
+    "gender": "MEN"
+  },
+  {
+    "brand": "hm",
+    "category": "top",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "hm",
+    "category": "chinos",
+    "gender": "MEN"
+  },
+  {
+    "brand": "hm",
+    "category": "chinos",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "hm",
+    "category": "joggers",
+    "gender": "MEN"
+  },
+  {
+    "brand": "hm",
+    "category": "joggers",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "hm",
+    "category": "shorts",
+    "gender": "MEN"
+  },
+  {
+    "brand": "hm",
+    "category": "shorts",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "hm",
+    "category": "skirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "hm",
+    "category": "skirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "hm",
+    "category": "dress",
+    "gender": "MEN"
+  },
+  {
+    "brand": "hm",
+    "category": "dress",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "tshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "tshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "shirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "shirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "hoodie",
+    "gender": "MEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "hoodie",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "jeans",
+    "gender": "MEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "jeans",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "polo",
+    "gender": "MEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "polo",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "sweatshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "sweatshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "jacket",
+    "gender": "MEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "jacket",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "top",
+    "gender": "MEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "top",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "chinos",
+    "gender": "MEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "chinos",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "joggers",
+    "gender": "MEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "joggers",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "shorts",
+    "gender": "MEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "shorts",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "skirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "skirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "dress",
+    "gender": "MEN"
+  },
+  {
+    "brand": "uniqlo",
+    "category": "dress",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "levis",
+    "category": "tshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "levis",
+    "category": "tshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "levis",
+    "category": "shirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "levis",
+    "category": "shirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "levis",
+    "category": "hoodie",
+    "gender": "MEN"
+  },
+  {
+    "brand": "levis",
+    "category": "hoodie",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "levis",
+    "category": "jeans",
+    "gender": "MEN"
+  },
+  {
+    "brand": "levis",
+    "category": "jeans",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "levis",
+    "category": "polo",
+    "gender": "MEN"
+  },
+  {
+    "brand": "levis",
+    "category": "polo",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "levis",
+    "category": "sweatshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "levis",
+    "category": "sweatshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "levis",
+    "category": "jacket",
+    "gender": "MEN"
+  },
+  {
+    "brand": "levis",
+    "category": "jacket",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "levis",
+    "category": "top",
+    "gender": "MEN"
+  },
+  {
+    "brand": "levis",
+    "category": "top",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "levis",
+    "category": "chinos",
+    "gender": "MEN"
+  },
+  {
+    "brand": "levis",
+    "category": "chinos",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "levis",
+    "category": "joggers",
+    "gender": "MEN"
+  },
+  {
+    "brand": "levis",
+    "category": "joggers",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "levis",
+    "category": "shorts",
+    "gender": "MEN"
+  },
+  {
+    "brand": "levis",
+    "category": "shorts",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "levis",
+    "category": "skirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "levis",
+    "category": "skirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "levis",
+    "category": "dress",
+    "gender": "MEN"
+  },
+  {
+    "brand": "levis",
+    "category": "dress",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "nike",
+    "category": "shirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "nike",
+    "category": "shirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "nike",
+    "category": "hoodie",
+    "gender": "MEN"
+  },
+  {
+    "brand": "nike",
+    "category": "hoodie",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "nike",
+    "category": "jeans",
+    "gender": "MEN"
+  },
+  {
+    "brand": "nike",
+    "category": "jeans",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "nike",
+    "category": "polo",
+    "gender": "MEN"
+  },
+  {
+    "brand": "nike",
+    "category": "polo",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "nike",
+    "category": "sweatshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "nike",
+    "category": "sweatshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "nike",
+    "category": "jacket",
+    "gender": "MEN"
+  },
+  {
+    "brand": "nike",
+    "category": "jacket",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "nike",
+    "category": "top",
+    "gender": "MEN"
+  },
+  {
+    "brand": "nike",
+    "category": "top",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "nike",
+    "category": "chinos",
+    "gender": "MEN"
+  },
+  {
+    "brand": "nike",
+    "category": "chinos",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "nike",
+    "category": "joggers",
+    "gender": "MEN"
+  },
+  {
+    "brand": "nike",
+    "category": "joggers",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "nike",
+    "category": "shorts",
+    "gender": "MEN"
+  },
+  {
+    "brand": "nike",
+    "category": "shorts",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "nike",
+    "category": "skirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "nike",
+    "category": "skirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "nike",
+    "category": "dress",
+    "gender": "MEN"
+  },
+  {
+    "brand": "nike",
+    "category": "dress",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "tshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "tshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "shirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "shirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "hoodie",
+    "gender": "MEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "hoodie",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "jeans",
+    "gender": "MEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "jeans",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "polo",
+    "gender": "MEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "polo",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "sweatshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "sweatshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "jacket",
+    "gender": "MEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "jacket",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "top",
+    "gender": "MEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "top",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "chinos",
+    "gender": "MEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "chinos",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "joggers",
+    "gender": "MEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "joggers",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "shorts",
+    "gender": "MEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "shorts",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "skirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "skirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "dress",
+    "gender": "MEN"
+  },
+  {
+    "brand": "adidas",
+    "category": "dress",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "puma",
+    "category": "tshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "puma",
+    "category": "tshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "puma",
+    "category": "shirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "puma",
+    "category": "shirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "puma",
+    "category": "hoodie",
+    "gender": "MEN"
+  },
+  {
+    "brand": "puma",
+    "category": "hoodie",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "puma",
+    "category": "jeans",
+    "gender": "MEN"
+  },
+  {
+    "brand": "puma",
+    "category": "jeans",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "puma",
+    "category": "polo",
+    "gender": "MEN"
+  },
+  {
+    "brand": "puma",
+    "category": "polo",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "puma",
+    "category": "sweatshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "puma",
+    "category": "sweatshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "puma",
+    "category": "jacket",
+    "gender": "MEN"
+  },
+  {
+    "brand": "puma",
+    "category": "jacket",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "puma",
+    "category": "top",
+    "gender": "MEN"
+  },
+  {
+    "brand": "puma",
+    "category": "top",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "puma",
+    "category": "chinos",
+    "gender": "MEN"
+  },
+  {
+    "brand": "puma",
+    "category": "chinos",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "puma",
+    "category": "joggers",
+    "gender": "MEN"
+  },
+  {
+    "brand": "puma",
+    "category": "joggers",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "puma",
+    "category": "shorts",
+    "gender": "MEN"
+  },
+  {
+    "brand": "puma",
+    "category": "shorts",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "puma",
+    "category": "skirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "puma",
+    "category": "skirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "puma",
+    "category": "dress",
+    "gender": "MEN"
+  },
+  {
+    "brand": "puma",
+    "category": "dress",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "tshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "tshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "shirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "shirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "hoodie",
+    "gender": "MEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "hoodie",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "jeans",
+    "gender": "MEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "jeans",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "polo",
+    "gender": "MEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "polo",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "sweatshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "sweatshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "jacket",
+    "gender": "MEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "jacket",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "top",
+    "gender": "MEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "top",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "chinos",
+    "gender": "MEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "chinos",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "joggers",
+    "gender": "MEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "joggers",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "shorts",
+    "gender": "MEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "shorts",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "skirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "skirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "dress",
+    "gender": "MEN"
+  },
+  {
+    "brand": "bewakoof",
+    "category": "dress",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "tshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "tshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "shirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "shirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "hoodie",
+    "gender": "MEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "hoodie",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "jeans",
+    "gender": "MEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "jeans",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "polo",
+    "gender": "MEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "polo",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "sweatshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "sweatshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "jacket",
+    "gender": "MEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "jacket",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "top",
+    "gender": "MEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "top",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "chinos",
+    "gender": "MEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "chinos",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "joggers",
+    "gender": "MEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "joggers",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "shorts",
+    "gender": "MEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "shorts",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "skirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "skirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "dress",
+    "gender": "MEN"
+  },
+  {
+    "brand": "snitch",
+    "category": "dress",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "tshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "tshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "shirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "shirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "hoodie",
+    "gender": "MEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "hoodie",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "jeans",
+    "gender": "MEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "jeans",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "polo",
+    "gender": "MEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "polo",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "sweatshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "sweatshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "jacket",
+    "gender": "MEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "jacket",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "top",
+    "gender": "MEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "top",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "chinos",
+    "gender": "MEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "chinos",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "joggers",
+    "gender": "MEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "joggers",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "shorts",
+    "gender": "MEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "shorts",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "skirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "skirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "dress",
+    "gender": "MEN"
+  },
+  {
+    "brand": "the-souled-store",
+    "category": "dress",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "tshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "tshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "shirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "shirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "hoodie",
+    "gender": "MEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "hoodie",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "jeans",
+    "gender": "MEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "jeans",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "polo",
+    "gender": "MEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "polo",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "sweatshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "sweatshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "jacket",
+    "gender": "MEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "jacket",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "top",
+    "gender": "MEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "top",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "chinos",
+    "gender": "MEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "chinos",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "joggers",
+    "gender": "MEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "joggers",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "shorts",
+    "gender": "MEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "shorts",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "skirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "skirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "dress",
+    "gender": "MEN"
+  },
+  {
+    "brand": "max-fashion",
+    "category": "dress",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "westside",
+    "category": "tshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "westside",
+    "category": "tshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "westside",
+    "category": "shirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "westside",
+    "category": "shirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "westside",
+    "category": "hoodie",
+    "gender": "MEN"
+  },
+  {
+    "brand": "westside",
+    "category": "hoodie",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "westside",
+    "category": "jeans",
+    "gender": "MEN"
+  },
+  {
+    "brand": "westside",
+    "category": "jeans",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "westside",
+    "category": "polo",
+    "gender": "MEN"
+  },
+  {
+    "brand": "westside",
+    "category": "polo",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "westside",
+    "category": "sweatshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "westside",
+    "category": "sweatshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "westside",
+    "category": "jacket",
+    "gender": "MEN"
+  },
+  {
+    "brand": "westside",
+    "category": "jacket",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "westside",
+    "category": "top",
+    "gender": "MEN"
+  },
+  {
+    "brand": "westside",
+    "category": "top",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "westside",
+    "category": "chinos",
+    "gender": "MEN"
+  },
+  {
+    "brand": "westside",
+    "category": "chinos",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "westside",
+    "category": "joggers",
+    "gender": "MEN"
+  },
+  {
+    "brand": "westside",
+    "category": "joggers",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "westside",
+    "category": "shorts",
+    "gender": "MEN"
+  },
+  {
+    "brand": "westside",
+    "category": "shorts",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "westside",
+    "category": "skirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "westside",
+    "category": "skirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "westside",
+    "category": "dress",
+    "gender": "MEN"
+  },
+  {
+    "brand": "westside",
+    "category": "dress",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "savana",
+    "category": "tshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "savana",
+    "category": "tshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "savana",
+    "category": "shirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "savana",
+    "category": "shirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "savana",
+    "category": "hoodie",
+    "gender": "MEN"
+  },
+  {
+    "brand": "savana",
+    "category": "hoodie",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "savana",
+    "category": "jeans",
+    "gender": "MEN"
+  },
+  {
+    "brand": "savana",
+    "category": "jeans",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "savana",
+    "category": "polo",
+    "gender": "MEN"
+  },
+  {
+    "brand": "savana",
+    "category": "polo",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "savana",
+    "category": "sweatshirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "savana",
+    "category": "sweatshirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "savana",
+    "category": "jacket",
+    "gender": "MEN"
+  },
+  {
+    "brand": "savana",
+    "category": "jacket",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "savana",
+    "category": "top",
+    "gender": "MEN"
+  },
+  {
+    "brand": "savana",
+    "category": "top",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "savana",
+    "category": "chinos",
+    "gender": "MEN"
+  },
+  {
+    "brand": "savana",
+    "category": "chinos",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "savana",
+    "category": "joggers",
+    "gender": "MEN"
+  },
+  {
+    "brand": "savana",
+    "category": "joggers",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "savana",
+    "category": "shorts",
+    "gender": "MEN"
+  },
+  {
+    "brand": "savana",
+    "category": "shorts",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "savana",
+    "category": "skirt",
+    "gender": "MEN"
+  },
+  {
+    "brand": "savana",
+    "category": "skirt",
+    "gender": "WOMEN"
+  },
+  {
+    "brand": "savana",
+    "category": "dress",
+    "gender": "MEN"
+  },
+  {
+    "brand": "savana",
+    "category": "dress",
+    "gender": "WOMEN"
+  }
+]

@@ -1,0 +1,33 @@
+{
+  "brand": "nike",
+  "category": "tshirt",
+  "gender": "MEN",
+  "region": "ASIA",
+  "productLine": "Tops & T-shirts (Asian sizing)",
+  "fitCut": "REGULAR",
+  "measurementType": "BODY",
+  "measurementSemantics": {},
+  "ambiguousDimensions": [],
+  "sourceType": "OFFICIAL_SITE",
+  "sourceUrl": "https://www.nike.com/lu/en/size-fit/mens-tops-asian-alpha",
+  "sourceDomain": "www.nike.com",
+  "extractionMethod": "WEB_FETCH_TEXT",
+  "retrievedAt": "2026-11-09",
+  "originalUnit": "IN",
+  "storedUnit": "CM",
+  "verificationStatus": "UNVERIFIED",
+  "columnLabels": {},
+  "product": null,
+  "notes": "Nike size & fit page. Body measurements. Open-ended sizes XXS (<31) and 5XL (51.5+) omitted. Values as printed, incl. 4XL waist 43-45. Retrieved 2026-11-09.",
+  "csvFile": "nike__tshirt__men__asia__5e198eb563831a70.csv",
+  "sizeLabels": [
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL",
+    "4XL"
+  ]
+}

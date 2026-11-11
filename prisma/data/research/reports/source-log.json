@@ -1,0 +1,191 @@
+[
+ {
+  "brand": "savana",
+  "target": "official size guide (women's tops)",
+  "method": "web_search",
+  "status": "SOURCE_UNAVAILABLE",
+  "date": "2026-11-10",
+  "reason": "Search returned no official savana page; only unrelated third-party brands' charts. Nothing used."
+ },
+ {
+  "brand": "nike",
+  "target": "womens-tops-alpha (nike.com/au)",
+  "method": "web_search_snippet",
+  "status": "SUCCESS",
+  "date": "2026-11-10",
+  "url": "https://www.nike.com/au/size-fit/womens-tops-alpha",
+  "reason": "Official Nike page text confirmed bust and waist rows for XXS-XXL (body measurements, inches)."
+ },
+ {
+  "brand": "nike",
+  "target": "womens-tops-asian-alpha (nike.com/hu)",
+  "method": "web_search_snippet",
+  "status": "PARTIAL_SUCCESS",
+  "date": "2026-11-10",
+  "url": "https://www.nike.com/hu/en/size-fit/womens-tops-asian-alpha",
+  "reason": "Bust and waist rows complete XXS-XXL; hip row truncated in retrieved text, so hips omitted."
+ },
+ {
+  "brand": "bewakoof",
+  "target": "Myntra product listing size chart",
+  "method": "web_search",
+  "status": "SOURCE_UNAVAILABLE",
+  "date": "2026-11-10",
+  "reason": "Search did not return any Myntra page. Myntra product pages are rendered by JavaScript. No data used."
+ },
+ {
+  "brand": "bewakoof",
+  "target": "Nykaa Man listing: Purple Beast Within oversized tee",
+  "method": "web_fetch",
+  "status": "NEEDS_HUMAN_VERIFICATION",
+  "date": "2026-11-10",
+  "url": "https://www.nykaaman.com/bewakoof-men-purple-graphic-oversized-t-shirt/p/10618232",
+  "reason": "Complete S-3XL table (chest/shoulder/length, cm) retrieved, but the page does not define whether chest/shoulder are garment or body measurements. Stored as product-specific with chest and shoulder flagged AMBIGUOUS, so they are excluded from automatic recommendations."
+ },
+ {
+  "brand": "bewakoof",
+  "target": "Nykaa Man listings (6 other Bewakoof products seen in search)",
+  "method": "web_search_snippet",
+  "status": "PARTIAL_SUCCESS",
+  "date": "2026-11-10",
+  "reason": "Snippets showed measurement values without size labels. Not stored. Only the fully fetched listing is used."
+ },
+ {
+  "brand": "bewakoof",
+  "target": "Nykaa Man listing: Gyomi Stone Hashira tee",
+  "method": "web_fetch",
+  "status": "NEEDS_HUMAN_VERIFICATION",
+  "date": "2026-11-10",
+  "url": "https://www.nykaaman.com/bewakoof-mens-dark-navy-blue-gyomi-stone-hashira-graphic-t-shirt/p/17108563",
+  "reason": "Complete S-2XL table retrieved (chest/shoulder/length/sleeve, cm). Semantics of chest/shoulder and the garment's cut are not stated, so chest and shoulder are flagged AMBIGUOUS."
+ },
+ {
+  "brand": "arbour",
+  "target": "Flipkart listing: Military Camouflage tee",
+  "method": "web_search_snippet",
+  "status": "NEEDS_HUMAN_VERIFICATION",
+  "date": "2026-11-10",
+  "url": "https://www.flipkart.com/arbour-military-camouflage-men-round-neck-multicolor-t-shirt/p/itma1b143012298e",
+  "reason": "Complete M-8XL table with labelled chest/length/shoulder (inch) and 'Slim fit'. Chest/shoulder semantics not stated, so flagged AMBIGUOUS."
+ },
+ {
+  "brand": "flipkart",
+  "target": "marketplace-wide size chart",
+  "method": "policy",
+  "status": "NOT_APPLICABLE",
+  "date": "2026-11-10",
+  "reason": "Flipkart is a marketplace. Only product-listing charts are stored, each with its actual brand. No generic Flipkart chart exists."
+ },
+ {
+  "brand": "myntra",
+  "target": "marketplace product listings",
+  "method": "web_search",
+  "status": "SOURCE_UNAVAILABLE",
+  "date": "2026-11-10",
+  "reason": "No Myntra product page was returned by two searches; Myntra pages are JavaScript-rendered. Not circumvented. No data used."
+ },
+ {
+  "brand": "zara",
+  "target": "Zara size guide",
+  "method": "previous_session",
+  "status": "SOURCE_UNAVAILABLE",
+  "date": "2026-11-09",
+  "reason": "Guides render per product page by JavaScript; no official table readable. (not re-attempted in V3 unless stated above)"
+ },
+ {
+  "brand": "hm",
+  "target": "H&M size guide",
+  "method": "previous_session",
+  "status": "SOURCE_UNAVAILABLE",
+  "date": "2026-11-09",
+  "reason": "Guides sit inside product pages; only third-party copies found (not used). (not re-attempted in V3 unless stated above)"
+ },
+ {
+  "brand": "uniqlo",
+  "target": "UNIQLO size chart",
+  "method": "previous_session",
+  "status": "SOURCE_UNAVAILABLE",
+  "date": "2026-11-09",
+  "reason": "Charts are per product page; no brand-wide official table readable. (not re-attempted in V3 unless stated above)"
+ },
+ {
+  "brand": "levis",
+  "target": "Levi's size guide",
+  "method": "previous_session",
+  "status": "SOURCE_UNAVAILABLE",
+  "date": "2026-11-09",
+  "reason": "No official table readable; third-party copies not used. (not re-attempted in V3 unless stated above)"
+ },
+ {
+  "brand": "adidas",
+  "target": "adidas size chart",
+  "method": "previous_session",
+  "status": "SOURCE_UNAVAILABLE",
+  "date": "2026-11-09",
+  "reason": "Only retailer copies found; official table not readable (not used). (not re-attempted in V3 unless stated above)"
+ },
+ {
+  "brand": "puma",
+  "target": "PUMA size chart",
+  "method": "previous_session",
+  "status": "SOURCE_UNAVAILABLE",
+  "date": "2026-11-09",
+  "reason": "Official page exposed only size-conversion tables; body rows only on retailer sites (not used). (not re-attempted in V3 unless stated above)"
+ },
+ {
+  "brand": "snitch",
+  "target": "Snitch size chart",
+  "method": "previous_session",
+  "status": "SOURCE_UNAVAILABLE",
+  "date": "2026-11-09",
+  "reason": "No official chart readable. (not re-attempted in V3 unless stated above)"
+ },
+ {
+  "brand": "the-souled-store",
+  "target": "The Souled Store size chart",
+  "method": "previous_session",
+  "status": "SOURCE_UNAVAILABLE",
+  "date": "2026-11-09",
+  "reason": "No official chart readable. (not re-attempted in V3 unless stated above)"
+ },
+ {
+  "brand": "max-fashion",
+  "target": "Max Fashion size chart",
+  "method": "previous_session",
+  "status": "SOURCE_UNAVAILABLE",
+  "date": "2026-11-09",
+  "reason": "No official chart readable. (not re-attempted in V3 unless stated above)"
+ },
+ {
+  "brand": "westside",
+  "target": "Westside size chart",
+  "method": "previous_session",
+  "status": "SOURCE_UNAVAILABLE",
+  "date": "2026-11-09",
+  "reason": "No official chart readable. (not re-attempted in V3 unless stated above)"
+ },
+ {
+  "brand": "bewakoof",
+  "target": "Bewakoof brand-level size guide",
+  "method": "previous_session",
+  "status": "SOURCE_UNAVAILABLE",
+  "date": "2026-11-09",
+  "reason": "Bewakoof shows charts per product only; no brand-wide official table readable. (not re-attempted in V3 unless stated above)"
+ },
+ {
+  "brand": "nike",
+  "target": "Nike men's tops alpha (nike.com)",
+  "method": "previous_session",
+  "status": "SUCCESS",
+  "date": "2026-11-09",
+  "reason": "Official table read (chest/waist/hip, body, inches). Re-confirmed chest row in V3 search. (not re-attempted in V3 unless stated above)"
+ },
+ {
+  "brand": "nike",
+  "target": "Nike men's tops Asian sizing",
+  "method": "previous_session",
+  "status": "SUCCESS",
+  "date": "2026-11-09",
+  "reason": "Official table read; open-ended XXS and 5XL omitted. (not re-attempted in V3 unless stated above)"
+ }
+]

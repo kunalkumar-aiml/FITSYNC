@@ -51,7 +51,7 @@ export function CompareClient({ categories, defaultFit, defaultGender }: { categ
           <div className="card mt-6 overflow-x-auto" aria-live="polite">
             <table className="w-full text-sm">
               <caption className="sr-only">Recommended {data.category.name} size per brand, {FIT_NAMES[data.fitPreference]} fit</caption>
-              <thead><tr className="text-left text-muted border-b border-line"><th className="p-4 font-medium">Brand</th><th className="p-4 font-medium">Size</th><th className="p-4 font-medium">Fit</th><th className="p-4 font-medium">Confidence</th></tr></thead>
+              <thead><tr className="text-left text-muted border-b border-line"><th className="p-4 font-medium">Brand</th><th className="p-4 font-medium">Size</th><th className="p-4 font-medium">Fit</th><th className="p-4 font-medium">Fit match score (exp.)</th></tr></thead>
               <tbody>
                 {data.rows.map((r) => (
                   <tr key={r.brand.slug} className="border-b border-line/60 last:border-0 align-top">
@@ -60,7 +60,7 @@ export function CompareClient({ categories, defaultFit, defaultGender }: { categ
                       <>
                         <td className="p-4 text-2xl font-semibold">{r.result.recommendedSize}</td>
                         <td className="p-4"><div className="flex flex-wrap gap-1.5">{Object.entries(r.result.compatibility).map(([d, l]) => <span key={d} title={DIM_NAMES[d]}><FitChip label={l!} /></span>)}</div><div className="mt-1 text-xs text-muted">{Object.keys(r.result.compatibility).map((d) => DIM_NAMES[d]).join(" · ")}</div></td>
-                        <td className="p-4 tabular-nums">{Math.round(r.result.confidence * 100)}%</td>
+                        <td className="p-4 tabular-nums">{Math.round(r.result.fitMatchScore * 100)}%</td>
                       </>
                     ) : (
                       <td colSpan={3} className="p-4 text-muted">{r.result.status === "invalid_input" ? r.result.errors[0] : r.result.explanation}</td>

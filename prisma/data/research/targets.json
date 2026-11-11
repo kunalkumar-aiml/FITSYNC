@@ -1,0 +1,8 @@
+[
+ {"brand":"nike","category":"tshirt","gender":"MEN","region":"GLOBAL","url":"https://www.nike.com/size-fit/mens_tops_alpha"},
+ {"brand":"nike","category":"tshirt","gender":"WOMEN","region":"GLOBAL","url":"https://www.nike.com/au/size-fit/womens-tops-alpha"},
+ {"brand":"nike","category":"tshirt","gender":"WOMEN","region":"ASIA","url":"https://www.nike.com/hu/en/size-fit/womens-tops-asian-alpha"},
+ {"brand":"bewakoof","category":"tshirt","gender":"MEN","region":"IN","marketplace":"nykaa-man","productName":"Bewakoof Men's Purple Beast Within Graphic Printed Oversized T-shirt","fitCut":"OVERSIZED","url":"https://www.nykaaman.com/bewakoof-men-purple-graphic-oversized-t-shirt/p/10618232"},
+ {"brand":"bewakoof","category":"tshirt","gender":"MEN","region":"IN","marketplace":"nykaa-man","productName":"Bewakoof Mens Dark Navy Blue Gyomi Stone Hashira Graphic T-Shirt","url":"https://www.nykaaman.com/bewakoof-mens-dark-navy-blue-gyomi-stone-hashira-graphic-t-shirt/p/17108563"},
+ {"brand":"arbour","category":"tshirt","gender":"MEN","region":"IN","marketplace":"flipkart","productName":"Arbour Men Military Camouflage Round Neck Cotton Blend Multicolor T-Shirt","url":"https://www.flipkart.com/arbour-military-camouflage-men-round-neck-multicolor-t-shirt/p/itma1b143012298e"}
+]

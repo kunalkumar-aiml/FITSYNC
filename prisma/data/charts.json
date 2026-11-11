@@ -85,7 +85,11 @@
      "hips": 46.5,
      "hipsMax": 48.5
     }
-   ]
+   ],
+   "extractionMethod": "WEB_FETCH_TEXT",
+   "verificationStatus": "UNVERIFIED",
+   "sourceDomain": "www.nike.com",
+   "retrievedAt": "2026-11-09"
   },
   {
    "brand": "nike",
@@ -181,7 +185,11 @@
      "hips": 53.5,
      "hipsMax": 58.5
     }
-   ]
+   ],
+   "extractionMethod": "WEB_SEARCH_SNIPPET",
+   "verificationStatus": "UNVERIFIED",
+   "sourceDomain": "www.nike.com",
+   "retrievedAt": "2026-11-09"
   },
   {
    "brand": "nike",
@@ -193,9 +201,18 @@
    "measurementType": "BODY",
    "unit": "IN",
    "sourceType": "OFFICIAL_SITE",
-   "sourceUrl": "https://www.nike.com/size-fit/womens-tops-alpha",
-   "sourceNote": "Nike size & fit page, body measurements (bust/waist/hip in inches), XS-XXL. Values cross-checked against a retailer copy of the same chart; hip row matches Nike HK's official page. Needs a human check against the live page before verifying. Retrieved 2026-11-09.",
+   "sourceUrl": "https://www.nike.com/au/size-fit/womens-tops-alpha",
+   "sourceNote": "Nike size & fit page, body measurements (bust/waist/hip, inches), XXS-XXL. V3 re-read on nike.com/au confirmed every bust and waist value; hip row cross-checked with Nike HK's official page. Retrieved 2026-11-10.",
    "rows": [
+    {
+     "label": "XXS",
+     "chest": 27.5,
+     "chestMax": 29.5,
+     "waist": 21.25,
+     "waistMax": 23.5,
+     "hips": 30.5,
+     "hipsMax": 33
+    },
     {
      "label": "XS",
      "chest": 29.5,
@@ -250,6 +267,323 @@
      "hips": 47,
      "hipsMax": 50
     }
+   ],
+   "extractionMethod": "WEB_SEARCH_SNIPPET",
+   "verificationStatus": "UNVERIFIED",
+   "sourceDomain": "www.nike.com",
+   "retrievedAt": "2026-11-10",
+   "columnLabels": {
+    "chest": "Bust"
+   }
+  },
+  {
+   "brand": "nike",
+   "category": "tshirt",
+   "gender": "WOMEN",
+   "region": "ASIA",
+   "productLine": "Women's Tops & T-shirts (Asian sizing)",
+   "fitCut": "REGULAR",
+   "measurementType": "BODY",
+   "unit": "IN",
+   "sourceType": "OFFICIAL_SITE",
+   "sourceUrl": "https://www.nike.com/hu/en/size-fit/womens-tops-asian-alpha",
+   "sourceDomain": "www.nike.com",
+   "extractionMethod": "WEB_SEARCH_SNIPPET",
+   "verificationStatus": "UNVERIFIED",
+   "retrievedAt": "2026-11-10",
+   "columnLabels": {
+    "chest": "Bust"
+   },
+   "sourceNote": "Nike size & fit page: 'The measurements on the size chart are body measurements.' Bust and waist rows XXS-XXL. Hip row was truncated in the retrieved text, so hips are omitted rather than guessed.",
+   "rows": [
+    {
+     "label": "XXS",
+     "chest": 28.5,
+     "chestMax": 30,
+     "waist": 24.5,
+     "waistMax": 26
+    },
+    {
+     "label": "XS",
+     "chest": 30,
+     "chestMax": 32,
+     "waist": 26,
+     "waistMax": 27
+    },
+    {
+     "label": "S",
+     "chest": 32,
+     "chestMax": 33.5,
+     "waist": 27,
+     "waistMax": 28
+    },
+    {
+     "label": "M",
+     "chest": 33.5,
+     "chestMax": 35,
+     "waist": 28,
+     "waistMax": 29.5
+    },
+    {
+     "label": "L",
+     "chest": 35,
+     "chestMax": 37.5,
+     "waist": 29.5,
+     "waistMax": 31.5
+    },
+    {
+     "label": "XL",
+     "chest": 37.5,
+     "chestMax": 40,
+     "waist": 31.5,
+     "waistMax": 33.5
+    },
+    {
+     "label": "XXL",
+     "chest": 40,
+     "chestMax": 42.5,
+     "waist": 33.5,
+     "waistMax": 35.5
+    }
+   ]
+  },
+  {
+   "brand": "bewakoof",
+   "category": "tshirt",
+   "gender": "MEN",
+   "region": "IN",
+   "productLine": "",
+   "fitCut": "OVERSIZED",
+   "measurementType": "GARMENT",
+   "unit": "CM",
+   "sourceType": "MARKETPLACE_LISTING",
+   "sourceUrl": "https://www.nykaaman.com/bewakoof-men-purple-graphic-oversized-t-shirt/p/10618232",
+   "sourceDomain": "www.nykaaman.com",
+   "extractionMethod": "WEB_FETCH_TEXT",
+   "verificationStatus": "UNVERIFIED",
+   "retrievedAt": "2026-11-10",
+   "product": {
+    "name": "Bewakoof Men's Purple Beast Within Graphic Printed Oversized T-shirt",
+    "marketplace": "nykaa-man",
+    "url": "https://www.nykaaman.com/bewakoof-men-purple-graphic-oversized-t-shirt/p/10618232",
+    "brand": "bewakoof",
+    "fitCutStatedOnListing": false
+   },
+   "measurementSemantics": {
+    "chest": "AMBIGUOUS",
+    "shoulder": "AMBIGUOUS",
+    "garmentLength": "GARMENT_LENGTH",
+    "sleeveLength": "GARMENT_LENGTH"
+   },
+   "ambiguousDimensions": [
+    "chest",
+    "shoulder"
+   ],
+   "sourceNote": "Chest, shoulder and length are labelled on the listing but never defined as body or garment measurements, so chest and shoulder are flagged AMBIGUOUS and excluded from automatic recommendations until a human confirms their meaning. Cut taken from the product title (the product title says Oversized).",
+   "rows": [
+    {
+     "label": "S",
+     "chest": 106.7,
+     "shoulder": 52.1,
+     "garmentLength": 73.7
+    },
+    {
+     "label": "M",
+     "chest": 111.8,
+     "shoulder": 54.0,
+     "garmentLength": 75.6
+    },
+    {
+     "label": "L",
+     "chest": 116.8,
+     "shoulder": 55.9,
+     "garmentLength": 77.5
+    },
+    {
+     "label": "XL",
+     "chest": 121.9,
+     "shoulder": 57.8,
+     "garmentLength": 79.4
+    },
+    {
+     "label": "2XL",
+     "chest": 127,
+     "shoulder": 59.7,
+     "garmentLength": 81.3
+    },
+    {
+     "label": "3XL",
+     "chest": 132.1,
+     "shoulder": 61.6,
+     "garmentLength": 83.2
+    }
+   ]
+  },
+  {
+   "brand": "bewakoof",
+   "category": "tshirt",
+   "gender": "MEN",
+   "region": "IN",
+   "productLine": "",
+   "fitCut": "REGULAR",
+   "measurementType": "GARMENT",
+   "unit": "CM",
+   "sourceType": "MARKETPLACE_LISTING",
+   "sourceUrl": "https://www.nykaaman.com/bewakoof-mens-dark-navy-blue-gyomi-stone-hashira-graphic-t-shirt/p/17108563",
+   "sourceDomain": "www.nykaaman.com",
+   "extractionMethod": "WEB_FETCH_TEXT",
+   "verificationStatus": "UNVERIFIED",
+   "retrievedAt": "2026-11-10",
+   "product": {
+    "name": "Bewakoof Mens Dark Navy Blue Gyomi Stone Hashira Graphic T-Shirt",
+    "marketplace": "nykaa-man",
+    "url": "https://www.nykaaman.com/bewakoof-mens-dark-navy-blue-gyomi-stone-hashira-graphic-t-shirt/p/17108563",
+    "brand": "bewakoof",
+    "fitCutStatedOnListing": false
+   },
+   "measurementSemantics": {
+    "chest": "AMBIGUOUS",
+    "shoulder": "AMBIGUOUS",
+    "garmentLength": "GARMENT_LENGTH",
+    "sleeveLength": "GARMENT_LENGTH"
+   },
+   "ambiguousDimensions": [
+    "chest",
+    "shoulder"
+   ],
+   "sourceNote": "Chest, shoulder and length are labelled on the listing but never defined as body or garment measurements, so chest and shoulder are flagged AMBIGUOUS and excluded from automatic recommendations until a human confirms their meaning. Garment cut is not stated on the listing (REGULAR is a placeholder).",
+   "rows": [
+    {
+     "label": "S",
+     "chest": 96.5,
+     "shoulder": 42.5,
+     "garmentLength": 69.2,
+     "sleeveLength": 20.3
+    },
+    {
+     "label": "M",
+     "chest": 101.6,
+     "shoulder": 44.5,
+     "garmentLength": 71.1,
+     "sleeveLength": 21.0
+    },
+    {
+     "label": "L",
+     "chest": 106.7,
+     "shoulder": 46.4,
+     "garmentLength": 73.0,
+     "sleeveLength": 21.6
+    },
+    {
+     "label": "XL",
+     "chest": 111.8,
+     "shoulder": 48.3,
+     "garmentLength": 74.9,
+     "sleeveLength": 22.2
+    },
+    {
+     "label": "2XL",
+     "chest": 116.8,
+     "shoulder": 50.2,
+     "garmentLength": 76.2,
+     "sleeveLength": 22.9
+    }
+   ]
+  },
+  {
+   "brand": "arbour",
+   "category": "tshirt",
+   "gender": "MEN",
+   "region": "IN",
+   "productLine": "",
+   "fitCut": "SLIM",
+   "measurementType": "GARMENT",
+   "unit": "IN",
+   "sourceType": "MARKETPLACE_LISTING",
+   "sourceUrl": "https://www.flipkart.com/arbour-military-camouflage-men-round-neck-multicolor-t-shirt/p/itma1b143012298e",
+   "sourceDomain": "www.flipkart.com",
+   "extractionMethod": "WEB_SEARCH_SNIPPET",
+   "verificationStatus": "UNVERIFIED",
+   "retrievedAt": "2026-11-10",
+   "product": {
+    "name": "Arbour Men Military Camouflage Round Neck Cotton Blend Multicolor T-Shirt",
+    "marketplace": "flipkart",
+    "url": "https://www.flipkart.com/arbour-military-camouflage-men-round-neck-multicolor-t-shirt/p/itma1b143012298e",
+    "brand": "arbour",
+    "fitCutStatedOnListing": true
+   },
+   "measurementSemantics": {
+    "chest": "AMBIGUOUS",
+    "shoulder": "AMBIGUOUS",
+    "garmentLength": "GARMENT_LENGTH",
+    "sleeveLength": "GARMENT_LENGTH"
+   },
+   "ambiguousDimensions": [
+    "chest",
+    "shoulder"
+   ],
+   "sourceNote": "Listing states 'Slim fit' and 'runs one size smaller'. Chest/shoulder/length are labelled in inches but not defined as body or garment measurements, so chest and shoulder are flagged AMBIGUOUS and excluded from automatic recommendations until a human confirms their meaning.",
+   "rows": [
+    {
+     "label": "M",
+     "chest": 36,
+     "garmentLength": 28,
+     "shoulder": 16
+    },
+    {
+     "label": "L",
+     "chest": 38,
+     "garmentLength": 28.5,
+     "shoulder": 17
+    },
+    {
+     "label": "XL",
+     "chest": 40,
+     "garmentLength": 29.5,
+     "shoulder": 18
+    },
+    {
+     "label": "XXL",
+     "chest": 42,
+     "garmentLength": 30,
+     "shoulder": 19
+    },
+    {
+     "label": "3XL",
+     "chest": 44,
+     "garmentLength": 30.5,
+     "shoulder": 19.5
+    },
+    {
+     "label": "4XL",
+     "chest": 46,
+     "garmentLength": 31,
+     "shoulder": 20
+    },
+    {
+     "label": "5XL",
+     "chest": 48,
+     "garmentLength": 31.5,
+     "shoulder": 20.5
+    },
+    {
+     "label": "6XL",
+     "chest": 50,
+     "garmentLength": 32,
+     "shoulder": 21
+    },
+    {
+     "label": "7XL",
+     "chest": 52,
+     "garmentLength": 32.5,
+     "shoulder": 22
+    },
+    {
+     "label": "8XL",
+     "chest": 54,
+     "garmentLength": 33,
+     "shoulder": 22.5
+    }
    ]
   }
  ],
@@ -279,10 +613,6 @@
    "note": "PUMA's official page exposed only size-conversion tables (DE/UK/US). Body-measurement rows appeared only on retailer sites, which are not used."
   },
   {
-   "brand": "bewakoof",
-   "note": "Bewakoof shows size charts per product (garment measurements). No brand-wide official table was retrievable."
-  },
-  {
    "brand": "snitch",
    "note": "No official size chart could be retrieved."
   },
@@ -301,7 +631,45 @@
   {
    "brand": "nike",
    "note": "Only tops (T-shirt) charts have been added. Shirts, hoodies and trousers are not yet added for Nike."
+  },
+  {
+   "brand": "savana",
+   "note": "No official Savana size chart could be retrieved."
+  },
+  {
+   "brand": "bewakoof",
+   "note": "Bewakoof publishes charts per product. Two product-specific charts (via Nykaa Man) are stored, but their chest/shoulder meaning is ambiguous, so they cannot drive recommendations yet."
   }
  ],
- "researchedAt": "2026-11-09"
+ "researchedAt": "2026-11-10",
+ "marketplaces": [
+  {
+   "slug": "nykaa-man",
+   "name": "Nykaa Man",
+   "domain": "www.nykaaman.com"
+  },
+  {
+   "slug": "flipkart",
+   "name": "Flipkart",
+   "domain": "www.flipkart.com"
+  },
+  {
+   "slug": "myntra",
+   "name": "Myntra",
+   "domain": "www.myntra.com"
+  }
+ ],
+ "extraBrands": [
+  {
+   "slug": "savana",
+   "name": "Savana",
+   "region": "INDIAN"
+  },
+  {
+   "slug": "arbour",
+   "name": "Arbour",
+   "region": "INDIAN",
+   "discoveredVia": "flipkart listing"
+  }
+ ]
 }

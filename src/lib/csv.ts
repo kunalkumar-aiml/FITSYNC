@@ -1,6 +1,8 @@
-import { DIMENSIONS, LIMITS, round1, toCm, type ChartRow, type Dimension, type Unit } from "./engine";
+import { DIMENSIONS, GARMENT_LIMITS, GARMENT_ONLY_DIMENSIONS, LIMITS, round1, toCm, type ChartRow, type Dimension, type GarmentOnlyDimension, type Unit } from "./engine";
 
-export type CsvResult = { rows: ChartRow[]; errors: string[]; dimensions: Dimension[] };
+const ALL_KEYS: (Dimension | GarmentOnlyDimension)[] = [...DIMENSIONS, ...GARMENT_ONLY_DIMENSIONS];
+
+export type CsvResult = { rows: ChartRow[]; errors: string[]; dimensions: (Dimension | GarmentOnlyDimension)[] };
 
 const RANGE = /^\s*(\d+(?:[.,]\d+)?)\s*(?:-|–|—|to)\s*(\d+(?:[.,]\d+)?)\s*$/i;
 const NUM = /^\s*(\d+(?:[.,]\d+)?)\s*$/;
@@ -27,8 +29,9 @@ function splitLine(line: string, delim: string): string[] {
 /**
  * Parse a size chart pasted/uploaded as CSV.
  *
- * Header: `label` then any of: chest, waist, hips, shoulder, armLength, inseam, neck, thigh,
- * optionally `<dim>_min` / `<dim>_max`. A cell can be a single number (35), or a range (35-37.5 or 35 to 37.5).
+ * Header: `label` (or `size_label`) then any of: chest, waist, hips, shoulder, armLength, inseam, neck, thigh
+ * (garment-only: garmentLength, sleeveLength, rise, legOpening), optionally `<dim>_min` / `<dim>_max`, optionally with a
+ * `_cm` / `_in` suffix that overrides the unit for that column (snake_case such as arm_length_min_cm also works). A cell can be a single number (35), or a range (35-37.5 or 35 to 37.5).
  * Open-ended cells (<31, 51.5+) are rejected on purpose: we never invent a missing bound.
  * Values are converted to cm using `unit`.
  */
@@ -40,20 +43,20 @@ export function parseChartCsv(text: string, unit: Unit): CsvResult {
 
   const delim = lines[0].l.includes("\t") ? "\t" : lines[0].l.includes(";") && !lines[0].l.includes(",") ? ";" : ",";
   const header = splitLine(lines[0].l, delim).map((h) => h.trim());
-  if (header[0]?.toLowerCase() !== "label") errors.push(`Line ${lines[0].n}: the first column must be "label".`);
+  if (!["label", "size_label"].includes(header[0]?.toLowerCase())) errors.push(`Line ${lines[0].n}: the first column must be "label".`);
 
-  type Col = { idx: number; dim: Dimension; part: "single" | "min" | "max" };
+  type Col = { idx: number; dim: Dimension | GarmentOnlyDimension; part: "single" | "min" | "max"; unit: Unit };
   const cols: Col[] = [];
   header.slice(1).forEach((h, i) => {
-    const m = /^([a-zA-Z]+?)(?:_(min|max))?$/.exec(h);
-    const dim = DIMENSIONS.find((d) => d.toLowerCase() === m?.[1]?.toLowerCase());
-    if (!m || !dim) errors.push(`Line ${lines[0].n}: unknown column "${h}". Use: ${DIMENSIONS.join(", ")} (optionally with _min/_max).`);
-    else cols.push({ idx: i + 1, dim, part: (m[2] as "min" | "max" | undefined) ?? "single" });
+    const m = /^(.*?)(?:_(min|max))?(?:_(cm|in))?$/i.exec(h);
+    const key = m?.[1]?.replace(/_/g, "").toLowerCase();
+    const dim = ALL_KEYS.find((d) => d.toLowerCase() === key);
+    if (!m || !dim) errors.push(`Line ${lines[0].n}: unknown column "${h}". Use: ${ALL_KEYS.join(", ")} (optionally with _min/_max and _cm/_in).`);
+    else cols.push({ idx: i + 1, dim, part: (m[2]?.toLowerCase() as "min" | "max" | undefined) ?? "single", unit: m[3] ? (m[3].toLowerCase() === "in" ? "IN" : "CM") : unit });
   });
   if (!cols.length && !errors.length) errors.push("No measurement columns found.");
   if (errors.length) return { rows: [], errors, dimensions: [] };
 
-  const conv = (v: number) => round1(toCm(v, unit));
   const rows: ChartRow[] = [];
   const seen = new Set<string>();
 
@@ -76,10 +79,11 @@ export function parseChartCsv(text: string, unit: Unit): CsvResult {
       else if (s) { lo = num(s[1]); }
       else { errors.push(`Line ${n}: "${raw}" in ${c.dim} is not a number or a range (open-ended values like "<31" or "51.5+" are not accepted).`); continue; }
       if (hi !== undefined && hi < lo) { errors.push(`Line ${n}: ${c.dim} range ${raw} has min above max.`); continue; }
-      const [min, max] = LIMITS[c.dim];
+      const [min, max] = (LIMITS as Record<string, [number, number]>)[c.dim] ?? (GARMENT_LIMITS as Record<string, [number, number]>)[c.dim];
+      const conv = (v: number) => round1(toCm(v, c.unit));
       for (const v of [lo, hi].filter((x): x is number => x !== undefined)) {
         const cm = conv(v);
-        if (cm < min * 0.5 || cm > max * 1.6) errors.push(`Line ${n}: ${c.dim} ${raw} (${cm} cm) looks wrong. Check the unit.`);
+        if (cm < min * 0.7 || cm > max * 1.6) errors.push(`Line ${n}: ${c.dim} ${raw} (${cm} cm) looks wrong. Check the unit.`);
       }
       if (c.part === "max") row[`${c.dim}Max`] = conv(lo);
       else { row[c.dim] = conv(lo); if (hi !== undefined) row[`${c.dim}Max`] = conv(hi); }

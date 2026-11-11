@@ -5,6 +5,13 @@ export const DIMENSIONS: Dimension[] = [
   "chest", "waist", "hips", "shoulder", "armLength", "inseam", "neck", "thigh",
 ];
 
+/**
+ * Garment-only measurements. They describe the clothing, have no matching body measurement, and are stored
+ * and shown for information (and for future use) but are NOT compared with the body.
+ */
+export type GarmentOnlyDimension = "garmentLength" | "sleeveLength" | "rise" | "legOpening";
+export const GARMENT_ONLY_DIMENSIONS: GarmentOnlyDimension[] = ["garmentLength", "sleeveLength", "rise", "legOpening"];
+
 export type FitPreference = "SLIM" | "REGULAR" | "RELAXED" | "OVERSIZED";
 export type Unit = "CM" | "IN";
 
@@ -15,7 +22,7 @@ export type BodyMeasurements = Partial<Record<Dimension | "height", number>> & {
  * One row of a brand chart. Values are in centimetres.
  * `chest: 92` is a single value (or the lower bound); `chestMax: 96` makes it a range 92-96.
  */
-export type ChartRow = { label: string } & Partial<Record<Dimension, number>> & Partial<Record<`${Dimension}Max`, number>>;
+export type ChartRow = { label: string } & Partial<Record<Dimension | GarmentOnlyDimension, number>> & Partial<Record<`${Dimension}Max`, number>>;
 
 export type Gender = "MEN" | "WOMEN" | "UNISEX";
 export type AchievedFit = FitPreference | "TIGHTER_THAN_SLIM" | "LOOSER_THAN_OVERSIZED" | null;
@@ -28,9 +35,15 @@ export type AchievedFit = FitPreference | "TIGHTER_THAN_SLIM" | "LOOSER_THAN_OVE
 export type MeasurementType = "GARMENT" | "BODY";
 export type DataStatus = "VERIFIED" | "UNVERIFIED" | "DEPRECATED";
 
+export type ChartScope = "BRAND" | "PRODUCT";
+
 export type SizeChart = {
   /** the garment's cut as sold, e.g. a brand's "relaxed fit" T-shirt line */
   garmentCut?: FitPreference;
+  /** brand-level (default) or product-specific */
+  scope?: ChartScope;
+  /** dimensions whose meaning the source does not state. Never used for recommendations until resolved. */
+  ambiguousDimensions?: Dimension[];
   rows: ChartRow[];
   measurementType: MeasurementType;
   status: DataStatus;
@@ -82,7 +95,16 @@ export type RecommendationResult =
       status: "ok";
       recommendedSize: string;
       fitPreference: FitPreference;
-      confidence: number;
+      /**
+       * Fit Match Score (0-1). An EXPERIMENTAL heuristic: how closely this size matches your measurements for the
+       * chosen fit. It is NOT a calibrated probability and has not been validated against real purchase/fit data.
+       */
+      fitMatchScore: number;
+      /** true when the result rests on unverified data or on ignored/partial dimensions */
+      provisional: boolean;
+      chartScope: ChartScope;
+      /** dimensions left out because their meaning is ambiguous */
+      ambiguousExcluded: Dimension[];
       /** The garment's cut as sold by the brand (not your preference). */
       garmentCut: FitPreference | null;
       /** The fit this size should actually give you, judged from the primary measurement. null when it can't be known (body-measurement charts). */

@@ -1,0 +1,100 @@
+{
+  "brand": "nike",
+  "category": "tshirt",
+  "gender": "WOMEN",
+  "region": "GLOBAL",
+  "productLine": "Women's Tops & Tees (alpha)",
+  "fitCut": "REGULAR",
+  "measurementType": "BODY",
+  "measurementSemantics": {},
+  "ambiguousDimensions": [],
+  "sourceType": "OFFICIAL_SITE",
+  "sourceUrl": "https://www.nike.com/au/size-fit/womens-tops-alpha",
+  "sourceDomain": "www.nike.com",
+  "extractionMethod": "WEB_SEARCH_SNIPPET",
+  "retrievedAt": "2026-11-10",
+  "originalUnit": "IN",
+  "storedUnit": "CM",
+  "verificationStatus": "UNVERIFIED",
+  "columnLabels": {
+    "chest": "Bust"
+  },
+  "product": null,
+  "notes": "Nike size & fit page, body measurements (bust/waist/hip, inches), XXS-XXL. V3 re-read on nike.com/au confirmed every bust and waist value; hip row cross-checked with Nike HK's official page. Retrieved 2026-11-10.",
+  "csvFile": "nike__tshirt__women__global__0b1d4ab536a58287.csv",
+  "sizeLabels": [
+    "XXS",
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL"
+  ],
+  "unit": "CM",
+  "rows": [
+    {
+      "label": "XXS",
+      "chest": 69.9,
+      "chestMax": 74.9,
+      "waist": 54,
+      "waistMax": 59.7,
+      "hips": 77.5,
+      "hipsMax": 83.8
+    },
+    {
+      "label": "XS",
+      "chest": 74.9,
+      "chestMax": 82.6,
+      "waist": 59.7,
+      "waistMax": 66,
+      "hips": 83.8,
+      "hipsMax": 90.2
+    },
+    {
+      "label": "S",
+      "chest": 82.6,
+      "chestMax": 90.2,
+      "waist": 66,
+      "waistMax": 73.7,
+      "hips": 90.2,
+      "hipsMax": 97.8
+    },
+    {
+      "label": "M",
+      "chest": 90.2,
+      "chestMax": 96.5,
+      "waist": 73.7,
+      "waistMax": 80,
+      "hips": 97.8,
+      "hipsMax": 104.1
+    },
+    {
+      "label": "L",
+      "chest": 96.5,
+      "chestMax": 104.1,
+      "waist": 80,
+      "waistMax": 87.6,
+      "hips": 104.1,
+      "hipsMax": 111.8
+    },
+    {
+      "label": "XL",
+      "chest": 104.1,
+      "chestMax": 113,
+      "waist": 87.6,
+      "waistMax": 97.8,
+      "hips": 111.8,
+      "hipsMax": 119.4
+    },
+    {
+      "label": "2XL",
+      "chest": 113,
+      "chestMax": 123.2,
+      "waist": 97.8,
+      "waistMax": 108,
+      "hips": 119.4,
+      "hipsMax": 127
+    }
+  ]
+}

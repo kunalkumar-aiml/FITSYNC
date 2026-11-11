@@ -9,8 +9,8 @@ export const GET = route(async () => {
     db.user.count(),
     db.bodyMeasurement.count(),
     db.recommendation.count(),
-    db.userFeedback.count(),
-    db.userFeedback.groupBy({ by: ["outcome"], _count: true }),
+    db.userFitFeedback.count(),
+    db.userFitFeedback.groupBy({ by: ["outcome"], _count: true }),
     db.brandSizeChartVersion.count({ where: { status: "UNVERIFIED" } }),
     db.brand.count({ where: { active: true } }),
   ]);

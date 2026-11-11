@@ -1,0 +1,38 @@
+{
+  "brandsTargeted": 13,
+  "brandsWithAnyChart": 3,
+  "brandsWithBrandLevelCharts": 1,
+  "charts": 7,
+  "brandLevelCharts": 4,
+  "productSpecificCharts": 3,
+  "verifiedCharts": 0,
+  "unverifiedCharts": 7,
+  "chartsWithAmbiguousDimensions": 3,
+  "chartsUsableForRecommendations": 4,
+  "categoriesWithData": [
+    "tshirt"
+  ],
+  "categoriesSupportedByEngine": [
+    "tshirt",
+    "shirt",
+    "hoodie",
+    "jeans",
+    "polo",
+    "sweatshirt",
+    "jacket",
+    "top",
+    "chinos",
+    "joggers",
+    "shorts",
+    "skirt",
+    "dress"
+  ],
+  "marketplacesStudied": [
+    "nykaa-man",
+    "flipkart",
+    "myntra"
+  ],
+  "sourcesAttempted": 23,
+  "sourcesFailed": 14,
+  "needsHumanVerification": 3
+}

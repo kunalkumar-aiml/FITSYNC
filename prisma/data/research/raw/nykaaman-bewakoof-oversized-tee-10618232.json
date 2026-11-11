@@ -1,0 +1,56 @@
+{
+ "marketplace": "nykaa-man",
+ "marketplaceDomain": "www.nykaaman.com",
+ "brand": "bewakoof",
+ "productName": "Bewakoof Men's Purple Beast Within Graphic Printed Oversized T-shirt",
+ "productUrl": "https://www.nykaaman.com/bewakoof-men-purple-graphic-oversized-t-shirt/p/10618232",
+ "retrievedAt": "2026-11-10",
+ "extractionMethod": "WEB_FETCH_TEXT",
+ "unitShown": "cm",
+ "columns": [
+  "Size",
+  "CHEST",
+  "SHOULDER",
+  "LENGTH"
+ ],
+ "rows": [
+  [
+   "S",
+   106.7,
+   52.1,
+   73.7
+  ],
+  [
+   "M",
+   111.8,
+   54.0,
+   75.6
+  ],
+  [
+   "L",
+   116.8,
+   55.9,
+   77.5
+  ],
+  [
+   "XL",
+   121.9,
+   57.8,
+   79.4
+  ],
+  [
+   "2XL",
+   127,
+   59.7,
+   81.3
+  ],
+  [
+   "3XL",
+   132.1,
+   61.6,
+   83.2
+  ]
+ ],
+ "pageStatesSemantics": false,
+ "note": "The page labels columns only as CHEST/SHOULDER/LENGTH. It does not say whether CHEST is garment circumference or body chest-to-fit, nor whether SHOULDER is garment or body. Price/other details intentionally not stored."
+}

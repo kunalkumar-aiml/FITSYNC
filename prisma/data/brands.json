@@ -1,0 +1,67 @@
+[
+ {
+  "slug": "zara",
+  "name": "Zara",
+  "region": "INTERNATIONAL"
+ },
+ {
+  "slug": "hm",
+  "name": "H&M",
+  "region": "INTERNATIONAL"
+ },
+ {
+  "slug": "uniqlo",
+  "name": "Uniqlo",
+  "region": "INTERNATIONAL"
+ },
+ {
+  "slug": "levis",
+  "name": "Levi's",
+  "region": "INTERNATIONAL"
+ },
+ {
+  "slug": "nike",
+  "name": "Nike",
+  "region": "INTERNATIONAL"
+ },
+ {
+  "slug": "adidas",
+  "name": "Adidas",
+  "region": "INTERNATIONAL"
+ },
+ {
+  "slug": "puma",
+  "name": "Puma",
+  "region": "INTERNATIONAL"
+ },
+ {
+  "slug": "bewakoof",
+  "name": "Bewakoof",
+  "region": "INDIAN"
+ },
+ {
+  "slug": "snitch",
+  "name": "Snitch",
+  "region": "INDIAN"
+ },
+ {
+  "slug": "the-souled-store",
+  "name": "The Souled Store",
+  "region": "INDIAN"
+ },
+ {
+  "slug": "max-fashion",
+  "name": "Max Fashion",
+  "region": "INDIAN"
+ },
+ {
+  "slug": "westside",
+  "name": "Westside",
+  "region": "INDIAN"
+ },
+ {
+  "slug": "savana",
+  "name": "Savana",
+  "region": "INDIAN"
+ }
+]

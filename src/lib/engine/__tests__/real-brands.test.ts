@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { getCategoryConfig, normalizeMeasurements, recommend, type ChartRow, type FitPreference, type SizeChart } from "..";
 
-type Src = { brand: string; category: string; gender: string; region: string; measurementType: "BODY" | "GARMENT"; unit: "CM" | "IN"; sourceUrl: string; sourceType: string; rows: Record<string, number | string>[] };
+type Src = { brand: string; category: string; gender: string; region: string; measurementType: "BODY" | "GARMENT"; unit: "CM" | "IN"; sourceUrl: string; sourceType: string; sourceDomain?: string; extractionMethod?: string; retrievedAt?: string; verificationStatus?: string; ambiguousDimensions?: string[]; product?: { name: string; marketplace?: string; brand: string; url: string }; rows: Record<string, number | string>[] };
 const data = JSON.parse(readFileSync(join(__dirname, "../../../../prisma/data/charts.json"), "utf8")) as { charts: Src[]; unavailable: { brand: string }[] };
 
 // Same unit conversion the seed performs
@@ -11,14 +11,14 @@ const toChart = (c: Src, status: SizeChart["status"] = "VERIFIED"): SizeChart =>
   measurementType: c.measurementType, status,
   rows: c.rows.map((r) => Object.fromEntries(Object.entries(r).map(([k, v]) => [k, k === "label" ? v : Math.round((c.unit === "IN" ? (v as number) * 2.54 : (v as number)) * 10) / 10]))) as ChartRow[],
 });
-const find = (brand: string, gender: string, region?: string) => data.charts.find((c) => c.brand === brand && c.gender === gender && (!region || c.region === region))!;
+const find = (brand: string, gender: string, region?: string) => data.charts.find((c) => !c.product && c.brand === brand && c.gender === gender && (!region || c.region === region))!;
 const tshirt = getCategoryConfig("tshirt")!;
 
 describe("real sourced data rules", () => {
   it("every real chart records an official source and is a known type", () => {
     for (const c of data.charts) {
       expect(c.sourceUrl).toMatch(/^https:\/\//);
-      expect(["OFFICIAL_SITE", "OFFICIAL_PDF", "STORE_MEASURED", "MANUAL_ENTRY"]).toContain(c.sourceType);
+      expect(["OFFICIAL_SITE", "OFFICIAL_PDF", "OFFICIAL_PRODUCT_PAGE", "MARKETPLACE_LISTING", "STORE_MEASURED", "MANUAL_ENTRY"]).toContain(c.sourceType);
       expect(c.sourceType).not.toBe("DEMO");
       expect(c.rows.length).toBeGreaterThanOrEqual(2);
     }
@@ -30,12 +30,40 @@ describe("real sourced data rules", () => {
       expect(asCm.every((v) => demoChests.has(v as number)) && asCm.length === 4).toBe(false);
     }
   });
-  it("brands without official data are recorded as unavailable, not given charts", () => {
-    const withCharts = new Set(data.charts.map((c) => c.brand));
-    for (const brand of ["zara", "hm", "uniqlo", "levis", "adidas", "puma", "bewakoof", "snitch", "the-souled-store", "max-fashion", "westside"]) {
-      expect(withCharts.has(brand)).toBe(false);
-      expect(data.unavailable.some((u) => u.brand === brand)).toBe(true);
+  it("brands with no brand-level official chart have none, and are recorded as unavailable", () => {
+    const withBrandCharts = new Set(data.charts.filter((c) => !c.product).map((c) => c.brand));
+    for (const brand of ["zara", "hm", "uniqlo", "levis", "adidas", "puma", "bewakoof", "snitch", "the-souled-store", "max-fashion", "westside", "savana"]) {
+      expect(withBrandCharts.has(brand), brand).toBe(false);
+      expect(data.unavailable.some((u) => u.brand === brand), brand).toBe(true);
     }
+  });
+  it("provenance: every chart has a source host that matches its URL, an ISO retrieval date and an extraction method", () => {
+    for (const c of data.charts) {
+      expect(new URL(c.sourceUrl).host, c.sourceUrl).toBe(c.sourceDomain);
+      expect(c.retrievedAt, c.sourceUrl).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(c.extractionMethod, c.sourceUrl).toBeTruthy();
+    }
+  });
+  it("research data is never pre-verified: verification is a human step in /admin", () => {
+    for (const c of data.charts) expect(c.verificationStatus, c.sourceUrl).toBe("UNVERIFIED");
+  });
+  it("'official' charts come from the brand's own domain; marketplace charts are product-level with the real brand", () => {
+    const own: Record<string, string> = { nike: "nike.com" };
+    for (const c of data.charts) {
+      if (c.sourceType === "OFFICIAL_SITE") expect(c.sourceDomain!.endsWith(own[c.brand] ?? "__none__"), `${c.brand} ${c.sourceDomain}`).toBe(true);
+      if (c.sourceType === "MARKETPLACE_LISTING") {
+        expect(c.product, c.sourceUrl).toBeTruthy();
+        expect(c.product!.brand).toBe(c.brand);
+        expect(["flipkart", "myntra", "nykaa-man"]).not.toContain(c.brand); // a marketplace is never the brand
+        expect(c.product!.url).toBe(c.sourceUrl);
+      }
+    }
+  });
+  it("no generic marketplace chart exists: marketplace data is always tied to one product", () => {
+    expect(data.charts.filter((c) => c.sourceType === "MARKETPLACE_LISTING" && !c.product)).toHaveLength(0);
+  });
+  it("product charts whose measurement meaning is not stated are flagged ambiguous (never silently assumed)", () => {
+    for (const c of data.charts.filter((x) => x.sourceType === "MARKETPLACE_LISTING")) expect(c.ambiguousDimensions?.length, c.sourceUrl).toBeGreaterThan(0);
   });
   it("men's and women's charts are separate records", () => {
     expect(find("nike", "MEN", "GLOBAL").rows.length).not.toBe(0);
@@ -84,7 +112,7 @@ describe("recommendations from real charts", () => {
   it("unverified real charts cap confidence and warn", () => {
     const r = recommend({ body, chart: toChart(find("nike", "MEN", "GLOBAL"), "UNVERIFIED"), category: tshirt, fitPreference: "REGULAR" });
     if (r.status !== "ok") throw new Error("expected ok");
-    expect(r.confidence).toBeLessThanOrEqual(0.55);
+    expect(r.fitMatchScore).toBeLessThanOrEqual(0.55);
     expect(r.warnings.join(" ")).toMatch(/not verified/);
   });
   it("a chest far outside any size is no_compatible_size, not a forced pick", () => {

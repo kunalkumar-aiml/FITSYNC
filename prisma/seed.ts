@@ -1,19 +1,14 @@
 /**
- * Seeds categories, the brand list, REAL sourced size charts (prisma/data/charts.json) and
- * "DATA UNAVAILABLE" notes for brands where no official table could be retrieved.
- *
- * RULES
- * - Real charts are copied only from official brand pages (sourceUrl recorded per chart).
- * - They are seeded as UNVERIFIED. A human must open the source URL, compare, and click Verify in /admin.
- * - Nothing is invented. Fictional DEMO brands are only created when SEED_DEMO=true, and are kept separate.
- * - Idempotent: safe to run many times. A chart version is only added if that source has no version yet.
+ * Seeds categories, brands, marketplaces, REAL sourced charts (prisma/data/charts.json, incl. product-specific ones),
+ * and "DATA UNAVAILABLE" notes. Nothing is invented; everything real is imported UNVERIFIED.
+ * Demo (fictional) brands are only created with SEED_DEMO=true and are typed DEMO.
+ * Idempotent. See prisma/lib/import.ts.
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { CATEGORY_CONFIGS } from "../src/lib/engine/config";
-import { round1, toCm } from "../src/lib/engine/units";
+import { importCharts } from "./lib/import";
 
 // tsx does not read .env by itself, so load DATABASE_URL from it when it is not already set.
 if (!process.env.DATABASE_URL) {
@@ -27,70 +22,10 @@ if (!process.env.DATABASE_URL) {
 
 const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL! }) });
 
-const REAL_BRANDS: [string, string, "INTERNATIONAL" | "INDIAN"][] = [
-  ["zara", "Zara", "INTERNATIONAL"], ["hm", "H&M", "INTERNATIONAL"], ["uniqlo", "Uniqlo", "INTERNATIONAL"],
-  ["levis", "Levi's", "INTERNATIONAL"], ["nike", "Nike", "INTERNATIONAL"], ["adidas", "Adidas", "INTERNATIONAL"],
-  ["puma", "Puma", "INTERNATIONAL"], ["bewakoof", "Bewakoof", "INDIAN"], ["snitch", "Snitch", "INDIAN"],
-  ["the-souled-store", "The Souled Store", "INDIAN"], ["max-fashion", "Max Fashion", "INDIAN"], ["westside", "Westside", "INDIAN"],
-];
-
-type SourceChart = {
-  brand: string; category: string; gender: "MEN" | "WOMEN" | "UNISEX"; region: string; productLine: string; fitCut: string;
-  measurementType: "BODY" | "GARMENT"; unit: "CM" | "IN"; sourceType: string; sourceUrl: string; sourceNote: string;
-  rows: Record<string, number | string>[];
-};
-type Data = { charts: SourceChart[]; unavailable: { brand: string; note: string }[]; researchedAt: string };
-
-const toCmRow = (row: Record<string, number | string>, unit: "CM" | "IN") =>
-  Object.fromEntries(Object.entries(row).map(([k, v]) => [k, k === "label" ? v : round1(toCm(v as number, unit))]));
-
 async function main() {
-  const data: Data = JSON.parse(readFileSync(join(__dirname, "data", "charts.json"), "utf8"));
-
-  for (const c of CATEGORY_CONFIGS) {
-    await db.clothingCategory.upsert({
-      where: { slug: c.slug }, create: { slug: c.slug, name: c.name, dimensions: Object.keys(c.dimensions) },
-      update: { name: c.name, dimensions: Object.keys(c.dimensions) },
-    });
-  }
-  for (const [slug, name, region] of REAL_BRANDS) {
-    await db.brand.upsert({ where: { slug }, create: { slug, name, region }, update: {} });
-  }
-
-  let added = 0;
-  for (const sc of data.charts) {
-    const brand = await db.brand.findUniqueOrThrow({ where: { slug: sc.brand } });
-    const category = await db.clothingCategory.findUniqueOrThrow({ where: { slug: sc.category } });
-    const chart = await db.brandSizeChart.upsert({
-      where: { brandId_categoryId_gender_region_productLine_fitCut: {
-        brandId: brand.id, categoryId: category.id, gender: sc.gender, region: sc.region, productLine: sc.productLine, fitCut: sc.fitCut } },
-      create: { brandId: brand.id, categoryId: category.id, gender: sc.gender, region: sc.region, productLine: sc.productLine, fitCut: sc.fitCut },
-      update: {},
-    });
-    const exists = await db.brandSizeChartVersion.findFirst({ where: { chartId: chart.id, sourceUrl: sc.sourceUrl } });
-    if (exists) continue;
-    const last = await db.brandSizeChartVersion.findFirst({ where: { chartId: chart.id }, orderBy: { version: "desc" } });
-    await db.brandSizeChartVersion.create({
-      data: {
-        chartId: chart.id, version: (last?.version ?? 0) + 1, measurementType: sc.measurementType,
-        sourceType: sc.sourceType as "OFFICIAL_SITE", originalUnit: sc.unit, retrievedAt: new Date(data.researchedAt),
-        status: "UNVERIFIED", // never auto-verified
-        sourceUrl: sc.sourceUrl, sourceNote: sc.sourceNote, rows: sc.rows.map((r) => toCmRow(r, sc.unit)),
-      },
-    });
-    added++;
-  }
-
-  // DATA UNAVAILABLE records (brand-level; they apply to every category/gender without a chart)
-  for (const u of data.unavailable) {
-    const brand = await db.brand.findUnique({ where: { slug: u.brand } });
-    if (!brand) continue;
-    const same = await db.brandCoverageNote.findFirst({ where: { brandId: brand.id, note: u.note } });
-    if (!same) await db.brandCoverageNote.create({ data: { brandId: brand.id, note: u.note, checkedAt: new Date(data.researchedAt) } });
-  }
-
+  await importCharts(db);
   if (process.env.SEED_DEMO === "true") await seedDemo();
-  console.log(`Seed complete. ${added} new chart version(s). Charts are UNVERIFIED until verified in /admin.`);
+  console.log("Seed complete.");
 }
 
 // Fictional numbers, development only. Flagged isDemo and typed DEMO so they are never confused with real data.
@@ -104,7 +39,7 @@ async function seedDemo() {
   for (const d of DEMO) {
     const brand = await db.brand.upsert({ where: { slug: d.slug }, create: { slug: d.slug, name: d.name, region: "INTERNATIONAL", isDemo: true }, update: {} });
     const chart = await db.brandSizeChart.upsert({
-      where: { brandId_categoryId_gender_region_productLine_fitCut: { brandId: brand.id, categoryId: tshirt.id, gender: "UNISEX", region: "GLOBAL", productLine: "", fitCut: "REGULAR" } },
+      where: { brandId_categoryId_productKey_gender_region_productLine_fitCut: { brandId: brand.id, categoryId: tshirt.id, productKey: "", gender: "UNISEX", region: "GLOBAL", productLine: "", fitCut: "REGULAR" } },
       create: { brandId: brand.id, categoryId: tshirt.id }, update: {},
     });
     if (!(await db.brandSizeChartVersion.findFirst({ where: { chartId: chart.id } }))) {

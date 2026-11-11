@@ -41,9 +41,35 @@ enum Gender {
 enum SourceType {
   OFFICIAL_SITE
   OFFICIAL_PDF
+  OFFICIAL_PRODUCT_PAGE
+  MARKETPLACE_LISTING
   STORE_MEASURED
   MANUAL_ENTRY
   DEMO
+}
+
+enum ResearchStatus {
+  SUCCESS
+  PARTIAL_SUCCESS
+  SOURCE_UNAVAILABLE
+  ACCESS_RESTRICTED
+  INVALID_DATA
+  NEEDS_HUMAN_VERIFICATION
+}
+
+enum JobState {
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+enum VerificationAction {
+  APPROVED
+  REJECTED
+  FLAGGED
+  EDITED
+  DEPRECATED
 }
 
 enum FitOutcome {
@@ -64,7 +90,9 @@ model User {
   measurement   BodyMeasurement?
   recommendations Recommendation[]
   savedBrands   SavedBrand[]
-  feedback      UserFeedback[]
+  feedback      UserFitFeedback[]
+  verifications DataVerification[]
+  researchJobs  ResearchJob[]
 }
 
 model UserProfile {
@@ -106,6 +134,7 @@ model Brand {
   sizeCharts BrandSizeChart[]
   savedBy    SavedBrand[]
   coverageNotes BrandCoverageNote[]
+  products   Product[]
 }
 
 model ClothingCategory {
@@ -123,6 +152,9 @@ model BrandSizeChart {
   brand        Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
   categoryId   String
   category     ClothingCategory @relation(fields: [categoryId], references: [id])
+  productId    String?  // null = brand-level chart; set = product-specific chart (overrides the brand chart when verified)
+  product      Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productKey   String   @default("") // productId or "" so the unique index below also covers brand-level charts
   gender       Gender   @default(UNISEX)
   region       String   @default("GLOBAL") // sizing system / market: IN, GLOBAL, ASIA, US, EU, UK...
   productLine  String   @default("")       // e.g. "Tops & Tees (alpha)"; empty when the brand has one chart
@@ -130,7 +162,7 @@ model BrandSizeChart {
   active       Boolean  @default(true)
   createdAt    DateTime @default(now())
   versions     BrandSizeChartVersion[]
-  @@unique([brandId, categoryId, gender, region, productLine, fitCut], map: "BrandSizeChart_identity_key")
+  @@unique([brandId, categoryId, productKey, gender, region, productLine, fitCut], map: "BrandSizeChart_identity_key")
 }
 
 // Rows: [{ "label": "M", "chestCm": 102, "waistCm": 96, ... }]  — these are GARMENT measurements.
@@ -144,6 +176,13 @@ model BrandSizeChartVersion {
   sourceType     SourceType @default(MANUAL_ENTRY)
   originalUnit   Unit     @default(CM)        // unit the source used; rows are always stored in cm
   retrievedAt    DateTime?
+  sourceDomain   String?
+  extractionMethod String?
+  // What each column means, e.g. {"chest":"BODY_CIRCUMFERENCE"}. Unknown meaning = "AMBIGUOUS".
+  measurementSemantics Json @default("{}")
+  // Dimensions whose meaning is unclear. They are ignored by the recommendation engine until a human resolves them.
+  ambiguousDimensions  Json @default("[]")
+  verifications  DataVerification[]
   status         VerificationStatus @default(UNVERIFIED)
   sourceUrl      String?
   sourceNote     String?
@@ -167,7 +206,7 @@ model Recommendation {
   result      Json     // full structured engine output
   inputSnapshot Json   // body measurements used (cm) at the time
   createdAt   DateTime @default(now())
-  feedback    UserFeedback[]
+  feedback    UserFitFeedback[]
   @@index([userId, createdAt])
 }
 
@@ -180,7 +219,7 @@ model SavedBrand {
   @@id([userId, brandId])
 }
 
-model UserFeedback {
+model UserFitFeedback {
   id             String   @id @default(cuid())
   userId         String
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -191,6 +230,7 @@ model UserFeedback {
   review         String?
   createdAt      DateTime @default(now())
   @@index([recommendationId])
+  @@map("UserFeedback") // table name kept so existing data is untouched
 }
 
 // Records that a brand/category/gender was checked and no usable official data exists (shown as DATA UNAVAILABLE).
@@ -203,4 +243,93 @@ model BrandCoverageNote {
   note       String
   checkedAt  DateTime @default(now())
   @@index([brandId])
+}
+
+model Marketplace {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  name      String
+  domain    String   @unique
+  active    Boolean  @default(true)
+  listings  ProductListing[]
+}
+
+// A real product with its real brand identity. Marketplaces never own products.
+model Product {
+  id          String   @id @default(cuid())
+  brandId     String
+  brand       Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  slug        String
+  name        String
+  categoryId  String
+  gender      Gender   @default(UNISEX)
+  fitCut      String   @default("REGULAR")
+  fitCutStated Boolean @default(false) // did the listing actually state the cut?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  listings    ProductListing[]
+  charts      BrandSizeChart[]
+  @@unique([brandId, slug])
+}
+
+model ProductListing {
+  id            String   @id @default(cuid())
+  productId     String
+  product       Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  marketplaceId String?  // null = the brand's own site
+  marketplace   Marketplace? @relation(fields: [marketplaceId], references: [id], onDelete: SetNull)
+  url           String   @unique
+  retrievedAt   DateTime?
+  active        Boolean  @default(true)
+}
+
+// Reference table: what a published measurement actually represents.
+model MeasurementDefinition {
+  id          String @id @default(cuid())
+  code        String @unique // e.g. BODY_CIRCUMFERENCE, GARMENT_CIRCUMFERENCE, GARMENT_WIDTH_FLAT, GARMENT_LENGTH, AMBIGUOUS
+  name        String
+  appliesTo   String // BODY | GARMENT | UNKNOWN
+  description String
+}
+
+model ResearchJob {
+  id          String   @id @default(cuid())
+  state       JobState @default(QUEUED)
+  targets     Json
+  createdById String?
+  createdBy   User?    @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  summary     Json?
+  createdAt   DateTime @default(now())
+  startedAt   DateTime?
+  finishedAt  DateTime?
+  sources     ResearchSource[]
+}
+
+model ResearchSource {
+  id               String   @id @default(cuid())
+  jobId            String?
+  job              ResearchJob? @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  url              String
+  domain           String
+  status           ResearchStatus
+  httpStatus       Int?
+  extractionMethod String?
+  note             String?
+  chartVersionId   String?
+  retrievedAt      DateTime @default(now())
+  @@index([jobId])
+  @@index([url])
+}
+
+// Audit trail of every human decision about a chart version.
+model DataVerification {
+  id             String   @id @default(cuid())
+  chartVersionId String
+  chartVersion   BrandSizeChartVersion @relation(fields: [chartVersionId], references: [id], onDelete: Cascade)
+  action         VerificationAction
+  adminId        String?
+  admin          User?    @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  note           String?
+  createdAt      DateTime @default(now())
+  @@index([chartVersionId])
 }

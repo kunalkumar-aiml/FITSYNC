@@ -1,0 +1,45 @@
+{
+  "brand": "bewakoof",
+  "category": "tshirt",
+  "gender": "MEN",
+  "region": "IN",
+  "productLine": "",
+  "fitCut": "OVERSIZED",
+  "measurementType": "GARMENT",
+  "measurementSemantics": {
+    "chest": "AMBIGUOUS",
+    "shoulder": "AMBIGUOUS",
+    "garmentLength": "GARMENT_LENGTH",
+    "sleeveLength": "GARMENT_LENGTH"
+  },
+  "ambiguousDimensions": [
+    "chest",
+    "shoulder"
+  ],
+  "sourceType": "MARKETPLACE_LISTING",
+  "sourceUrl": "https://www.nykaaman.com/bewakoof-men-purple-graphic-oversized-t-shirt/p/10618232",
+  "sourceDomain": "www.nykaaman.com",
+  "extractionMethod": "WEB_FETCH_TEXT",
+  "retrievedAt": "2026-11-10",
+  "originalUnit": "CM",
+  "storedUnit": "CM",
+  "verificationStatus": "UNVERIFIED",
+  "columnLabels": {},
+  "product": {
+    "name": "Bewakoof Men's Purple Beast Within Graphic Printed Oversized T-shirt",
+    "marketplace": "nykaa-man",
+    "url": "https://www.nykaaman.com/bewakoof-men-purple-graphic-oversized-t-shirt/p/10618232",
+    "brand": "bewakoof",
+    "fitCutStatedOnListing": false
+  },
+  "notes": "Chest, shoulder and length are labelled on the listing but never defined as body or garment measurements, so chest and shoulder are flagged AMBIGUOUS and excluded from automatic recommendations until a human confirms their meaning. Cut taken from the product title (the product title says Oversized).",
+  "csvFile": "bewakoof__tshirt__men__in__bewakoof-men-s-purple-beast-within-graph__c6a7d4631abdcab4.csv",
+  "sizeLabels": [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "2XL",
+    "3XL"
+  ]
+}

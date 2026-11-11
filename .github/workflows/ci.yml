@@ -26,6 +26,7 @@ jobs:
         with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run typecheck
+      - run: npm run research:validate
       - run: npm test
       - name: Apply migrations and seed (test database)
         run: npx prisma migrate deploy && npm run db:seed
@@ -34,7 +35,7 @@ jobs:
         run: |
           npx next start -p 3100 &
           npx wait-on http-get://localhost:3100/api/health --timeout 60000
-          TEST_SERVER_URL=http://localhost:3100 npm run test:integration
+          TEST_SERVER_URL=http://localhost:3100 npx vitest run tests
 
   migrate-production:
     # Runs only after checks pass on main. Needs repo secret PRODUCTION_DATABASE_URL.

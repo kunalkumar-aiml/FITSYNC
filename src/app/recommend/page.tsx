@@ -29,7 +29,8 @@ export default async function Page({ searchParams }: { searchParams: { brand?: s
   // All brands are listed. Ones without data are shown as "data unavailable" instead of being hidden.
   const opts = brands.map((b) => ({
     slug: b.slug, name: b.name, isDemo: b.isDemo,
-    categories: b.sizeCharts.filter((c) => c.versions.length).map((c) => ({ slug: c.category.slug, name: c.category.name, gender: c.gender })),
+    categories: b.sizeCharts.filter((c) => c.versions.length && !c.productId).map((c) => ({ slug: c.category.slug, name: c.category.name, gender: c.gender })), // brand-level only
+    hasProducts: b.sizeCharts.some((c) => c.versions.length && c.productId),
   }));
   const g = ["MEN", "WOMEN", "UNISEX"].includes(searchParams.gender ?? "") ? (searchParams.gender as "MEN" | "WOMEN" | "UNISEX") : (profile?.fitCategory as "MEN" | "WOMEN" | "UNISEX" | null) ?? null;
   return (

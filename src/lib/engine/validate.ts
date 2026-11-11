@@ -1,4 +1,4 @@
-import type { BodyMeasurements, Dimension } from "./types";
+import type { BodyMeasurements, Dimension, GarmentOnlyDimension } from "./types";
 
 /** Plausible adult ranges in cm. Anything outside is almost certainly a typo or a unit mistake. */
 export const LIMITS: Record<Dimension | "height", [number, number]> = {
@@ -11,6 +11,11 @@ export const LIMITS: Record<Dimension | "height", [number, number]> = {
   inseam: [50, 100],
   neck: [28, 55],
   thigh: [35, 100],
+};
+
+/** Plausible garment-only ranges (cm), used when validating imported charts. */
+export const GARMENT_LIMITS: Record<GarmentOnlyDimension, [number, number]> = {
+  garmentLength: [20, 140], sleeveLength: [5, 100], rise: [15, 50], legOpening: [10, 60],
 };
 
 export function validateBody(body: BodyMeasurements): string[] {

@@ -13,7 +13,11 @@
     "db:seed": "tsx prisma/seed.ts",
     "postinstall": "prisma generate",
     "test:integration": "vitest run tests/api.integration.test.ts",
-    "test:all": "vitest run"
+    "test:all": "vitest run",
+    "research": "tsx scripts/research-brands.ts",
+    "research:csv": "tsx scripts/generate-csv.ts",
+    "research:validate": "tsx scripts/validate-charts.ts",
+    "research:import": "tsx scripts/import-research.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^6.19.3",

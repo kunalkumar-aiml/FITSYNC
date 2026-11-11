@@ -12,7 +12,7 @@ export const POST = route(async (req: Request) => {
   const input = await parseBody(req, feedbackSchema);
   const rec = await db.recommendation.findFirst({ where: { id: input.recommendationId, userId: user.id } });
   if (!rec) throw new ApiError(404, "Recommendation not found.");
-  const fb = await db.userFeedback.create({
+  const fb = await db.userFitFeedback.create({
     data: { userId: user.id, recommendationId: rec.id, purchasedSize: input.purchasedSize, outcome: input.outcome, review: input.review },
   });
   return ok(fb, 201);

@@ -1,0 +1,112 @@
+{
+  "brand": "arbour",
+  "category": "tshirt",
+  "gender": "MEN",
+  "region": "IN",
+  "productLine": "",
+  "fitCut": "SLIM",
+  "measurementType": "GARMENT",
+  "measurementSemantics": {
+    "chest": "AMBIGUOUS",
+    "shoulder": "AMBIGUOUS",
+    "garmentLength": "GARMENT_LENGTH",
+    "sleeveLength": "GARMENT_LENGTH"
+  },
+  "ambiguousDimensions": [
+    "chest",
+    "shoulder"
+  ],
+  "sourceType": "MARKETPLACE_LISTING",
+  "sourceUrl": "https://www.flipkart.com/arbour-military-camouflage-men-round-neck-multicolor-t-shirt/p/itma1b143012298e",
+  "sourceDomain": "www.flipkart.com",
+  "extractionMethod": "WEB_SEARCH_SNIPPET",
+  "retrievedAt": "2026-11-10",
+  "originalUnit": "IN",
+  "storedUnit": "CM",
+  "verificationStatus": "UNVERIFIED",
+  "columnLabels": {},
+  "product": {
+    "name": "Arbour Men Military Camouflage Round Neck Cotton Blend Multicolor T-Shirt",
+    "marketplace": "flipkart",
+    "url": "https://www.flipkart.com/arbour-military-camouflage-men-round-neck-multicolor-t-shirt/p/itma1b143012298e",
+    "brand": "arbour",
+    "fitCutStatedOnListing": true
+  },
+  "notes": "Listing states 'Slim fit' and 'runs one size smaller'. Chest/shoulder/length are labelled in inches but not defined as body or garment measurements, so chest and shoulder are flagged AMBIGUOUS and excluded from automatic recommendations until a human confirms their meaning.",
+  "csvFile": "arbour__tshirt__men__in__arbour-men-military-camouflage-round-nec__5319fba6c520e7cb.csv",
+  "sizeLabels": [
+    "M",
+    "L",
+    "XL",
+    "XXL",
+    "3XL",
+    "4XL",
+    "5XL",
+    "6XL",
+    "7XL",
+    "8XL"
+  ],
+  "unit": "CM",
+  "rows": [
+    {
+      "label": "M",
+      "chest": 91.4,
+      "garmentLength": 71.1,
+      "shoulder": 40.6
+    },
+    {
+      "label": "L",
+      "chest": 96.5,
+      "garmentLength": 72.4,
+      "shoulder": 43.2
+    },
+    {
+      "label": "XL",
+      "chest": 101.6,
+      "garmentLength": 74.9,
+      "shoulder": 45.7
+    },
+    {
+      "label": "XXL",
+      "chest": 106.7,
+      "garmentLength": 76.2,
+      "shoulder": 48.3
+    },
+    {
+      "label": "3XL",
+      "chest": 111.8,
+      "garmentLength": 77.5,
+      "shoulder": 49.5
+    },
+    {
+      "label": "4XL",
+      "chest": 116.8,
+      "garmentLength": 78.7,
+      "shoulder": 50.8
+    },
+    {
+      "label": "5XL",
+      "chest": 121.9,
+      "garmentLength": 80,
+      "shoulder": 52.1
+    },
+    {
+      "label": "6XL",
+      "chest": 127,
+      "garmentLength": 81.3,
+      "shoulder": 53.3
+    },
+    {
+      "label": "7XL",
+      "chest": 132.1,
+      "garmentLength": 82.6,
+      "shoulder": 55.9
+    },
+    {
+      "label": "8XL",
+      "chest": 137.2,
+      "garmentLength": 83.8,
+      "shoulder": 57.2
+    }
+  ]
+}

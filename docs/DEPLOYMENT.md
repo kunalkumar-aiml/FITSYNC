@@ -61,3 +61,13 @@ git add -A && git commit -m "Real brand size data, gender/region charts, CSV imp
 ```
 Then open `/admin`, check each chart against its source URL, and press **Verify**.
 Demo brands are hidden on Vercel automatically. Set `SHOW_DEMO_BRANDS=true` only if you want them visible.
+
+## 11. V3 update (products, marketplaces, research pipeline)
+```bash
+npm install
+npx prisma migrate deploy       # 20261110000000_v3_research_products (additive; keeps users, measurements, history)
+npm run db:seed                 # idempotent; adds Savana, marketplaces, product charts, research sources (UNVERIFIED)
+npm run research:validate       # optional local check
+git add -A && git commit -m "FITSYNC V3" && git push
+```
+Routine for new data: `npm run research` (or Admin → Research) → review in Admin → Charts → Approve. Update the DB with `npm run research:import` or push (seed). Demo brands stay hidden on Vercel.

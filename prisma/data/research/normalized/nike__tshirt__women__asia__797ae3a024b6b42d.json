@@ -1,0 +1,86 @@
+{
+  "brand": "nike",
+  "category": "tshirt",
+  "gender": "WOMEN",
+  "region": "ASIA",
+  "productLine": "Women's Tops & T-shirts (Asian sizing)",
+  "fitCut": "REGULAR",
+  "measurementType": "BODY",
+  "measurementSemantics": {},
+  "ambiguousDimensions": [],
+  "sourceType": "OFFICIAL_SITE",
+  "sourceUrl": "https://www.nike.com/hu/en/size-fit/womens-tops-asian-alpha",
+  "sourceDomain": "www.nike.com",
+  "extractionMethod": "WEB_SEARCH_SNIPPET",
+  "retrievedAt": "2026-11-10",
+  "originalUnit": "IN",
+  "storedUnit": "CM",
+  "verificationStatus": "UNVERIFIED",
+  "columnLabels": {
+    "chest": "Bust"
+  },
+  "product": null,
+  "notes": "Nike size & fit page: 'The measurements on the size chart are body measurements.' Bust and waist rows XXS-XXL. Hip row was truncated in the retrieved text, so hips are omitted rather than guessed.",
+  "csvFile": "nike__tshirt__women__asia__797ae3a024b6b42d.csv",
+  "sizeLabels": [
+    "XXS",
+    "XS",
+    "S",
+    "M",
+    "L",
+    "XL",
+    "XXL"
+  ],
+  "unit": "CM",
+  "rows": [
+    {
+      "label": "XXS",
+      "chest": 72.4,
+      "chestMax": 76.2,
+      "waist": 62.2,
+      "waistMax": 66
+    },
+    {
+      "label": "XS",
+      "chest": 76.2,
+      "chestMax": 81.3,
+      "waist": 66,
+      "waistMax": 68.6
+    },
+    {
+      "label": "S",
+      "chest": 81.3,
+      "chestMax": 85.1,
+      "waist": 68.6,
+      "waistMax": 71.1
+    },
+    {
+      "label": "M",
+      "chest": 85.1,
+      "chestMax": 88.9,
+      "waist": 71.1,
+      "waistMax": 74.9
+    },
+    {
+      "label": "L",
+      "chest": 88.9,
+      "chestMax": 95.3,
+      "waist": 74.9,
+      "waistMax": 80
+    },
+    {
+      "label": "XL",
+      "chest": 95.3,
+      "chestMax": 101.6,
+      "waist": 80,
+      "waistMax": 85.1
+    },
+    {
+      "label": "XXL",
+      "chest": 101.6,
+      "chestMax": 108,
+      "waist": 85.1,
+      "waistMax": 90.2
+    }
+  ]
+}
