@@ -54,6 +54,11 @@
     "wait-on": "^9.5.1"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=20.9.0"
+  },
+  "overrides": {
+    "@prisma/config": {
+      "deepmerge-ts": "8.0.2"
+    }
   }
 }
