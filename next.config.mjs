@@ -13,10 +13,8 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  experimental: {
-    // native module: keep it out of the server bundle
-    serverComponentsExternalPackages: ["@node-rs/argon2"],
-  },
+  // native module: keep it out of the server bundle (Next 15+: top-level option; the experimental key was removed)
+  serverExternalPackages: ["@node-rs/argon2"],
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
