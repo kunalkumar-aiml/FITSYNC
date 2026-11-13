@@ -21,7 +21,7 @@ Run it from a trusted machine with `DATABASE_URL` set. It refuses as soon as any
 ## Request security
 - **CSRF:** strict Origin (Referer fallback only if Origin is absent; neither → 403) + double-submit token (`__Host-fitsync_csrf` cookie, `x-csrf-token` header). `/api/cron/*` is exempt and uses a bearer secret instead.
 - **CORS:** none. No `Access-Control-Allow-*` header is ever set.
-- **CSP:** nonce + `strict-dynamic` per request (middleware), `frame-ancestors 'none'`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `upgrade-insecure-requests` when cookies are secure. API responses get `default-src 'none'`.
+- **CSP:** nonce + `strict-dynamic` per request (`src/proxy.ts`, formerly middleware), `frame-ancestors 'none'`, `object-src 'none'`, `base-uri 'self'`, `form-action 'self'`, `upgrade-insecure-requests` when cookies are secure. API responses get `default-src 'none'`.
 - **Other headers:** HSTS (2 years, preload), nosniff, X-Frame-Options DENY, Referrer-Policy strict-origin-when-cross-origin, Permissions-Policy, COOP/CORP same-origin.
 - **Rate limiting:** Upstash Redis REST (`INCR` + `PEXPIRE NX`), hashed keys, memory fallback. Client IP is only read from proxy headers on Vercel or with `TRUST_PROXY=true`.
 - **Input:** every body is size-capped and validated with Zod; stored links must be https; CSV is parsed server-side with per-line errors; research URLs pass the SSRF allow-list, DNS-must-be-public check, per-hop redirect validation, robots.txt and size/time limits.

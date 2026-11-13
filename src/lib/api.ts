@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { ZodError, type ZodTypeAny, type z } from "zod";
+import { z, ZodError } from "zod";
 import { ConfigError } from "./errors";
 export { ConfigError };
 
@@ -42,7 +42,7 @@ export function handleError(e: unknown) {
   }
   if (e instanceof ZodError) {
     return NextResponse.json(
-      { error: { message: "Please check the highlighted fields.", details: e.flatten().fieldErrors } },
+      { error: { message: "Please check the highlighted fields.", details: z.flattenError(e).fieldErrors } },
       { status: 400 },
     );
   }
@@ -75,7 +75,7 @@ export function route<A extends unknown[]>(fn: (...args: A) => Promise<Response>
 const MAX_JSON_BYTES = 256 * 1024;
 
 /** Parse and validate a JSON body. Bodies over 256 KB are refused before parsing. */
-export async function parseBody<S extends ZodTypeAny>(req: Request, schema: S, maxBytes = MAX_JSON_BYTES): Promise<z.infer<S>> {
+export async function parseBody<S extends z.ZodType>(req: Request, schema: S, maxBytes = MAX_JSON_BYTES): Promise<z.infer<S>> {
   const declared = Number(req.headers.get("content-length") ?? 0);
   if (declared > maxBytes) throw new ApiError(413, "Request is too large.");
   let text: string;

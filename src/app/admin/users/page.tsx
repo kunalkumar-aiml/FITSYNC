@@ -5,7 +5,8 @@ import { UsersPanel } from "@/components/admin/users-panel";
 export const metadata = { title: "Users · Admin" };
 export const dynamic = "force-dynamic";
 
-export default async function Users({ searchParams }: { searchParams: { q?: string } }) {
+export default async function Users(props: { searchParams: Promise<{ q?: string }> }) {
+  const searchParams = await props.searchParams;
   const me = await requirePageAdmin();
   const q = searchParams.q?.trim().slice(0, 120);
   const users = await db.user.findMany({

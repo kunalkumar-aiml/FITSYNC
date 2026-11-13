@@ -10,14 +10,14 @@ const CSRF_EXEMPT = ["/api/cron/"];
 const json = (status: number, message: string) => NextResponse.json({ error: { message } }, { status, headers: { "content-security-policy": API_CSP } });
 
 /**
- * Runs on the Edge before every page and API request.
+ * Runs before every page and API request (Next 16 "proxy", formerly middleware; Node runtime).
  *  1. API: CORS is not offered (no Access-Control-Allow-* headers; preflights get an empty 204) and every
  *     state-changing request passes the CSRF check (strict Origin/Referer + double-submit token).
  *  2. Pages: a fresh CSP nonce per request, and the CSRF cookie is issued if missing.
  *  3. Protected pages without a session cookie redirect to /login. This is only a convenience: every page and API
  *     route checks the session (and role) on the server again.
  */
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   if (pathname.startsWith("/api/")) {

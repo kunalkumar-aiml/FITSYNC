@@ -3,7 +3,8 @@ import { ok, route } from "@/lib/api";
 export const dynamic = "force-dynamic";
 
 // Public list of products (with their real brand and where they are listed) that have their own size chart.
-export const GET = route(async (req: Request, { params }: { params: { slug: string } }) => {
+export const GET = route(async (req: Request, ctx: { params: Promise<{ slug: string }> }) => {
+  const params = await ctx.params;
   const u = new URL(req.url);
   const category = u.searchParams.get("category") ?? undefined;
   const products = await db.product.findMany({

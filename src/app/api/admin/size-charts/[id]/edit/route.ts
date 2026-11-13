@@ -13,7 +13,8 @@ const FLAT_CONVERTIBLE = ["chest", "waist", "hips", "thigh"] as const;
  * Resolving an ambiguous measurement is a human statement of what it is, recorded per dimension in measurementSemantics.
  * A flat garment width can be converted to a circumference (x2) only when the admin explicitly asks for it.
  */
-export const POST = route(async (req: Request, { params }: { params: { id: string } }) => {
+export const POST = route(async (req: Request, ctx: { params: Promise<{ id: string }> }) => {
+  const params = await ctx.params;
   const admin = await requireAdmin();
   const input = await parseBody(req, editVersionSchema);
   const v = await db.brandSizeChartVersion.findUnique({ where: { id: params.id } });

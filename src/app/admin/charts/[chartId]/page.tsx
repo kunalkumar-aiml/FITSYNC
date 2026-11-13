@@ -10,7 +10,8 @@ export const dynamic = "force-dynamic";
 const fmt = (d: Date | null) => (d ? d.toLocaleString("en-IN", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "–");
 const safeHref = (u: string | null) => { try { return u && new URL(u).protocol === "https:" ? u : null; } catch { return null; } };
 
-export default async function ChartHistory({ params }: { params: { chartId: string } }) {
+export default async function ChartHistory(props: { params: Promise<{ chartId: string }> }) {
+  const params = await props.params;
   await requirePageAdmin();
   const chart = await db.brandSizeChart.findUnique({
     where: { id: params.chartId },

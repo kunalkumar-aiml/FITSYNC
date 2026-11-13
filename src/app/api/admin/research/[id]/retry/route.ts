@@ -9,7 +9,8 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
 // Re-runs only the targets that did not produce usable data.
-export const POST = route(async (_req: Request, { params }: { params: { id: string } }) => {
+export const POST = route(async (_req: Request, ctx: { params: Promise<{ id: string }> }) => {
+  const params = await ctx.params;
   const admin = await requireAdmin();
   await rateLimit(`research:${admin.id}`, 3, 10 * 60_000);
   const job = await db.researchJob.findUnique({ where: { id: params.id }, include: { sources: true } });

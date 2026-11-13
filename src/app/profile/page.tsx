@@ -4,7 +4,8 @@ import { MeasurementForm } from "@/components/measurement-form";
 export const metadata = { title: "Fit profile" };
 export const dynamic = "force-dynamic";
 
-export default async function Page({ searchParams }: { searchParams: { welcome?: string } }) {
+export default async function Page(props: { searchParams: Promise<{ welcome?: string }> }) {
+  const searchParams = await props.searchParams;
   const user = await requirePageUser("/profile");
   const [m, p] = await Promise.all([
     db.bodyMeasurement.findUnique({ where: { userId: user.id } }),

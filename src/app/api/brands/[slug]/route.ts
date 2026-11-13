@@ -2,7 +2,8 @@ import { db } from "@/lib/db";
 import { ApiError, ok, route } from "@/lib/api";
 export const dynamic = "force-dynamic";
 
-export const GET = route(async (_req: Request, { params }: { params: { slug: string } }) => {
+export const GET = route(async (_req: Request, ctx: { params: Promise<{ slug: string }> }) => {
+  const params = await ctx.params;
   const brand = await db.brand.findFirst({ where: { slug: params.slug, active: true }, include: { coverageNotes: { orderBy: { checkedAt: "desc" }, take: 1 } } });
   if (!brand) throw new ApiError(404, "Brand not found.");
   const charts = await db.brandSizeChart.findMany({

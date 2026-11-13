@@ -5,7 +5,8 @@ import { brandEditSchema } from "@/lib/schemas";
 import { logAdmin } from "@/lib/audit";
 export const dynamic = "force-dynamic";
 
-export const PATCH = route(async (req: Request, { params }: { params: { slug: string } }) => {
+export const PATCH = route(async (req: Request, ctx: { params: Promise<{ slug: string }> }) => {
+  const params = await ctx.params;
   const admin = await requireAdmin();
   const input = await parseBody(req, brandEditSchema);
   const before = await db.brand.findUnique({ where: { slug: params.slug } });
