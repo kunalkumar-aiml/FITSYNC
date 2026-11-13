@@ -40,7 +40,7 @@ export const accountSchema = z.object({
 export const adminUserUpdateSchema = z.object({
   role: z.enum(["USER", "ADMIN"]).optional(),
   disabled: z.boolean().optional(),
-  confirm: z.literal(true, { errorMap: () => ({ message: "Confirm this change." }) }),
+  confirm: z.literal(true, { error: () => "Confirm this change." }),
   reason: z.string().trim().min(3, "Say why (saved to the audit log).").max(300),
 });
 
@@ -97,14 +97,14 @@ export const chartVersionSchema = z.object({
   region: z.string().trim().min(1).max(20).default("GLOBAL"),
   productLine: z.string().trim().max(80).default(""),
   // The cut is required and may be UNKNOWN: a chart is never assumed to be a REGULAR cut.
-  fitCut: z.enum(["SLIM", "REGULAR", "RELAXED", "OVERSIZED", "UNKNOWN"], { required_error: "Say which cut the source states, or Unknown." }),
+  fitCut: z.enum(["SLIM", "REGULAR", "RELAXED", "OVERSIZED", "UNKNOWN"], { error: (iss) => (iss.input === undefined ? "Say which cut the source states, or Unknown." : undefined) }),
   // UNKNOWN keeps every dimension out of recommendations until someone states its meaning.
   measurementType: z.enum(["GARMENT", "BODY", "UNKNOWN"]),
   sourceType: z.enum(["OFFICIAL_SITE", "OFFICIAL_PDF", "OFFICIAL_PRODUCT_PAGE", "MARKETPLACE_LISTING", "STORE_MEASURED", "MANUAL_ENTRY"]).default("MANUAL_ENTRY"),
   productId: z.string().min(1).optional(),
   ambiguousDimensions: z.array(z.enum(["chest", "waist", "hips", "shoulder", "armLength", "inseam", "neck", "thigh"])).default([]),
   // The unit must be stated explicitly; nothing defaults to centimetres.
-  originalUnit: z.enum(["CM", "IN"], { required_error: "Choose the unit the source uses." }),
+  originalUnit: z.enum(["CM", "IN"], { error: (iss) => (iss.input === undefined ? "Choose the unit the source uses." : undefined) }),
   rows: z.array(chartRowSchema).min(2, "Add at least two sizes.").max(30),
   sourceUrl: httpsUrl.optional(),
   sourceNote: z.string().trim().max(500).optional(),
@@ -145,7 +145,8 @@ export const editVersionSchema = z.object({
   rows: z.array(chartRowSchema).min(2).max(30).optional(),
   measurementType: z.enum(["GARMENT", "BODY", "UNKNOWN"]).optional(),
   // resolve an ambiguous dimension by stating what it is. This is a human decision and is recorded.
-  resolveSemantics: z.record(z.enum(["chest", "waist", "hips", "shoulder", "armLength", "inseam", "neck", "thigh"]),
+  // Zod 4: z.record with an enum key is exhaustive (every key required); partialRecord keeps the Zod 3 behaviour.
+  resolveSemantics: z.partialRecord(z.enum(["chest", "waist", "hips", "shoulder", "armLength", "inseam", "neck", "thigh"]),
     z.enum(["BODY_CIRCUMFERENCE", "GARMENT_CIRCUMFERENCE", "BODY_LINEAR", "GARMENT_LINEAR", "GARMENT_WIDTH_FLAT"])).optional(),
   /** Explicit, recorded conversion of flat garment widths (chest/waist/hips/thigh) to circumference (x2). Never automatic. */
   convertFlatToCircumference: z.boolean().optional(),

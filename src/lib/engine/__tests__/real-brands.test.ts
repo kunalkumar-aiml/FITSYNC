@@ -32,7 +32,7 @@ describe("real sourced data rules", () => {
   });
   it("brands with no brand-level official chart have none, and are recorded as unavailable", () => {
     const withBrandCharts = new Set(data.charts.filter((c) => !c.product).map((c) => c.brand));
-    for (const brand of ["zara", "hm", "uniqlo", "levis", "adidas", "puma", "bewakoof", "snitch", "the-souled-store", "max-fashion", "westside", "savana"]) {
+    for (const brand of ["zara", "hm", "uniqlo", "levis", "puma", "bewakoof", "snitch", "the-souled-store", "max-fashion", "westside", "savana"]) {
       expect(withBrandCharts.has(brand), brand).toBe(false);
       expect(data.unavailable.some((u) => u.brand === brand), brand).toBe(true);
     }
@@ -48,7 +48,7 @@ describe("real sourced data rules", () => {
     for (const c of data.charts) expect(c.verificationStatus, c.sourceUrl).toBe("UNVERIFIED");
   });
   it("'official' charts come from the brand's own domain; marketplace charts are product-level with the real brand", () => {
-    const own: Record<string, string> = { nike: "nike.com" };
+    const own: Record<string, string> = { nike: "nike.com", adidas: "adidas.com" };
     for (const c of data.charts) {
       if (c.sourceType === "OFFICIAL_SITE") expect(c.sourceDomain!.endsWith(own[c.brand] ?? "__none__"), `${c.brand} ${c.sourceDomain}`).toBe(true);
       if (c.sourceType === "MARKETPLACE_LISTING") {
@@ -143,5 +143,24 @@ describe("recommendations from real charts", () => {
   it("brand comparison: same body, per-brand charts give independent results", () => {
     const results = ["MEN", "WOMEN"].map((g) => recommend({ body, chart: toChart(find("nike", g, "GLOBAL")), category: tshirt, fitPreference: "REGULAR" }));
     expect(results.every((r) => r.status === "ok")).toBe(true);
+  });
+
+  it("adidas men's tops (official US body chart): chest decides the size and the hip/waist rows match the published ranges", () => {
+    const c = find("adidas", "MEN", "US");
+    expect(c.sourceUrl).toBe("https://www.adidas.com/us/help/size_charts");
+    expect(c.measurementType).toBe("BODY");
+    expect(c.unit).toBe("CM");
+    const chart = toChart(c, "UNVERIFIED");
+    const size = (chest: number, waist: number) => {
+      const r = recommend({ body: normalizeMeasurements({ chest, waist }, "CM"), chart, category: tshirt, fitPreference: "REGULAR" });
+      return r.status === "ok" ? r.recommendedSize : null;
+    };
+    expect(size(84, 72)).toBe("XS");
+    expect(size(96, 84)).toBe("M");
+    expect(size(105, 92)).toBe("L");
+    expect(size(125, 112)).toBe("2XL");
+    // Unverified charts never claim verification
+    const r = recommend({ body: normalizeMeasurements({ chest: 96, waist: 84 }, "CM"), chart, category: tshirt, fitPreference: "REGULAR" });
+    expect(r.status === "ok" && r.dataStatus).toBe("UNVERIFIED");
   });
 });

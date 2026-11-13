@@ -10,7 +10,8 @@ export const dynamic = "force-dynamic";
 
 const STATUSES = ["VERIFIED", "UNVERIFIED", "NEEDS_HUMAN_VERIFICATION", "INVALID", "DEPRECATED"] as const;
 
-export default async function Charts({ searchParams }: { searchParams: { status?: string; brand?: string } }) {
+export default async function Charts(props: { searchParams: Promise<{ status?: string; brand?: string }> }) {
+  const searchParams = await props.searchParams;
   await requirePageAdmin();
   const status = STATUSES.find((s) => s === searchParams.status);
   const [charts, brands] = await Promise.all([

@@ -38,7 +38,7 @@ export const DELETE = route(async (req: Request) => {
     throw new ApiError(409, "You are the only administrator. Make another verified account an admin before deleting this one.");
   }
   await db.user.delete({ where: { id: user.id } });
-  clearSessionCookies();
+  await clearSessionCookies();
   await logAuthEvent("ACCOUNT_DELETED", { headers: req.headers }); // not linked to the deleted user
   return ok({ deleted: true });
 });

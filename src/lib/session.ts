@@ -22,11 +22,11 @@ export type SessionState =
   | { status: "none" }
   | { status: "expired" };
 
-const readToken = () => cookies().get(sessionCookieName())?.value;
+const readToken = async () => (await cookies()).get(sessionCookieName())?.value;
 
 /** Resolve the current request's session (memoised per request). Disabled accounts never resolve. */
 export const getSession = cache(async (): Promise<SessionState> => {
-  const token = readToken();
+  const token = await readToken();
   if (!token || token.length > 200) return { status: "none" };
   const s = await db.session.findUnique({
     where: { tokenHash: sha256(token) },
@@ -40,32 +40,53 @@ export const getSession = cache(async (): Promise<SessionState> => {
   return { status: "active", sessionId: s.id, user };
 });
 
-/** Create a session for userId and set the cookie. Any session presented with this request is revoked (rotation). */
-export async function startSession(userId: string, headers: Headers) {
-  const previous = readToken();
-  if (previous) await db.session.updateMany({ where: { tokenHash: sha256(previous), revokedAt: null }, data: { revokedAt: new Date() } });
+/**
+ * Everything a new session row needs except its user, computed BEFORE any database write. Anything that can fail
+ * here (for example a missing AUTH_SECRET when hashing the IP) then fails before an account is created.
+ */
+export function prepareSession(headers: Headers) {
   const token = randomToken();
   const now = new Date();
-  const session = await db.session.create({
-    data: { tokenHash: sha256(token), userId, expiresAt: new Date(now.getTime() + SESSION_ABSOLUTE_MS), lastSeenAt: now, userAgent: userAgentOf(headers), ipHash: ipHashOf(headers) },
-  });
-  cookies().set(sessionCookieName(), token, {
+  return {
+    token,
+    data: { tokenHash: sha256(token), expiresAt: new Date(now.getTime() + SESSION_ABSOLUTE_MS), lastSeenAt: now, userAgent: userAgentOf(headers), ipHash: ipHashOf(headers) },
+  };
+}
+
+/** Revoke the session cookie sent with this request, if any (rotation on login / registration). */
+export async function revokePresentedSession() {
+  const previous = await readToken();
+  if (previous) await db.session.updateMany({ where: { tokenHash: sha256(previous), revokedAt: null }, data: { revokedAt: new Date() } });
+}
+
+export async function setSessionCookie(token: string) {
+  const jar = await cookies();
+  jar.set(sessionCookieName(), token, {
     httpOnly: true, secure: cookieSecure(), sameSite: "lax", path: "/", maxAge: Math.floor(SESSION_ABSOLUTE_MS / 1000),
   });
-  cookies().delete(LEGACY_SESSION_COOKIE);
+  jar.delete(LEGACY_SESSION_COOKIE);
+}
+
+/** Create a session for userId and set the cookie. Any session presented with this request is revoked (rotation). */
+export async function startSession(userId: string, headers: Headers) {
+  const prepared = prepareSession(headers);
+  await revokePresentedSession();
+  const session = await db.session.create({ data: { ...prepared.data, userId } });
+  await setSessionCookie(prepared.token);
   return session;
 }
 
 /** Revoke the session presented with this request and clear the cookie. */
 export async function endCurrentSession() {
-  const token = readToken();
+  const token = await readToken();
   if (token) await db.session.updateMany({ where: { tokenHash: sha256(token), revokedAt: null }, data: { revokedAt: new Date() } });
-  clearSessionCookies();
+  await clearSessionCookies();
 }
 
-export function clearSessionCookies() {
-  cookies().delete(sessionCookieName());
-  cookies().delete(LEGACY_SESSION_COOKIE);
+export async function clearSessionCookies() {
+  const jar = await cookies();
+  jar.delete(sessionCookieName());
+  jar.delete(LEGACY_SESSION_COOKIE);
 }
 
 export const revokeAllSessions = (userId: string, exceptSessionId?: string) =>

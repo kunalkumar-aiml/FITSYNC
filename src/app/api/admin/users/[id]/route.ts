@@ -16,7 +16,8 @@ export const dynamic = "force-dynamic";
  *  - disabling signs the account out everywhere.
  * Every change needs explicit confirmation and a reason, and is written to the audit log.
  */
-export const PATCH = route(async (req: Request, { params }: { params: { id: string } }) => {
+export const PATCH = route(async (req: Request, ctx: { params: Promise<{ id: string }> }) => {
+  const params = await ctx.params;
   const admin = await requireAdmin();
   await rateLimit(`admin-user:${admin.id}`, 20, 10 * 60_000);
   const input = await parseBody(req, adminUserUpdateSchema);

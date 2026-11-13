@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const POST = route(async (req: Request) => {
   const s = await requireSession();
   const { count } = await revokeAllSessions(s.user.id);
-  clearSessionCookies();
+  await clearSessionCookies();
   await logAuthEvent("LOGOUT_ALL", { userId: s.user.id, headers: req.headers });
   return ok({ revoked: count });
 });
