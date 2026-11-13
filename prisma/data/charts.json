@@ -585,6 +585,88 @@
      "shoulder": 22.5
     }
    ]
+  },
+  {
+   "brand": "adidas",
+   "category": "tshirt",
+   "gender": "MEN",
+   "region": "US",
+   "productLine": "Shirts & Tops (regular)",
+   "fitCut": "REGULAR",
+   "measurementType": "BODY",
+   "unit": "CM",
+   "sourceType": "OFFICIAL_SITE",
+   "sourceUrl": "https://www.adidas.com/us/help/size_charts",
+   "sourceDomain": "www.adidas.com",
+   "extractionMethod": "WEB_FETCH_TEXT",
+   "retrievedAt": "2026-11-14",
+   "sourceNote": "adidas US size guide, men's Shirts & Tops, regular sizes. Body measurements (chest, waist, hip) as published in cm; the page also prints the same chart in inches. Tall and Short variants not imported. adidas states that the chart applies to all its shirts, T-shirts and tops. Retrieved 2026-11-14.",
+   "rows": [
+    {
+     "label": "XS",
+     "chest": 83,
+     "chestMax": 86,
+     "waist": 71,
+     "waistMax": 74,
+     "hips": 82,
+     "hipsMax": 85
+    },
+    {
+     "label": "S",
+     "chest": 87,
+     "chestMax": 92,
+     "waist": 75,
+     "waistMax": 80,
+     "hips": 86,
+     "hipsMax": 91
+    },
+    {
+     "label": "M",
+     "chest": 93,
+     "chestMax": 100,
+     "waist": 81,
+     "waistMax": 88,
+     "hips": 92,
+     "hipsMax": 99
+    },
+    {
+     "label": "L",
+     "chest": 101,
+     "chestMax": 108,
+     "waist": 89,
+     "waistMax": 96,
+     "hips": 100,
+     "hipsMax": 107
+    },
+    {
+     "label": "XL",
+     "chest": 109,
+     "chestMax": 118,
+     "waist": 97,
+     "waistMax": 106,
+     "hips": 108,
+     "hipsMax": 116
+    },
+    {
+     "label": "2XL",
+     "chest": 119,
+     "chestMax": 130,
+     "waist": 107,
+     "waistMax": 119,
+     "hips": 117,
+     "hipsMax": 125
+    },
+    {
+     "label": "3XL",
+     "chest": 131,
+     "chestMax": 142,
+     "waist": 120,
+     "waistMax": 132,
+     "hips": 126,
+     "hipsMax": 135
+    }
+   ],
+   "verificationStatus": "UNVERIFIED"
   }
  ],
  "unavailable": [
@@ -603,10 +685,6 @@
   {
    "brand": "levis",
    "note": "Official Levi's size guide could not be retrieved as a table. Only third-party copies were found, which are not used."
-  },
-  {
-   "brand": "adidas",
-   "note": "Only retailer copies of the adidas chart were found. The official adidas India table was not retrievable, so nothing is used."
   },
   {
    "brand": "puma",
@@ -639,9 +717,41 @@
   {
    "brand": "bewakoof",
    "note": "Bewakoof publishes charts per product. Two product-specific charts (via Nykaa Man) are stored, but their chest/shoulder meaning is ambiguous, so they cannot drive recommendations yet."
+  },
+  {
+   "brand": "adidas",
+   "note": "Only men's tops are added (official adidas US body-measurement chart). Women's tops, bottoms and an India-specific chart were not readable on the official site (re-checked 2026-11-14)."
+  },
+  {
+   "brand": "puma",
+   "note": "Re-checked 2026-11-14: PUMA's official size guide still exposes only DE/UK/US conversion tables, no body measurements. Retailer copies exist but are not used."
+  },
+  {
+   "brand": "hm",
+   "note": "Re-checked 2026-11-14: H&M's official size-guide pages (India and US) returned no readable measurement table; guides are inside product pages. Third-party copies are not used."
+  },
+  {
+   "brand": "zara",
+   "note": "Re-checked 2026-11-14: Zara states its measurement guide is on each product page; no brand-wide official table is published. Third-party copies are not used."
+  },
+  {
+   "brand": "uniqlo",
+   "note": "Re-checked 2026-11-14: UNIQLO publishes charts per product page only; no brand-wide official table was readable."
+  },
+  {
+   "brand": "levis",
+   "note": "Re-checked 2026-11-14: levi.in product pages list sizes without measurements, and the official global size guide could not be fetched. Third-party copies are not used."
+  },
+  {
+   "brand": "snitch",
+   "note": "Re-checked 2026-11-14: Snitch's size-chart page and catalogue load by JavaScript and returned no readable table."
+  },
+  {
+   "brand": "the-souled-store",
+   "note": "Re-checked 2026-11-14: The Souled Store's size-chart page returned no readable measurement table."
   }
  ],
- "researchedAt": "2026-11-10",
+ "researchedAt": "2026-11-14",
  "marketplaces": [
   {
    "slug": "nykaa-man",

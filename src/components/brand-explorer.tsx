@@ -64,7 +64,7 @@ export function BrandExplorer({ brands, categories }: { brands: ExplorerBrand[];
                   <span className="self-center">{m.length ? <DataBadge status={m.some((c) => c.verified) ? "VERIFIED" : "UNVERIFIED"} demo={b.isDemo} /> : <span className="tag">Data unavailable</span>}</span>
                   <span className="col-span-2 text-sm text-muted">
                     {b.region === "INDIAN" ? "Indian brand" : "International brand"}.{" "}
-                    {sets.length ? sets.join(", ") : (gender || category) ? "No chart for this filter." : "No usable official chart found yet."}
+                    {sets.length ? sets.join(", ") : (gender || category) ? "No chart for this filter." : (b.note ?? "No usable official chart found yet.")}
                   </span>
                 </Link>
               </li>
