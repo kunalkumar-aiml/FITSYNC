@@ -138,6 +138,19 @@ d("FITSYNC API", () => {
     expect((await user.req("GET", "/api/admin/users")).status).toBe(403);
   });
 
+  it("registration signs the new user in immediately and rotates any session cookie sent with it", async () => {
+    const c = new Client();
+    expect((await c.req("POST", "/api/auth/login", { email, password: pw })).status).toBe(200);
+    const before = new Client(); before.jar = new Map(c.jar);
+    const r = await c.req("POST", "/api/auth/register", { email: `rot-${run}@test.local`, password: pw, name: "Rotation Test" });
+    expect(r.status).toBe(201);
+    const me = await c.req("GET", "/api/auth/sessions");
+    expect(me.status).toBe(200); // the brand-new account's session works straight away
+    expect((await before.req("GET", "/api/auth/sessions")).status).toBe(401); // the cookie sent with the request was revoked
+    const health = await new Client().req("GET", "/api/health");
+    expect(health.json.data.status).toBe("ok");
+  });
+
   it("an admin-looking email gets no privileges (ADMIN_EMAILS promotion is gone)", async () => {
     const c = new Client();
     const r = await c.req("POST", "/api/auth/register", { email: `admin-${run}@test.local`, password: pw });
