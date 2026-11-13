@@ -8,12 +8,15 @@ export const dynamic = "force-dynamic";
 // Actual fit reported by the user is stored separately from the predicted fit in Recommendation.result.
 export const POST = route(async (req: Request) => {
   const user = await requireUser();
-  rateLimit(`fb:${user.id}`, 20, 60_000);
+  await rateLimit(`fb:${user.id}`, 20, 60_000);
   const input = await parseBody(req, feedbackSchema);
   const rec = await db.recommendation.findFirst({ where: { id: input.recommendationId, userId: user.id } });
   if (!rec) throw new ApiError(404, "Recommendation not found.");
-  const fb = await db.userFitFeedback.create({
-    data: { userId: user.id, recommendationId: rec.id, purchasedSize: input.purchasedSize, outcome: input.outcome, review: input.review },
-  });
-  return ok(fb, 201);
+  // One report per recommendation: sending again corrects the earlier report instead of adding a duplicate.
+  const existing = await db.userFitFeedback.findFirst({ where: { recommendationId: rec.id, userId: user.id } });
+  const data = { purchasedSize: input.purchasedSize, outcome: input.outcome, review: input.review ?? null };
+  const fb = existing
+    ? await db.userFitFeedback.update({ where: { id: existing.id }, data })
+    : await db.userFitFeedback.create({ data: { userId: user.id, recommendationId: rec.id, ...data } });
+  return ok(fb, existing ? 200 : 201);
 });

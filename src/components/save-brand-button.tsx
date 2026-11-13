@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { Heart } from "lucide-react";
-import { api, ClientError } from "@/lib/client";
+import { Bookmark, BookmarkCheck } from "lucide-react";
+import { api } from "@/lib/client";
 import { useToast } from "./toast";
 
 export function SaveBrandButton({ slug, initial }: { slug: string; initial: boolean }) {
@@ -13,13 +13,13 @@ export function SaveBrandButton({ slug, initial }: { slug: string; initial: bool
     try {
       await api(`/api/brands/${slug}/save`, { method: saved ? "DELETE" : "PUT" });
       setSaved(!saved);
-      toast("success", saved ? "Removed from favourites" : "Saved to favourites");
-    } catch (e) { toast("error", e instanceof ClientError ? e.message : "Couldn’t update favourites."); }
+      toast("success", saved ? "Removed from saved brands" : "Saved to your brands");
+    } catch { toast("error", "Couldn’t update saved brands. Try again."); }
     setBusy(false);
   }
   return (
-    <button onClick={toggle} disabled={busy} aria-pressed={saved} className="btn btn-ghost">
-      <Heart size={16} className={saved ? "fill-accent text-accent" : ""} />{saved ? "Saved" : "Save brand"}
+    <button type="button" onClick={toggle} disabled={busy} aria-pressed={saved} className="btn btn-ghost">
+      {saved ? <BookmarkCheck size={16} strokeWidth={1.6} /> : <Bookmark size={16} strokeWidth={1.6} />}{saved ? "Saved" : "Save brand"}
     </button>
   );
 }

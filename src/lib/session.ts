@@ -1,38 +1,72 @@
-import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { authSecret } from "./env";
+import { cache } from "react";
+import { db } from "./db";
+import { cookieSecure } from "./env";
+import { randomToken, sha256 } from "./security/crypto";
+import { ipHashOf, userAgentOf } from "./security/request-meta";
+import { LEGACY_SESSION_COOKIE, sessionCookieName } from "./security/cookie-names";
 
-export const COOKIE = "fitsync_session";
-const MAX_AGE = 60 * 60 * 24 * 7;
+/**
+ * Revocable server-side sessions.
+ * - The cookie holds 256 random bits; the database stores only SHA-256(token). A leaked database row cannot be replayed.
+ * - Absolute lifetime 30 days; idle timeout 7 days (lastSeenAt is refreshed at most every 10 minutes).
+ * - Logout, "log out everywhere", password reset/change and account disabling revoke sessions immediately.
+ * - Legacy V3 JWT cookies are not accepted (they could not be revoked); holders are simply asked to log in again.
+ */
+import { SESSION_ABSOLUTE_MS, SESSION_IDLE_MS, TOUCH_EVERY_MS, isSessionUsable } from "./session-policy";
+export { SESSION_ABSOLUTE_MS, SESSION_IDLE_MS, isSessionUsable };
 
-export async function createSessionToken(userId: string) {
-  return new SignJWT({ sub: userId })
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setExpirationTime(`${MAX_AGE}s`)
-    .sign(authSecret());
-}
+export type SessionUser = { id: string; email: string; name: string | null; role: "USER" | "ADMIN"; emailVerifiedAt: Date | null };
+export type SessionState =
+  | { status: "active"; sessionId: string; user: SessionUser }
+  | { status: "none" }
+  | { status: "expired" };
 
-export async function verifySessionToken(token: string | undefined): Promise<string | null> {
-  if (!token) return null;
-  try {
-    const { payload } = await jwtVerify(token, authSecret(), { algorithms: ["HS256"] });
-    return typeof payload.sub === "string" ? payload.sub : null;
-  } catch {
-    return null;
-  }
-}
+const readToken = () => cookies().get(sessionCookieName())?.value;
 
-export async function setSessionCookie(userId: string) {
-  const token = await createSessionToken(userId);
-  cookies().set(COOKIE, token, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: MAX_AGE,
+/** Resolve the current request's session (memoised per request). Disabled accounts never resolve. */
+export const getSession = cache(async (): Promise<SessionState> => {
+  const token = readToken();
+  if (!token || token.length > 200) return { status: "none" };
+  const s = await db.session.findUnique({
+    where: { tokenHash: sha256(token) },
+    include: { user: { select: { id: true, email: true, name: true, role: true, emailVerifiedAt: true, disabledAt: true } } },
   });
+  if (!s || !isSessionUsable(s) || s.user.disabledAt) return { status: "expired" };
+  if (Date.now() - s.lastSeenAt.getTime() > TOUCH_EVERY_MS) {
+    await db.session.update({ where: { id: s.id }, data: { lastSeenAt: new Date() } }).catch(() => {});
+  }
+  const { disabledAt: _d, ...user } = s.user;
+  return { status: "active", sessionId: s.id, user };
+});
+
+/** Create a session for userId and set the cookie. Any session presented with this request is revoked (rotation). */
+export async function startSession(userId: string, headers: Headers) {
+  const previous = readToken();
+  if (previous) await db.session.updateMany({ where: { tokenHash: sha256(previous), revokedAt: null }, data: { revokedAt: new Date() } });
+  const token = randomToken();
+  const now = new Date();
+  const session = await db.session.create({
+    data: { tokenHash: sha256(token), userId, expiresAt: new Date(now.getTime() + SESSION_ABSOLUTE_MS), lastSeenAt: now, userAgent: userAgentOf(headers), ipHash: ipHashOf(headers) },
+  });
+  cookies().set(sessionCookieName(), token, {
+    httpOnly: true, secure: cookieSecure(), sameSite: "lax", path: "/", maxAge: Math.floor(SESSION_ABSOLUTE_MS / 1000),
+  });
+  cookies().delete(LEGACY_SESSION_COOKIE);
+  return session;
 }
 
-export const clearSessionCookie = () => cookies().delete(COOKIE);
-export const currentUserId = () => verifySessionToken(cookies().get(COOKIE)?.value);
+/** Revoke the session presented with this request and clear the cookie. */
+export async function endCurrentSession() {
+  const token = readToken();
+  if (token) await db.session.updateMany({ where: { tokenHash: sha256(token), revokedAt: null }, data: { revokedAt: new Date() } });
+  clearSessionCookies();
+}
+
+export function clearSessionCookies() {
+  cookies().delete(sessionCookieName());
+  cookies().delete(LEGACY_SESSION_COOKIE);
+}
+
+export const revokeAllSessions = (userId: string, exceptSessionId?: string) =>
+  db.session.updateMany({ where: { userId, revokedAt: null, ...(exceptSessionId ? { id: { not: exceptSessionId } } : {}) }, data: { revokedAt: new Date() } });

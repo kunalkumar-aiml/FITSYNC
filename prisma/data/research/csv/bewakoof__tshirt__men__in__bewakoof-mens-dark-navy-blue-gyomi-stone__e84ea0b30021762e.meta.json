@@ -4,8 +4,8 @@
   "gender": "MEN",
   "region": "IN",
   "productLine": "",
-  "fitCut": "REGULAR",
-  "measurementType": "GARMENT",
+  "fitCut": "UNKNOWN",
+  "measurementType": "UNKNOWN",
   "measurementSemantics": {
     "chest": "AMBIGUOUS",
     "shoulder": "AMBIGUOUS",

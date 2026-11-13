@@ -1,7 +1,7 @@
 import type { ChartRow, Dimension, FitPreference, Unit } from "../../engine";
 import { DIMENSIONS } from "../../engine";
 import { pageText } from "../extraction/html-table";
-import { ambiguousFor, detectMeasurementType } from "../extraction/semantics";
+import { ambiguousFor, detectMeasurementType, detectUnitFromText } from "../extraction/semantics";
 import { dimensionFor, type Key } from "../normalization/aliases";
 import type { ExtractedChart, ExtractionResult, SourceAdapter } from "../types";
 
@@ -35,15 +35,19 @@ function pipeStyle(text: string) {
 }
 
 /** Header labels then repeating [size, (Sold Out)?, n values] (Nykaa Man style, as served in page text). */
-function columnStyle(rawText: string) {
+function columnStyle(rawText: string): { label: string; vals: Record<string, number>; unit: Unit | "UNKNOWN"; names: Record<string, string> }[] {
   const tokens = rawText.split(/\n\s*\n/).map((t) => t.trim()).filter(Boolean);
   const i = tokens.findIndex((t) => /^size$/i.test(t)); if (i < 0) return [];
   const heads: string[] = []; let j = i + 1;
   while (j < tokens.length && /^[A-Z][A-Z ]+$/.test(tokens[j]) && !new RegExp(`^${SZ}$`).test(tokens[j])) heads.push(tokens[j++]);
   const keys = heads.map((h) => dimensionFor(h));
   if (!heads.length || keys.some((k) => !k)) return [];
-  const unit: Unit = /\bcm\b/i.test(tokens[i - 1] ?? "") && /\bin\b/i.test(tokens[i - 1] ?? "") ? "CM" : "CM"; // default view of the page; verified by the value ranges below
-  const rows: { label: string; vals: Record<string, number>; unit: Unit; names: Record<string, string> }[] = [];
+  // Nykaa-style listings show a "cm | in" toggle right before the table and render the cm view by default.
+  // Without that toggle (or another statement) the unit is UNKNOWN: it is never inferred from the size of the numbers.
+  const toggle = /\bcm\b/i.test(tokens[i - 1] ?? "") && /\bin\b/i.test(tokens[i - 1] ?? "");
+  const stated = detectUnitFromText(tokens.slice(Math.max(0, i - 6), i).join(" "));
+  const unit: Unit | "UNKNOWN" = toggle ? "CM" : stated?.unit ?? "UNKNOWN";
+  const rows: { label: string; vals: Record<string, number>; unit: Unit | "UNKNOWN"; names: Record<string, string> }[] = [];
   while (j < tokens.length && new RegExp(`^${SZ}$`).test(tokens[j])) {
     const label = tokens[j++]; if (/^sold out$/i.test(tokens[j] ?? "")) j++;
     const nums: number[] = [];
@@ -67,7 +71,7 @@ export const marketplaceListingAdapter: SourceAdapter = {
   extract({ body, target }): ExtractionResult {
     const flat = pageText(body);
     const lines = body.includes("<") ? body.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<[^>]+>/g, "\n").replace(/&nbsp;/g, " ") : body;
-    const found = pipeStyle(flat).length >= 2 ? pipeStyle(flat) : columnStyle(lines);
+    const found: { label: string; vals: Record<string, number>; unit: Unit | "UNKNOWN"; names: Record<string, string> }[] = pipeStyle(flat).length >= 2 ? pipeStyle(flat) : columnStyle(lines);
     if (found.length < 2) return { status: "SOURCE_UNAVAILABLE", reason: "No product-level size table found in the page text (it may be rendered by JavaScript)." };
     const dims = new Set<Dimension>(); const labels: Record<string, string> = {};
     const rows: ChartRow[] = found.map((f) => {
@@ -78,9 +82,10 @@ export const marketplaceListingAdapter: SourceAdapter = {
     const sem = detectMeasurementType(flat); // listings almost never say; then it stays UNKNOWN
     const fit = STATED_FIT.find(([re]) => re.test(flat))?.[1];
     const chart: ExtractedChart = {
-      rows, unit: found[0].unit, columnLabels: labels, measurementType: sem.type === "UNKNOWN" ? "UNKNOWN" : sem.type, semanticsEvidence: sem.evidence,
+      rows, unit: found[0].unit, unitEvidence: found[0].unit === "UNKNOWN" ? null : "unit printed next to the values / page unit toggle", columnLabels: labels, measurementType: sem.type === "UNKNOWN" ? "UNKNOWN" : sem.type, semanticsEvidence: sem.evidence,
       ambiguousDimensions: ambiguousFor(sem.type, [...dims]), statedFit: fit, productName: target.productName, notes: [],
     };
+    if (chart.unit === "UNKNOWN") return { status: "NEEDS_HUMAN_VERIFICATION", chart, reason: "Product chart extracted, but the listing does not state its unit. Nothing was converted." };
     if (sem.type === "UNKNOWN") return { status: "NEEDS_HUMAN_VERIFICATION", chart, reason: "Product chart extracted, but the listing does not say whether chest/shoulder are body or garment measurements. Those dimensions are flagged ambiguous." };
     return { status: "SUCCESS", chart, reason: "Product-level chart extracted." };
   },

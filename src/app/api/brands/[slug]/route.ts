@@ -7,7 +7,7 @@ export const GET = route(async (_req: Request, { params }: { params: { slug: str
   if (!brand) throw new ApiError(404, "Brand not found.");
   const charts = await db.brandSizeChart.findMany({
     where: { brandId: brand.id, active: true },
-    include: { category: true, versions: { where: { status: { not: "DEPRECATED" } }, orderBy: { version: "desc" } } },
+    include: { category: true, versions: { where: { status: { in: ["VERIFIED", "UNVERIFIED"] } }, orderBy: { version: "desc" } } },
   });
   return ok({
     brand: { slug: brand.slug, name: brand.name, region: brand.region, isDemo: brand.isDemo },

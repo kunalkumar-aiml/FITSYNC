@@ -51,6 +51,7 @@ export async function fetchPage(rawUrl: string, o: Opts = {}): Promise<PageResul
       if ([401, 403, 407, 429].includes(res.status)) return { ok: false, status: "ACCESS_RESTRICTED", httpStatus: res.status, reason: `Site refused automated access (HTTP ${res.status}). Not bypassed.` };
       if (!res.ok) return { ok: false, status: "SOURCE_UNAVAILABLE", httpStatus: res.status, reason: `HTTP ${res.status}.` };
       const type = res.headers.get("content-type") ?? "";
+      if (/application\/pdf/i.test(type)) return { ok: false, status: "SOURCE_UNAVAILABLE", httpStatus: res.status, reason: "This source is a PDF. Automatic PDF table extraction is not supported yet: open it, check the table, and import it with the CSV importer." };
       if (!/text\/(html|plain)|application\/xhtml/.test(type)) return { ok: false, status: "SOURCE_UNAVAILABLE", httpStatus: res.status, reason: `Unsupported content type: ${type || "unknown"}.` };
       const len = Number(res.headers.get("content-length") ?? 0);
       if (len > MAX_BYTES) return { ok: false, status: "SOURCE_UNAVAILABLE", httpStatus: res.status, reason: "Page too large." };

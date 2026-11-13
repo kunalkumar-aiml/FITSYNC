@@ -1,50 +1,50 @@
+import Link from "next/link";
 import { db } from "@/lib/db";
 import { requirePageAdmin } from "@/lib/auth";
-import { AdminClient } from "@/components/admin-client";
-import { CATEGORY_CONFIGS } from "@/lib/engine";
-import { getCoverage, getCoverageRows } from "@/lib/coverage";
-import { AdminData } from "@/components/admin-data";
+import { AdminHeader, Stat } from "@/components/admin/admin-header";
+import { emailProvider } from "@/lib/email";
+import { rateLimitBackend } from "@/lib/rate-limit";
+import { Notice } from "@/components/ui";
 export const metadata = { title: "Admin" };
 export const dynamic = "force-dynamic";
 
-export default async function Page() {
-  await requirePageAdmin(); // server-side check; the API routes enforce it again
-  const coverage = await getCoverage();
-  const coverageRows = await getCoverageRows();
-  const [jobs, allBrands, marketplaces, versionRows] = await Promise.all([
-    db.researchJob.findMany({ orderBy: { createdAt: "desc" }, take: 10, include: { sources: { orderBy: { retrievedAt: "desc" } } } }),
-    db.brand.findMany({ orderBy: { name: "asc" }, select: { slug: true, name: true, region: true, active: true } }),
-    db.marketplace.findMany({ orderBy: { name: "asc" }, select: { slug: true, name: true } }),
-    db.brandSizeChartVersion.findMany({ orderBy: [{ createdAt: "desc" }], take: 150, include: { chart: { include: { brand: true, category: true, product: true } }, _count: { select: { verifications: true } } } }),
+export default async function Overview() {
+  await requirePageAdmin();
+  const since = new Date(Date.now() - 7 * 86_400_000);
+  const [users, admins, withM, recs, fb, review, unverified, failedJobs, brands, failures, audit] = await Promise.all([
+    db.user.count(), db.user.count({ where: { role: "ADMIN" } }), db.bodyMeasurement.count(), db.recommendation.count(), db.userFitFeedback.count(),
+    db.brandSizeChartVersion.count({ where: { status: "NEEDS_HUMAN_VERIFICATION" } }),
+    db.brandSizeChartVersion.count({ where: { status: "UNVERIFIED", chart: { brand: { isDemo: false } } } }),
+    db.researchJob.count({ where: { state: "FAILED" } }),
+    db.brand.count({ where: { active: true, isDemo: false } }),
+    db.authEvent.count({ where: { type: "LOGIN_FAILURE", createdAt: { gte: since } } }),
+    db.adminAuditLog.findMany({ orderBy: { createdAt: "desc" }, take: 8 }),
   ]);
-  const [users, withM, recs, fb, outcomes, brands, versions] = await Promise.all([
-    db.user.count(), db.bodyMeasurement.count(), db.recommendation.count(), db.userFitFeedback.count(),
-    db.userFitFeedback.groupBy({ by: ["outcome"], _count: true }),
-    db.brand.findMany({ where: { active: true }, orderBy: { name: "asc" }, select: { slug: true, name: true } }),
-    db.brandSizeChartVersion.findMany({
-      orderBy: [{ status: "asc" }, { createdAt: "desc" }], take: 100,
-      include: { chart: { include: { brand: true, category: true } } },
-    }),
-  ]);
-  const out = Object.fromEntries(outcomes.map((o) => [o.outcome, o._count]));
-  const stats = [
-    ["Users", users], ["With measurements", withM], ["Recommendations", recs], ["Fit reports", fb],
-    ["Unverified charts", versions.filter((v) => v.status === "UNVERIFIED" && !v.chart.brand.isDemo).length],
-    ["Missing brand data", coverage.reduce((n, b) => n + Object.values(b.cells).filter((c) => c.status === "UNAVAILABLE").length, 0)],
-  ];
+  const warnings = [
+    emailProvider() === "none" && "Email delivery is not configured: confirmation and password-reset emails cannot be sent.",
+    process.env.NODE_ENV === "production" && rateLimitBackend() === "memory" && "Rate limits use per-instance memory. Configure Upstash Redis for limits that hold across instances.",
+  ].filter(Boolean) as string[];
   return (
-    <div className="container-x py-8 sm:py-12 max-w-4xl">
-      <h1 className="text-3xl sm:text-4xl font-semibold">Admin</h1>
-      <dl className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        {stats.map(([k, v]) => <div key={k as string} className="card p-4"><dt className="text-xs text-muted">{k}</dt><dd className="text-2xl font-semibold tabular-nums">{v}</dd></div>)}
+    <>
+      <AdminHeader title="Overview" lede="The state of FITSYNC’s accounts and data. Counts only; no personal measurements are shown in admin." />
+      {warnings.length > 0 && <div className="space-y-2 mb-8">{warnings.map((w) => <Notice key={w} tone="warn">{w} <Link href="/admin/health" className="link">System health</Link></Notice>)}</div>}
+      <dl className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-6">
+        <Stat label="Accounts" value={users} note={`${admins} administrator${admins === 1 ? "" : "s"}`} />
+        <Stat label="With measurements" value={withM} />
+        <Stat label="Saved recommendations" value={recs} />
+        <Stat label="Fit reports" value={fb} />
+        <Stat label="Brands tracked" value={brands} />
+        <Stat label="Charts awaiting review" value={review} />
+        <Stat label="Unverified charts" value={unverified} />
+        <Stat label="Failed logins, 7 days" value={failures} note={failedJobs ? `${failedJobs} failed research job(s)` : undefined} />
       </dl>
-      <p className="mt-3 text-sm text-muted">Reported fit so far: {out.PERFECT ?? 0} perfect · {out.TOO_TIGHT ?? 0} too tight · {out.TOO_LOOSE ?? 0} too loose.</p>
-      <div className="mt-8 space-y-8">
-        <AdminData coverage={coverageRows} jobs={JSON.parse(JSON.stringify(jobs))} brands={allBrands} marketplaces={marketplaces} categories={CATEGORY_CONFIGS.map((c) => ({ slug: c.slug, name: c.name }))}
-          versions={versionRows.map((v) => ({ id: v.id, brand: v.chart.brand.name, category: v.chart.category.name, gender: v.chart.gender, region: v.chart.region, product: v.chart.product?.name ?? null, productLine: v.chart.productLine, version: v.version, status: v.status, sourceType: v.sourceType, sourceUrl: v.sourceUrl, extractionMethod: v.extractionMethod, retrievedAt: v.retrievedAt?.toISOString() ?? null, ambiguous: (Array.isArray(v.ambiguousDimensions) ? v.ambiguousDimensions : []) as string[], isDemo: v.chart.brand.isDemo, decisions: v._count.verifications }))} />
-        <AdminClient coverage={coverage} brands={brands} categories={CATEGORY_CONFIGS.map((c) => ({ slug: c.slug, name: c.name }))}
-          versions={versions.map((v) => ({ id: v.id, brand: v.chart.brand.name, category: v.chart.category.name, fitCut: v.chart.fitCut, version: v.version, gender: v.chart.gender, region: v.chart.region, productLine: v.chart.productLine, sourceType: v.sourceType, status: v.status, sourceUrl: v.sourceUrl, sourceNote: v.sourceNote, isDemo: v.chart.brand.isDemo }))} />
-      </div>
-    </div>
+      <section className="mt-12">
+        <div className="flex items-baseline justify-between"><h2 className="text-lg font-semibold">Recent admin activity</h2><Link href="/admin/audit" className="text-sm link">Full log</Link></div>
+        {audit.length === 0 ? <p className="mt-3 text-sm text-muted">No administrative changes recorded yet.</p> : (
+          <table className="table-x mt-3"><thead><tr><th>When</th><th>Who</th><th>What</th><th>Target</th></tr></thead>
+            <tbody>{audit.map((a) => <tr key={a.id}><td className="whitespace-nowrap text-muted">{a.createdAt.toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</td><td>{a.actorEmail}</td><td className="font-medium">{a.action}</td><td className="text-muted">{a.targetType}</td></tr>)}</tbody></table>
+        )}
+      </section>
+    </>
   );
 }

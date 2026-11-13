@@ -13,5 +13,17 @@ export function detectMeasurementType(text: string): { type: "BODY" | "GARMENT" 
   return { type: "UNKNOWN", evidence: null };
 }
 
+/**
+ * The unit the page itself states for its size table ("All measurements are in cm", "Measurements in inches").
+ * Returns null when the page says nothing or mentions both without saying which the table uses.
+ */
+export function detectUnitFromText(text: string): { unit: "CM" | "IN"; evidence: string } | null {
+  const cm = /(measurements?|sizes?|values?|chart|table)[^.]{0,40}\b(in|are in|shown in)\s+(cm|centimet(?:er|re)s?)\b/i.exec(text);
+  const inch = /(measurements?|sizes?|values?|chart|table)[^.]{0,40}\b(in|are in|shown in)\s+(inch(?:es)?)\b/i.exec(text);
+  if (cm && !inch) return { unit: "CM", evidence: cm[0].trim() };
+  if (inch && !cm) return { unit: "IN", evidence: inch[0].trim() };
+  return null;
+}
+
 const CIRC: Dimension[] = ["chest", "waist", "hips", "shoulder", "thigh", "neck", "armLength", "inseam"];
 export const ambiguousFor = (type: "BODY" | "GARMENT" | "UNKNOWN", present: Dimension[]) => (type === "UNKNOWN" ? present.filter((d) => CIRC.includes(d)) : []);

@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export const POST = route(async (req: Request) => {
   const user = await requireUser();
-  rateLimit(`rec:${user.id}`, 60, 60_000);
+  await rateLimit(`rec:${user.id}`, 60, 60_000);
   const input = await parseBody(req, recommendSchema);
   const { loaded, result, body, fitPreference } = await runRecommendation(user.id, input.brandSlug, input.categorySlug, { fitPreference: input.fitPreference, gender: input.gender, region: input.region, productId: input.productId });
   const saved = input.save ? await saveRecommendation(user.id, loaded.version.id, fitPreference, result, body) : null;

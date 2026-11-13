@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 import { researchJobSchema } from "@/lib/schemas";
 import { runJob } from "@/lib/research-job";
+import { logAdmin } from "@/lib/audit";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
@@ -17,8 +18,9 @@ export const GET = route(async () => {
 export const POST = route(async (req: Request) => {
   const admin = await requireAdmin();
   const { targets } = await parseBody(req, researchJobSchema); // SSRF/allow-list validation first; bad input never costs quota
-  rateLimit(`research:${admin.id}`, 3, 10 * 60_000);
+  await rateLimit(`research:${admin.id}`, 3, 10 * 60_000);
   const job = await db.researchJob.create({ data: { targets, createdById: admin.id } });
+  await logAdmin(admin, "research.job.start", "ResearchJob", job.id, { urls: targets.map((t) => t.url) });
   await runJob(job.id);
   return ok(await db.researchJob.findUnique({ where: { id: job.id }, include: { sources: true } }), 201);
 });

@@ -1,7 +1,6 @@
 generator client {
   provider   = "prisma-client-js"
   engineType = "client"
-  previewFeatures = ["queryCompiler"]
 }
 
 datasource db {
@@ -30,6 +29,30 @@ enum VerificationStatus {
   UNVERIFIED
   VERIFIED
   DEPRECATED
+  NEEDS_HUMAN_VERIFICATION // extracted automatically but something needs a person (meaning, unit, warnings). Not used for recommendations.
+  INVALID                  // rejected by validation or by an admin. Never used.
+}
+
+enum AuthTokenType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
+enum AuthEventType {
+  REGISTER
+  LOGIN_SUCCESS
+  LOGIN_FAILURE
+  LOGIN_BLOCKED_DISABLED
+  LOGOUT
+  LOGOUT_ALL
+  SESSION_REVOKED
+  EMAIL_VERIFICATION_SENT
+  EMAIL_VERIFIED
+  PASSWORD_RESET_REQUESTED
+  PASSWORD_RESET_COMPLETED
+  PASSWORD_CHANGED
+  PASSWORD_REHASHED
+  ACCOUNT_DELETED
 }
 
 enum Gender {
@@ -86,6 +109,15 @@ model User {
   role          Role      @default(USER)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  emailVerifiedAt   DateTime?
+  passwordChangedAt DateTime?
+  lastLoginAt       DateTime?
+  disabledAt        DateTime? // set by an admin; the account cannot sign in while set
+  sessions      Session[]
+  authTokens    AuthToken[]
+  authEvents    AuthEvent[]
+  adminActions  AdminAuditLog[]
+  verifiedVersions BrandSizeChartVersion[] @relation("VersionVerifiedBy")
   profile       UserProfile?
   measurement   BodyMeasurement?
   recommendations Recommendation[]
@@ -144,6 +176,7 @@ model ClothingCategory {
   // Which body dimensions matter for this category (JSON array of keys, e.g. ["chest","shoulder","waist"])
   dimensions Json
   sizeCharts BrandSizeChart[]
+  products   Product[]
 }
 
 model BrandSizeChart {
@@ -158,7 +191,7 @@ model BrandSizeChart {
   gender       Gender   @default(UNISEX)
   region       String   @default("GLOBAL") // sizing system / market: IN, GLOBAL, ASIA, US, EU, UK...
   productLine  String   @default("")       // e.g. "Tops & Tees (alpha)"; empty when the brand has one chart
-  fitCut       String   @default("REGULAR") // the GARMENT's cut as sold by the brand (not the user's preference)
+  fitCut       String   @default("REGULAR") // the GARMENT's cut as sold (SLIM|REGULAR|RELAXED|OVERSIZED|UNKNOWN). UNKNOWN = the source does not say.
   active       Boolean  @default(true)
   createdAt    DateTime @default(now())
   versions     BrandSizeChartVersion[]
@@ -172,7 +205,9 @@ model BrandSizeChartVersion {
   chart          BrandSizeChart @relation(fields: [chartId], references: [id], onDelete: Cascade)
   version        Int
   rows           Json
-  measurementType String  @default("GARMENT") // GARMENT | BODY (what the brand's published numbers describe)
+  // GARMENT | BODY | UNKNOWN: what the published numbers describe. UNKNOWN is never silently treated as GARMENT;
+  // per-dimension meaning lives in measurementSemantics and wins over this chart-level default.
+  measurementType String  @default("GARMENT")
   sourceType     SourceType @default(MANUAL_ENTRY)
   originalUnit   Unit     @default(CM)        // unit the source used; rows are always stored in cm
   retrievedAt    DateTime?
@@ -188,8 +223,10 @@ model BrandSizeChartVersion {
   sourceNote     String?
   verifiedAt     DateTime?
   verifiedById   String?
+  verifiedBy     User?    @relation("VersionVerifiedBy", fields: [verifiedById], references: [id], onDelete: SetNull)
   createdAt      DateTime @default(now())
   recommendations Recommendation[]
+  researchSources ResearchSource[]
   @@unique([chartId, version])
 }
 
@@ -233,11 +270,15 @@ model UserFitFeedback {
   @@map("UserFeedback") // table name kept so existing data is untouched
 }
 
-// Records that a brand/category/gender was checked and no usable official data exists (shown as DATA UNAVAILABLE).
+// Records that a brand/category/gender (or one product, when productId is set) was checked and no usable data exists.
+// productId null = missing BRAND-level data; productId set = missing PRODUCT-level data.
 model BrandCoverageNote {
   id         String   @id @default(cuid())
   brandId    String
   brand      Brand    @relation(fields: [brandId], references: [id], onDelete: Cascade)
+  productId  String?
+  product    Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  sourceUrl  String?
   categoryId String?
   gender     Gender?
   note       String
@@ -262,8 +303,10 @@ model Product {
   slug        String
   name        String
   categoryId  String
+  category    ClothingCategory @relation(fields: [categoryId], references: [id])
   gender      Gender   @default(UNISEX)
-  fitCut      String   @default("REGULAR")
+  fitCut      String   @default("REGULAR") // UNKNOWN when the listing does not state the cut
+  coverageNotes BrandCoverageNote[]
   fitCutStated Boolean @default(false) // did the listing actually state the cut?
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
@@ -316,6 +359,7 @@ model ResearchSource {
   extractionMethod String?
   note             String?
   chartVersionId   String?
+  chartVersion     BrandSizeChartVersion? @relation(fields: [chartVersionId], references: [id], onDelete: SetNull)
   retrievedAt      DateTime @default(now())
   @@index([jobId])
   @@index([url])
@@ -332,4 +376,64 @@ model DataVerification {
   note           String?
   createdAt      DateTime @default(now())
   @@index([chartVersionId])
+}
+
+// ---------------------------------------------------------------- V5: identity & security
+
+// Revocable server-side session. The cookie holds a random token; only its SHA-256 hash is stored.
+model Session {
+  id          String    @id @default(cuid())
+  tokenHash   String    @unique
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime
+  lastSeenAt  DateTime  @default(now())
+  revokedAt   DateTime?
+  userAgent   String?   // truncated, for "your devices" in Settings
+  ipHash      String?   // keyed hash, never the raw IP
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+// Single-use, expiring email verification / password reset tokens. Only the SHA-256 hash is stored.
+model AuthToken {
+  id        String        @id @default(cuid())
+  type      AuthTokenType
+  tokenHash String        @unique
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  email     String        // address the token was issued for (a later email change invalidates it)
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime      @default(now())
+  @@index([userId, type])
+}
+
+// Security events. Never contains passwords, tokens, measurements or raw IP addresses.
+model AuthEvent {
+  id        String        @id @default(cuid())
+  type      AuthEventType
+  userId    String?
+  user      User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipHash    String?
+  userAgent String?
+  createdAt DateTime      @default(now())
+  @@index([type, createdAt])
+  @@index([userId, createdAt])
+}
+
+// Audit history of administrative changes (brands, products, charts, research, users).
+model AdminAuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  actorEmail String   // kept so the record stays readable if the admin account is later deleted
+  action     String   // e.g. brand.create, chart.approve, user.role.change
+  targetType String
+  targetId   String?
+  details    Json     @default("{}")
+  createdAt  DateTime @default(now())
+  @@index([createdAt])
+  @@index([targetType, targetId])
 }

@@ -1,13 +1,13 @@
 {
   "name": "fitsync",
-  "version": "0.1.0",
+  "version": "0.5.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --exclude tests/**",
+    "test": "vitest run --exclude \"tests/**\"",
     "db:migrate": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
@@ -17,9 +17,14 @@
     "research": "tsx scripts/research-brands.ts",
     "research:csv": "tsx scripts/generate-csv.ts",
     "research:validate": "tsx scripts/validate-charts.ts",
-    "research:import": "tsx scripts/import-research.ts"
+    "research:import": "tsx scripts/import-research.ts",
+    "admin:bootstrap": "tsx scripts/admin-bootstrap.ts",
+    "db:cleanup": "tsx scripts/cleanup.ts",
+    "audit:deps": "npm audit --omit=dev --audit-level=high",
+    "research:discover": "tsx scripts/discover-sources.ts"
   },
   "dependencies": {
+    "@node-rs/argon2": "^2.2.2",
     "@prisma/adapter-pg": "^6.19.3",
     "@prisma/client": "^6.19.0",
     "bcryptjs": "^2.4.3",

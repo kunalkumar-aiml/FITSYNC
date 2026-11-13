@@ -5,7 +5,7 @@
   "region": "IN",
   "productLine": "",
   "fitCut": "OVERSIZED",
-  "measurementType": "GARMENT",
+  "measurementType": "UNKNOWN",
   "measurementSemantics": {
     "chest": "AMBIGUOUS",
     "shoulder": "AMBIGUOUS",

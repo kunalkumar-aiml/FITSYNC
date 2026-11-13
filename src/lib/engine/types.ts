@@ -28,18 +28,36 @@ export type Gender = "MEN" | "WOMEN" | "UNISEX";
 export type AchievedFit = FitPreference | "TIGHTER_THAN_SLIM" | "LOOSER_THAN_OVERSIZED" | null;
 
 /**
- * GARMENT: the numbers describe the finished garment (e.g. full chest circumference of the T-shirt).
- *          Ease = garment - body.
- * BODY:    the numbers describe the body the size is intended for. The brand has already built ease in.
+ * Chart-level default meaning of the published numbers:
+ * GARMENT: the finished garment (e.g. full chest circumference of the T-shirt). Ease = garment - body.
+ * BODY:    the body the size is intended for. The brand has already built ease in.
+ * UNKNOWN: the source does not say. Never silently treated as GARMENT: every dimension is AMBIGUOUS unless a person
+ *          has stated its meaning in `semantics`.
+ * MIXED:   different dimensions mean different things; `semantics` says which.
  */
-export type MeasurementType = "GARMENT" | "BODY";
-export type DataStatus = "VERIFIED" | "UNVERIFIED" | "DEPRECATED";
+export type MeasurementType = "GARMENT" | "BODY" | "UNKNOWN" | "MIXED";
+export type DataStatus = "VERIFIED" | "UNVERIFIED" | "DEPRECATED" | "NEEDS_HUMAN_VERIFICATION" | "INVALID";
+
+/**
+ * What ONE published dimension means. Dimension-specific, because a chart can give body chest but garment length.
+ * BODY:         a body measurement (circumference for chest/waist/hips/thigh/neck; straight line for shoulder/arm/inseam).
+ * GARMENT:      the same measurement taken on the garment (full circumference, seam-to-seam width, inside-leg length).
+ * GARMENT_FLAT: a garment width measured laid flat (half the circumference). NOT comparable with a body circumference
+ *               and never doubled by the engine; an admin can convert it explicitly, which is recorded.
+ * AMBIGUOUS:    the source does not say. Excluded.
+ */
+export type DimensionSemantic = "BODY" | "GARMENT" | "GARMENT_FLAT" | "AMBIGUOUS";
+
+/** Cut of the garment as sold. UNKNOWN when the source does not state it (never assumed to be REGULAR). */
+export type GarmentCut = FitPreference | "UNKNOWN";
 
 export type ChartScope = "BRAND" | "PRODUCT";
 
 export type SizeChart = {
-  /** the garment's cut as sold, e.g. a brand's "relaxed fit" T-shirt line */
-  garmentCut?: FitPreference;
+  /** the garment's cut as sold, e.g. a brand's "relaxed fit" T-shirt line. UNKNOWN = not stated by the source. */
+  garmentCut?: GarmentCut;
+  /** per-dimension meaning; wins over measurementType */
+  semantics?: Partial<Record<Dimension, DimensionSemantic>>;
   /** brand-level (default) or product-specific */
   scope?: ChartScope;
   /** dimensions whose meaning the source does not state. Never used for recommendations until resolved. */
@@ -67,10 +85,14 @@ export type CategoryConfig = {
   dimensions: Partial<Record<Dimension, DimensionRule>>;
 };
 
+export type ExcludedDimension = { dimension: Dimension; reason: "AMBIGUOUS" | "FLAT_WIDTH" };
+
 export type FitLabel = "Tight" | "Slightly Tight" | "Good" | "Slightly Loose" | "Loose";
 
 export type DimensionResult = {
   dimension: Dimension;
+  /** what the chart value for this dimension describes */
+  semantic: "BODY" | "GARMENT";
   bodyCm: number;
   chartCm: number;
   /** published range for this size, when the brand gives ranges */
@@ -105,7 +127,9 @@ export type RecommendationResult =
       chartScope: ChartScope;
       /** dimensions left out because their meaning is ambiguous */
       ambiguousExcluded: Dimension[];
-      /** The garment's cut as sold by the brand (not your preference). */
+      /** every dimension that was not compared, with the reason */
+      excluded: ExcludedDimension[];
+      /** The garment's cut as sold by the brand (not your preference). null when the source does not state it. */
       garmentCut: FitPreference | null;
       /** The fit this size should actually give you, judged from the primary measurement. null when it can't be known (body-measurement charts). */
       achievedFit: AchievedFit;
@@ -128,6 +152,7 @@ export type RecommendationResult =
   | {
       status: "insufficient_data";
       missing: Dimension[];
+      excluded?: ExcludedDimension[];
       explanation: string;
       warnings: string[];
       dataStatus: DataStatus;

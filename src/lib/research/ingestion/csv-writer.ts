@@ -24,10 +24,16 @@ export function rowsToCsv(rowsCm: ChartRow[]): string {
   const lines = [["size_label", ...cols.map((c) => c.head)].join(",")];
   for (const row of rowsCm) {
     const r = row as unknown as Record<string, number>;
-    lines.push([`"${row.label}"`, ...cols.map((c) => c.get(r) ?? "")].join(","));
+    lines.push([csvText(row.label), ...cols.map((c) => c.get(r) ?? "")].join(","));
   }
   return lines.join("\n") + "\n";
 }
 
 export const fileStem = (p: { brand: string; category: string; gender: string; region: string; product?: string; hash: string }) =>
   [p.brand, p.category, p.gender.toLowerCase(), p.region.toLowerCase(), p.product ? p.product.toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 40) : null, p.hash].filter(Boolean).join("__");
+
+/** Quote a text cell; neutralise spreadsheet formulas (=, +, -, @) so an extracted label can never run in Excel. */
+export function csvText(v: string) {
+  const safe = /^[=+\-@\t\r]/.test(v) ? `'${v}` : v;
+  return `"${safe.replace(/"/g, '""')}"`;
+}

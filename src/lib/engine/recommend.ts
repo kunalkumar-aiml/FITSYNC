@@ -1,7 +1,8 @@
 import { BODY_CHART_OFFSET, MIN_ACCEPTABLE_SCORE, UNVERIFIED_SCORE_CAP } from "./config";
 import { validateBody } from "./validate";
+import { excludedReason, semanticFor } from "./semantics";
 import type {
-  BodyMeasurements, CategoryConfig, ChartRow, Dimension, DimensionResult, DimensionRule,
+  BodyMeasurements, CategoryConfig, ChartRow, Dimension, DimensionResult, DimensionRule, ExcludedDimension,
   AchievedFit, EaseRange, FitLabel, FitPreference, RecommendationResult, SizeChart, SizeScore,
 } from "./types";
 
@@ -20,7 +21,7 @@ const round1 = (n: number) => Math.round(n * 10) / 10;
 const fmt = (n: number) => (n > 0 ? `+${round1(n)}` : `${round1(n)}`);
 
 export function scoreDimension(
-  dimension: Dimension, bodyCm: number, chartCm: number, rule: DimensionRule, range: EaseRange,
+  dimension: Dimension, bodyCm: number, chartCm: number, rule: DimensionRule, range: EaseRange, semantic: "BODY" | "GARMENT" = "GARMENT",
 ): DimensionResult {
   const diff = chartCm - bodyCm;
   let deviation = 0;
@@ -44,17 +45,16 @@ export function scoreDimension(
     const slight = deviation <= rule.tolerance * 0.4;
     label = side === "tight" ? (slight ? "Slightly Tight" : "Tight") : slight ? "Slightly Loose" : "Loose";
   }
-  return { dimension, bodyCm, chartCm, differenceCm: round1(diff), idealRange: range, label, score: round2(score) };
+  return { dimension, semantic, bodyCm, chartCm, differenceCm: round1(diff), idealRange: range, label, score: round2(score) };
 }
 
-function rangeFor(
-  chartType: SizeChart["measurementType"], rule: DimensionRule, pref: FitPreference,
-): EaseRange {
-  return chartType === "GARMENT" ? rule.ease[pref] : BODY_CHART_OFFSET[pref];
+/** GARMENT values are compared with body + ease; BODY values describe the body a size is made for (ease already built in). */
+function rangeFor(semantic: "BODY" | "GARMENT", rule: DimensionRule, pref: FitPreference): EaseRange {
+  return semantic === "GARMENT" ? rule.ease[pref] : BODY_CHART_OFFSET[pref];
 }
 
 /** The value (cm) a size row represents for this body, plus its published range if any. */
-function resolveChartValue(row: ChartRow, key: Dimension, bodyCm: number, type: SizeChart["measurementType"]) {
+function resolveChartValue(row: ChartRow, key: Dimension, bodyCm: number, type: "BODY" | "GARMENT") {
   const lo = row[key];
   if (lo === undefined) return null;
   const hi = row[`${key}Max` as `${Dimension}Max`];
@@ -74,11 +74,13 @@ function scoreSize(row: ChartRow, input: RecommendInput): SizeScore {
   let totalWeight = 0;
   for (const [key, rule] of Object.entries(category.dimensions) as [Dimension, DimensionRule][]) {
     totalWeight += rule.weight;
-    if (chart.ambiguousDimensions?.includes(key)) { skipped.push(key); continue; } // meaning unknown: never compared
+    const semantic = semanticFor(chart, key);
+    // Ambiguous meaning, or a flat width (half a circumference): never compared with the body.
+    if (semantic !== "BODY" && semantic !== "GARMENT") { skipped.push(key); continue; }
     const b = body[key];
-    const resolved = b === undefined ? null : resolveChartValue(row, key, b, chart.measurementType);
+    const resolved = b === undefined ? null : resolveChartValue(row, key, b, semantic);
     if (b === undefined || !resolved) { skipped.push(key); continue; }
-    const res = scoreDimension(key, b, resolved.value, rule, rangeFor(chart.measurementType, rule, fitPreference));
+    const res = scoreDimension(key, b, resolved.value, rule, rangeFor(semantic, rule, fitPreference), semantic);
     if (resolved.range) res.chartRange = resolved.range;
     dims.push(res);
     usedWeight += rule.weight;
@@ -103,10 +105,11 @@ export function recommend(input: RecommendInput): RecommendationResult {
   }
 
   const dataStatus = chart.status;
-  if (dataStatus === "DEPRECATED") {
+  if (dataStatus === "DEPRECATED" || dataStatus === "INVALID" || dataStatus === "NEEDS_HUMAN_VERIFICATION") {
+    const why = dataStatus === "DEPRECATED" ? "has been deprecated" : dataStatus === "INVALID" ? "was rejected as invalid" : "is waiting for a person to review it";
     return {
       status: "insufficient_data", missing: [], dataStatus, warnings,
-      explanation: "This size chart has been marked deprecated, so FITSYNC will not recommend from it.",
+      explanation: `This size chart ${why}, so FITSYNC will not recommend a size from it.`,
     };
   }
 
@@ -120,12 +123,24 @@ export function recommend(input: RecommendInput): RecommendationResult {
       explanation: `Add your ${missingBody.join(", ")} measurement to get a ${category.name.toLowerCase()} recommendation.`,
     };
   }
-  const ambiguous = (chart.ambiguousDimensions ?? []).filter((d) => category.dimensions[d]);
-  const blocked = required.filter((d) => ambiguous.includes(d));
+  // Dimension-specific meaning: which of this category's dimensions can be compared at all?
+  const excluded: ExcludedDimension[] = [];
+  for (const d of Object.keys(category.dimensions) as Dimension[]) {
+    const reason = excludedReason(semanticFor(chart, d));
+    if (reason && chart.rows.some((r) => r[d] !== undefined)) excluded.push({ dimension: d, reason });
+  }
+  const ambiguous = excluded.filter((e) => e.reason === "AMBIGUOUS").map((e) => e.dimension);
+  const blocked = excluded.filter((e) => required.includes(e.dimension));
   if (blocked.length) {
+    const flat = blocked.filter((e) => e.reason === "FLAT_WIDTH").map((e) => e.dimension);
+    const amb = blocked.filter((e) => e.reason === "AMBIGUOUS").map((e) => e.dimension);
+    const parts = [
+      amb.length ? `the ${amb.join(", ")} measurement is ambiguous (the source does not say whether it describes the body or the garment)` : "",
+      flat.length ? `the ${flat.join(", ")} value is a flat garment width, which is half a circumference and cannot be compared with your body measurement` : "",
+    ].filter(Boolean);
     return {
-      status: "insufficient_data", missing: blocked, dataStatus, warnings,
-      explanation: `This chart's ${blocked.join(", ")} measurement is ambiguous (the source does not say whether it is a body or garment measurement), so it is excluded until an admin confirms its meaning.`,
+      status: "insufficient_data", missing: blocked.map((e) => e.dimension), excluded, dataStatus, warnings,
+      explanation: `In this chart ${parts.join(", and ")}. It stays out of recommendations until an admin confirms or converts it against the source.`,
     };
   }
   const usableRows = chart.rows.filter((row) => required.every((d) => row[d] !== undefined));
@@ -167,6 +182,8 @@ export function recommend(input: RecommendInput): RecommendationResult {
     warnings.push(`You are between ${best.label} and ${second.label}. Choose ${best.label} for the closer match, or the other if you prefer a different feel.`);
   }
   if (ambiguous.length) warnings.push(`Ignored ambiguous measurement(s): ${ambiguous.join(", ")}.`);
+  const flats = excluded.filter((e) => e.reason === "FLAT_WIDTH").map((e) => e.dimension);
+  if (flats.length) warnings.push(`Ignored flat garment width(s): ${flats.join(", ")} (half a circumference, not comparable with the body).`);
   if (best.coverage < 1) {
     warnings.push(`Based on ${Math.round(best.coverage * 100)}% of the measurements for this category. Add more measurements to improve accuracy.`);
   }
@@ -184,26 +201,28 @@ export function recommend(input: RecommendInput): RecommendationResult {
     recommendedSize: best.label,
     fitPreference,
     fitMatchScore,
-    provisional: dataStatus !== "VERIFIED" || ambiguous.length > 0 || best.coverage < 0.6,
+    provisional: dataStatus !== "VERIFIED" || excluded.length > 0 || best.coverage < 0.6,
     chartScope: chart.scope ?? "BRAND",
     ambiguousExcluded: ambiguous,
-    garmentCut: chart.garmentCut ?? null,
-    achievedFit: achievedFit(best, chart.measurementType, category),
+    excluded,
+    garmentCut: chart.garmentCut && chart.garmentCut !== "UNKNOWN" ? chart.garmentCut : null,
+    achievedFit: achievedFit(best, category),
     compatibility,
     alternatives: ranking.slice(1, 3).map((r) => ({ size: r.label, score: r.score })),
     ranking,
-    explanation: explain(best, chart.measurementType, fitPreference),
+    explanation: explain(best, fitPreference),
     warnings,
     dataStatus,
   };
 }
 
 /** Which fit preference's ideal ease range the chosen size's primary measurement falls into. */
-function achievedFit(best: SizeScore, type: SizeChart["measurementType"], category: CategoryConfig): AchievedFit {
-  if (type !== "GARMENT") return null; // body charts: the real fit depends on the garment's cut, which the chart does not say
+function achievedFit(best: SizeScore, category: CategoryConfig): AchievedFit {
   const primary = best.dimensions.find((d) => category.dimensions[d.dimension]?.required) ?? best.dimensions[0];
   const rule = primary && category.dimensions[primary.dimension];
   if (!primary || !rule) return null;
+  // Body-size values: the real fit depends on the garment's cut, which the chart does not describe.
+  if (primary.semantic !== "GARMENT") return null;
   const ease = primary.differenceCm;
   const order: FitPreference[] = ["SLIM", "REGULAR", "RELAXED", "OVERSIZED"];
   const first = rule.ease[order[0]];
@@ -223,16 +242,19 @@ function describeProblem(s: SizeScore): string {
   return `${worst.label.toLowerCase().includes("tight") ? "tight" : "loose"} at the ${worst.dimension}`;
 }
 
-function explain(best: SizeScore, type: SizeChart["measurementType"], pref: FitPreference): string {
+function explain(best: SizeScore, pref: FitPreference): string {
   const parts = best.dimensions.map((d) => {
-    const what = type === "GARMENT" ? "garment" : "chart";
+    const what = d.semantic === "GARMENT" ? "garment" : "body size";
     const shown = d.chartRange ? `${round1(d.chartRange[0])}–${round1(d.chartRange[1])}` : `${round1(d.chartCm)}`;
     const gap = d.chartRange ? (d.differenceCm === 0 ? "inside the range" : `${fmt(d.differenceCm)} cm outside the range`) : `${fmt(d.differenceCm)} cm`;
     return `${d.dimension}: ${what} ${shown} cm vs body ${round1(d.bodyCm)} cm (${gap}) → ${d.label}`;
   });
   const head = `Size ${best.label} gives the best overall match for a ${pref.toLowerCase()} fit.`;
-  const how = type === "GARMENT"
-    ? " Garment sizes are compared against your body plus the ease expected for this fit."
-    : " This brand publishes body measurements, so they are compared to yours directly.";
+  const semantics = new Set(best.dimensions.map((d) => d.semantic));
+  const how = semantics.size > 1
+    ? " Garment values are compared with your body plus the ease for this fit; body-size values are compared with yours directly."
+    : semantics.has("GARMENT")
+      ? " Garment sizes are compared against your body plus the ease expected for this fit."
+      : " This brand publishes body measurements, so they are compared to yours directly.";
   return `${head} ${parts.join("; ")}.${how}`;
 }

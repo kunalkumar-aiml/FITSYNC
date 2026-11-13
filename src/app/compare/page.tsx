@@ -6,7 +6,7 @@ export const metadata = { title: "Compare brands" };
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const user = await requirePageUser();
+  const user = await requirePageUser("/compare");
   const profile = await db.userProfile.findUnique({ where: { userId: user.id } });
   return <CompareClient categories={CATEGORY_CONFIGS.map((c) => ({ slug: c.slug, name: c.name }))} defaultFit={profile?.fitPreference ?? "REGULAR"} defaultGender={(profile?.fitCategory as "MEN" | "WOMEN" | "UNISEX" | null) ?? null} />;
 }

@@ -11,7 +11,7 @@ export const GET = route(async () => {
       coverageNotes: { orderBy: { checkedAt: "desc" }, take: 1 },
       sizeCharts: {
         where: { active: true },
-        include: { category: { select: { slug: true, name: true } }, versions: { where: { status: { not: "DEPRECATED" } }, select: { status: true } } },
+        include: { category: { select: { slug: true, name: true } }, versions: { where: { status: { in: ["VERIFIED", "UNVERIFIED"] } }, select: { status: true } } },
       },
     },
   });

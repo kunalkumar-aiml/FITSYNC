@@ -1,5 +1,5 @@
 import type { TargetOutcome } from "./runner";
-import { isUsable } from "./runner";
+import { isUsable, semanticsFor } from "./runner";
 import { chartHash } from "./csv-writer";
 
 export type StoredChart = {
@@ -17,12 +17,12 @@ const rowsKey = (rows: unknown) => JSON.stringify(rows);
 export function outcomeToStored(o: TargetOutcome): StoredChart | null {
   if (!isUsable(o.status) || !o.chart) return null;
   const t = o.target, c = o.chart;
-  const semantics: Record<string, string> = {};
-  for (const k of Object.keys(c.columnLabels)) semantics[k] = c.ambiguousDimensions.includes(k as never) ? "AMBIGUOUS" : c.measurementType === "BODY" ? "BODY_CIRCUMFERENCE" : c.measurementType === "GARMENT" ? "GARMENT_CIRCUMFERENCE" : "AMBIGUOUS";
+  if (c.unit === "UNKNOWN") return null; // never stored without a stated unit
+  const semantics = semanticsFor(c);
   const isMarket = !!t.marketplace;
   return {
-    brand: t.brand, category: t.category, gender: t.gender, region: t.region, productLine: t.productName ? "" : "", fitCut: c.statedFit ?? t.fitCut ?? "REGULAR",
-    measurementType: c.measurementType === "UNKNOWN" ? "GARMENT" : c.measurementType, unit: c.unit,
+    brand: t.brand, category: t.category, gender: t.gender, region: t.region, productLine: "", fitCut: c.statedFit ?? t.fitCut ?? "UNKNOWN",
+    measurementType: c.measurementType, unit: c.unit,
     sourceType: isMarket ? "MARKETPLACE_LISTING" : t.productName ? "OFFICIAL_PRODUCT_PAGE" : "OFFICIAL_SITE",
     sourceUrl: t.url, sourceDomain: new URL(t.url).host, extractionMethod: `PIPELINE:${o.adapter}`, verificationStatus: "UNVERIFIED",
     retrievedAt: o.retrievedAt.slice(0, 10), columnLabels: c.columnLabels as Record<string, string>, ambiguousDimensions: c.ambiguousDimensions, measurementSemantics: semantics,

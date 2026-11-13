@@ -2,65 +2,82 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { api, ClientError } from "@/lib/client";
+import { useToast } from "./toast";
+import { Notice } from "./ui";
+
+export function PasswordInput({ id, name, autoComplete, invalid, describedBy, required = true }: { id: string; name: string; autoComplete: string; invalid?: boolean; describedBy?: string; required?: boolean }) {
+  const [show, setShow] = useState(false);
+  return (
+    <div className="relative">
+      <input id={id} name={name} type={show ? "text" : "password"} required={required} className="input pr-11" autoComplete={autoComplete} aria-invalid={invalid || undefined} aria-describedby={describedBy} maxLength={128} />
+      <button type="button" onClick={() => setShow(!show)} className="absolute inset-y-0 right-0 px-3 text-muted hover:text-ink" aria-label={show ? "Hide password" : "Show password"} aria-pressed={show}>
+        {show ? <EyeOff size={17} strokeWidth={1.6} /> : <Eye size={17} strokeWidth={1.6} />}
+      </button>
+    </div>
+  );
+}
+
+const safeNext = (n: string | null) => (n && n.startsWith("/") && !n.startsWith("//") && !n.startsWith("/\\") ? n : null);
 
 export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const router = useRouter();
   const params = useSearchParams();
+  const toast = useToast();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string[]>>({});
   const signup = mode === "signup";
+  const banner = params.get("expired") ? { tone: "warn" as const, text: "Your session ended. Log in again to continue." }
+    : params.get("reset") ? { tone: "success" as const, text: "Password changed. Every device was signed out; log in with your new password." }
+    : params.get("deleted") ? { tone: "success" as const, text: "Your account and its data were deleted." } : null;
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setBusy(true); setError(null); setFieldErrors({});
     const f = new FormData(e.currentTarget);
     try {
-      await api(`/api/auth/${signup ? "register" : "login"}`, {
+      const r = await api<{ verification?: { message: string } }>(`/api/auth/${signup ? "register" : "login"}`, {
         method: "POST",
         json: { email: f.get("email"), password: f.get("password"), ...(signup && f.get("name") ? { name: f.get("name") } : {}) },
       });
-      const next = params.get("next");
-      router.push(next && next.startsWith("/") && !next.startsWith("//") ? next : signup ? "/profile?welcome=1" : "/dashboard");
+      if (signup && r.verification) toast("success", r.verification.message);
+      router.push(safeNext(params.get("next")) ?? (signup ? "/profile?welcome=1" : "/dashboard"));
       router.refresh();
     } catch (err) {
       if (err instanceof ClientError) { setError(err.message); setFieldErrors((err.details as Record<string, string[]>) ?? {}); }
-      else setError("Network problem. Check your connection and try again.");
+      else setError("We couldn’t reach FITSYNC. Check your connection and try again.");
       setBusy(false);
     }
   }
 
+  const fe = (k: string) => fieldErrors[k]?.[0];
   return (
-    <div className="container-x py-12 sm:py-20 max-w-md">
-      <h1 className="text-3xl font-semibold">{signup ? "Create your account" : "Welcome back"}</h1>
-      <p className="mt-2 text-muted">{signup ? "Free. Takes under a minute." : "Log in to see your fit profile."}</p>
-      <form onSubmit={onSubmit} className="card mt-8 p-6 space-y-4" noValidate>
-        {error && <div role="alert" className="rounded-xl border border-bad/40 bg-bad/10 px-3.5 py-2.5 text-sm">{error}</div>}
-        {signup && (
-          <div>
-            <label className="label" htmlFor="name">Name <span className="text-muted font-normal">(optional)</span></label>
-            <input id="name" name="name" className="input" autoComplete="name" maxLength={80} />
-          </div>
-        )}
+    <form onSubmit={onSubmit} className="space-y-5" noValidate>
+      {banner && <Notice tone={banner.tone} role="status">{banner.text}</Notice>}
+      {error && <Notice tone="error" role="alert">{error}</Notice>}
+      {signup && (
         <div>
-          <label className="label" htmlFor="email">Email</label>
-          <input id="email" name="email" type="email" required className="input" autoComplete="email" inputMode="email" aria-invalid={!!fieldErrors.email} />
-          {fieldErrors.email && <p className="mt-1 text-sm text-bad">{fieldErrors.email[0]}</p>}
+          <label className="label" htmlFor="name">Name <span className="text-muted font-normal">(optional)</span></label>
+          <input id="name" name="name" className="input" autoComplete="given-name" maxLength={80} />
         </div>
-        <div>
+      )}
+      <div>
+        <label className="label" htmlFor="email">Email</label>
+        <input id="email" name="email" type="email" required className="input" autoComplete="email" inputMode="email" aria-invalid={!!fe("email") || undefined} aria-describedby={fe("email") ? "email-err" : undefined} maxLength={254} />
+        {fe("email") && <p id="email-err" className="field-error">{fe("email")}</p>}
+      </div>
+      <div>
+        <div className="flex items-baseline justify-between">
           <label className="label" htmlFor="password">Password</label>
-          <input id="password" name="password" type="password" required minLength={signup ? 8 : 1} className="input"
-            autoComplete={signup ? "new-password" : "current-password"} aria-invalid={!!fieldErrors.password} />
-          {fieldErrors.password ? <p className="mt-1 text-sm text-bad">{fieldErrors.password[0]}</p> : signup && <p className="mt-1 text-xs text-muted">At least 8 characters.</p>}
+          {!signup && <Link href="/forgot-password" className="text-sm text-muted hover:text-ink">Forgot password?</Link>}
         </div>
-        <button className="btn btn-primary w-full" disabled={busy}>{busy && <Loader2 size={16} className="animate-spin" />}{signup ? "Create account" : "Log in"}</button>
-      </form>
-      <p className="mt-5 text-sm text-muted text-center">
-        {signup ? <>Already have an account? <Link href="/login" className="text-ink underline">Log in</Link></> : <>New to FITSYNC? <Link href="/signup" className="text-ink underline">Create an account</Link></>}
-      </p>
-      {signup && <p className="mt-3 text-xs text-muted text-center">By signing up you agree to our <Link href="/privacy" className="underline">privacy notice</Link>.</p>}
-    </div>
+        <PasswordInput id="password" name="password" autoComplete={signup ? "new-password" : "current-password"} invalid={!!fe("password")} describedBy="password-help" />
+        {fe("password") ? <p id="password-help" className="field-error">{fe("password")}</p> : signup && <p id="password-help" className="hint">At least 10 characters. A few unrelated words is easy to remember and hard to guess.</p>}
+      </div>
+      <button className="btn btn-primary w-full h-12" disabled={busy}>{busy && <Loader2 size={16} className="animate-spin" />}{signup ? "Create account" : "Log in"}</button>
+      {signup && <p className="text-xs text-muted">By creating an account you agree to how we handle data in the <Link href="/privacy" className="link">privacy notice</Link>.</p>}
+    </form>
   );
 }

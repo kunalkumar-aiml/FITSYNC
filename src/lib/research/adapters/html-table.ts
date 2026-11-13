@@ -1,7 +1,7 @@
 import type { ChartRow, Dimension, Unit } from "../../engine";
 import { extractTables, pageText } from "../extraction/html-table";
 import { parseCell } from "../extraction/cells";
-import { ambiguousFor, detectMeasurementType } from "../extraction/semantics";
+import { ambiguousFor, detectMeasurementType, detectUnitFromText } from "../extraction/semantics";
 import { dimensionFor, unitFromLabel, type Key } from "../normalization/aliases";
 import type { ExtractedChart, ExtractionResult, SourceAdapter } from "../types";
 import { DIMENSIONS } from "../../engine";
@@ -30,11 +30,11 @@ export const htmlTableAdapter: SourceAdapter = {
       if (!transposed && !looksLikeSizes(table.slice(1).map((r) => r[0] ?? ""))) continue;
       const sizes = grid[0].slice(1).map((s) => s.trim());
       const rows: ChartRow[] = sizes.map((label) => ({ label }) as ChartRow);
-      const labels: Record<string, string> = {}; let unit: Unit | null = null; const dims = new Set<Dimension>(); const dropped = new Set<string>();
+      const labels: Record<string, string> = {}; let unit: Unit | null = null; let unitEvidence: string | null = null; const dims = new Set<Dimension>(); const dropped = new Set<string>();
       for (const line of grid.slice(1)) {
         const key: Key | null = dimensionFor(line[0]);
         if (!key) continue;
-        unit = unit ?? unitFromLabel(line[0]);
+        if (!unit) { unit = unitFromLabel(line[0]); if (unit) unitEvidence = `column label "${line[0]}"`; }
         labels[key] = line[0].replace(/\(.*?\)/g, "").trim();
         line.slice(1).forEach((raw, i) => {
           const cell = parseCell(raw);
@@ -47,14 +47,17 @@ export const htmlTableAdapter: SourceAdapter = {
       }
       const kept = rows.filter((r) => !dropped.has(r.label) && Object.keys(r).length > 1);
       if (!dims.size || kept.length < 2) continue;
+      // The unit must be stated by the source: a column label, then the page text. Otherwise it is UNKNOWN.
+      const pageUnit = unit ? null : detectUnitFromText(text);
       const chart: ExtractedChart = {
-        rows: kept, unit: unit ?? "CM", columnLabels: labels, measurementType: sem.type, semanticsEvidence: sem.evidence,
+        rows: kept, unit: unit ?? pageUnit?.unit ?? "UNKNOWN", unitEvidence: unitEvidence ?? (pageUnit ? `page says "${pageUnit.evidence}"` : null), columnLabels: labels, measurementType: sem.type, semanticsEvidence: sem.evidence,
         ambiguousDimensions: ambiguousFor(sem.type, [...dims]), notes: [...notes], productName: target.productName,
       };
       if (!best || dims.size * kept.length > best.score) best = { chart, score: dims.size * kept.length };
     }
     if (!best) return { status: "INVALID_DATA", reason: "Tables found but none looked like a size chart (no size labels + recognised measurements)." };
     const c = best.chart;
+    if (c.unit === "UNKNOWN") return { status: "NEEDS_HUMAN_VERIFICATION", chart: c, reason: "Chart extracted, but the source does not state its unit (cm or inches). Nothing was converted; import it by CSV once the unit is confirmed." };
     if (c.measurementType === "UNKNOWN") return { status: "NEEDS_HUMAN_VERIFICATION", chart: c, reason: "Chart extracted, but the page does not say whether it lists body or garment measurements." };
     if (c.notes.length) return { status: "PARTIAL_SUCCESS", chart: c, reason: "Chart extracted; some sizes were omitted because their values were open-ended." };
     return { status: "SUCCESS", chart: c, reason: "Chart extracted from an HTML table." };

@@ -7,7 +7,7 @@ export const GET = route(async (req: Request, { params }: { params: { slug: stri
   const u = new URL(req.url);
   const category = u.searchParams.get("category") ?? undefined;
   const products = await db.product.findMany({
-    where: { active: true, brand: { slug: params.slug, active: true }, ...(category ? { category: undefined } : {}), charts: { some: { active: true, versions: { some: { status: { not: "DEPRECATED" } } } } } },
+    where: { active: true, brand: { slug: params.slug, active: true }, ...(category ? { category: undefined } : {}), charts: { some: { active: true, versions: { some: { status: { in: ["VERIFIED", "UNVERIFIED"] } } } } } },
     include: { brand: true, listings: { include: { marketplace: true } }, charts: { include: { category: true } } },
     orderBy: { name: "asc" },
   });

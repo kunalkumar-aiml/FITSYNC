@@ -9,7 +9,7 @@ const slugify = (s: string) => s.toLowerCase().replace(/&/g, "and").replace(/[^a
 
 type Chart = {
   brand: string; category: string; gender: "MEN" | "WOMEN" | "UNISEX"; region: string; productLine: string; fitCut: string;
-  measurementType: "BODY" | "GARMENT"; unit: "CM" | "IN"; sourceType: string; sourceUrl: string; sourceDomain?: string; extractionMethod?: string;
+  measurementType: "BODY" | "GARMENT" | "UNKNOWN"; unit: "CM" | "IN"; sourceType: string; sourceUrl: string; sourceDomain?: string; extractionMethod?: string;
   retrievedAt?: string; sourceNote: string; rows: Record<string, number | string>[];
   ambiguousDimensions?: string[]; measurementSemantics?: Record<string, string>;
   product?: { name: string; marketplace?: string; url: string; brand: string; fitCutStatedOnListing: boolean };

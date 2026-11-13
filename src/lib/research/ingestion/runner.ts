@@ -34,6 +34,10 @@ export async function runTargets(targets: Target[], o: RunnerOptions = {}): Prom
     if (!res.chart) { out.push({ ...base, status: res.status, reason: res.reason, httpStatus: page.status, adapter: adapter.id }); continue; }
     const v = validateChart(res.chart.rows, res.chart.unit);
     if (!v.ok) { out.push({ ...base, status: "INVALID_DATA", reason: v.issues.filter((i) => i.level === "error").map((i) => i.message).join(" "), issues: v.issues, httpStatus: page.status, adapter: adapter.id, chart: res.chart }); continue; }
+    if (res.chart.unit === "UNKNOWN") {
+      out.push({ ...base, adapter: adapter.id, httpStatus: page.status, chart: res.chart, issues: v.issues, status: "NEEDS_HUMAN_VERIFICATION", reason: res.reason });
+      continue; // no conversion without a stated unit: nothing is imported, the source is logged for a person to check
+    }
     const rowsCm = rowsToCm(res.chart.rows, res.chart.unit);
     const hasWarn = v.issues.some((i) => i.level === "warning");
     out.push({
@@ -47,3 +51,19 @@ export async function runTargets(targets: Target[], o: RunnerOptions = {}): Prom
 }
 
 export const isUsable = (s: ResearchStatus) => s === "SUCCESS" || s === "PARTIAL_SUCCESS" || s === "NEEDS_HUMAN_VERIFICATION";
+
+/**
+ * Per-dimension meaning to store with an extracted chart. Only what the page states: UNKNOWN pages give AMBIGUOUS.
+ * Circumferences and straight measurements get distinct codes so they are never confused.
+ */
+const LINEAR = ["shoulder", "armLength", "inseam"];
+const GARMENT_ONLY = ["garmentLength", "sleeveLength", "rise", "legOpening"];
+export function semanticsFor(c: Pick<ExtractedChart, "columnLabels" | "ambiguousDimensions" | "measurementType">): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const k of Object.keys(c.columnLabels)) {
+    if (GARMENT_ONLY.includes(k)) out[k] = "GARMENT_LENGTH";
+    else if (c.ambiguousDimensions.includes(k as never) || c.measurementType === "UNKNOWN") out[k] = "AMBIGUOUS";
+    else out[k] = `${c.measurementType}_${LINEAR.includes(k) ? "LINEAR" : "CIRCUMFERENCE"}`;
+  }
+  return out;
+}

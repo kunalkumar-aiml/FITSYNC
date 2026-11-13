@@ -19,7 +19,10 @@ export type Target = {
 /** Rows in the SOURCE's own unit, exactly as published (ranges as x / xMax). Nothing is halved or doubled. */
 export type ExtractedChart = {
   rows: ChartRow[];
-  unit: Unit;
+  /** UNKNOWN when neither the column labels nor the page states the unit. Never defaulted to CM. */
+  unit: Unit | "UNKNOWN";
+  /** where the unit came from (a column label or a quote from the page) */
+  unitEvidence?: string | null;
   /** which published column label each dimension came from, e.g. { chest: "Bust" } */
   columnLabels: Partial<Record<string, string>>;
   measurementType: "BODY" | "GARMENT" | "UNKNOWN";

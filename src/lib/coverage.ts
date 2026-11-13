@@ -10,7 +10,7 @@ export async function getCoverage(includeDemo = false) {
     where: { active: true, ...(includeDemo ? {} : { isDemo: false }) }, orderBy: { name: "asc" },
     include: {
       coverageNotes: { orderBy: { checkedAt: "desc" }, take: 1 },
-      sizeCharts: { where: { active: true }, include: { category: true, versions: { where: { status: { not: "DEPRECATED" } }, select: { status: true } } } },
+      sizeCharts: { where: { active: true }, include: { category: true, versions: { where: { status: { in: ["VERIFIED", "UNVERIFIED"] } }, select: { status: true } } } },
     },
   });
   return brands.map((b) => {
@@ -34,7 +34,7 @@ const OUTDATED_DAYS = 365;
 export async function getCoverageRows(): Promise<CoverageRow[]> {
   const brands = await db.brand.findMany({
     where: { active: true, isDemo: false }, orderBy: { name: "asc" },
-    include: { sizeCharts: { where: { active: true }, include: { category: true, product: true, versions: { where: { status: { not: "DEPRECATED" } }, orderBy: { version: "desc" } } } } },
+    include: { sizeCharts: { where: { active: true }, include: { category: true, product: true, versions: { where: { status: { in: ["VERIFIED", "UNVERIFIED"] } }, orderBy: { version: "desc" } } } } },
   });
   const rows: CoverageRow[] = [];
   for (const b of brands) for (const c of CATEGORY_CONFIGS) for (const g of GENDERS) {

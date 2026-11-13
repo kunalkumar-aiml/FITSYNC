@@ -5,59 +5,80 @@ import { api, ClientError } from "@/lib/client";
 import { useToast } from "./toast";
 import { DataBadge, FIT_NAMES } from "./badges";
 
+type Feedback = { purchasedSize: string; outcome: string; review: string | null };
 type Item = {
-  id: string; createdAt: string; brand: string; isDemo: boolean; category: string; fitPreference: string;
-  recommendedSize: string | null; confidence: number | null; insufficientData: boolean; dataStatus: string;
-  feedback: { purchasedSize: string; outcome: string } | null;
+  id: string; createdAt: string; brand: string; isDemo: boolean; category: string; product: string | null; fitPreference: string;
+  recommendedSize: string | null; score: number | null; insufficientData: boolean; dataStatus: string; feedback: Feedback | null;
 };
-const OUTCOMES = [{ v: "TOO_TIGHT", l: "Too tight" }, { v: "PERFECT", l: "Perfect" }, { v: "TOO_LOOSE", l: "Too loose" }];
+const OUTCOMES = [{ v: "TOO_TIGHT", l: "Too tight" }, { v: "PERFECT", l: "Perfect" }, { v: "TOO_LOOSE", l: "Too loose" }] as const;
+const outcomeLabel = (v: string) => OUTCOMES.find((o) => o.v === v)?.l ?? v;
 
 export function HistoryClient({ items }: { items: Item[] }) {
   const toast = useToast();
   const [open, setOpen] = useState<string | null>(null);
-  const [done, setDone] = useState<Record<string, { purchasedSize: string; outcome: string }>>({});
+  const [local, setLocal] = useState<Record<string, Feedback>>({});
   const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
   async function submit(e: React.FormEvent<HTMLFormElement>, item: Item) {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
-    const body = { recommendationId: item.id, purchasedSize: String(f.get("size") ?? ""), outcome: String(f.get("outcome") ?? ""), review: String(f.get("review") ?? "") || undefined };
-    if (!body.outcome) { toast("error", "Tell us how it fit."); return; }
-    setBusy(true);
+    const body = { recommendationId: item.id, purchasedSize: String(f.get("size") ?? "").trim(), outcome: String(f.get("outcome") ?? ""), review: String(f.get("review") ?? "").trim() || undefined };
+    if (!body.purchasedSize) { setErr("Enter the size you bought."); return; }
+    if (!body.outcome) { setErr("Choose how it fit."); return; }
+    setBusy(true); setErr(null);
     try {
       await api("/api/feedback", { method: "POST", json: body });
-      setDone((d) => ({ ...d, [item.id]: { purchasedSize: body.purchasedSize, outcome: body.outcome } }));
-      setOpen(null); toast("success", "Thanks. This helps improve future recommendations.");
-    } catch (err) { toast("error", err instanceof ClientError ? err.message : "Couldn’t send feedback."); }
+      setLocal((d) => ({ ...d, [item.id]: { purchasedSize: body.purchasedSize, outcome: body.outcome, review: body.review ?? null } }));
+      setOpen(null); toast("success", "Fit report saved. Thank you.");
+    } catch (error) { setErr(error instanceof ClientError ? error.message : "We couldn’t save your report. Try again."); }
     setBusy(false);
   }
 
   return (
-    <ul className="mt-6 space-y-3">
+    <ul className="border-t border-line">
       {items.map((i) => {
-        const fb = i.feedback ?? done[i.id];
+        const fb = local[i.id] ?? i.feedback;
+        const editing = open === i.id;
         return (
-          <li key={i.id} className="card p-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div>
-                <div className="font-semibold">{i.brand}</div>
-                <div className="text-sm text-muted">{i.category} · {FIT_NAMES[i.fitPreference]} · {new Date(i.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</div>
+          <li key={i.id} className="border-b border-line py-6">
+            <div className="grid sm:grid-cols-[1fr_auto_auto] gap-x-8 gap-y-3 items-start">
+              <div className="min-w-0">
+                <p className="font-display text-d-sm">{i.brand}</p>
+                <p className="mt-1 text-sm text-muted">{i.product ?? i.category}, {FIT_NAMES[i.fitPreference].toLowerCase()} fit, saved {new Date(i.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</p>
+                <div className="mt-2"><DataBadge status={i.dataStatus} demo={i.isDemo} /></div>
               </div>
-              <div className="flex items-center gap-3"><DataBadge status={i.dataStatus} demo={i.isDemo} /><div className="text-right"><div className="text-xs text-muted">Predicted</div><div className="text-2xl font-semibold leading-none">{i.recommendedSize ?? "–"}</div></div></div>
+              <div className="text-left sm:text-right">
+                <p className="text-xs text-muted">We predicted</p>
+                <p className="font-display text-d-md leading-none mt-1">{i.recommendedSize ?? "None"}</p>
+              </div>
+              <div className="text-left sm:text-right sm:min-w-[9rem]">
+                <p className="text-xs text-muted">You reported</p>
+                {fb ? <p className="mt-1.5"><span className="font-medium">Size {fb.purchasedSize}</span><span className={`block text-sm ${fb.outcome === "PERFECT" ? "text-good" : "text-warn"}`}>{outcomeLabel(fb.outcome)}</span></p>
+                  : <p className="mt-1.5 text-sm text-muted">Nothing yet</p>}
+              </div>
             </div>
-            {fb ? (
-              <p className="mt-3 text-sm text-muted border-t border-line pt-3">You bought <strong className="text-ink">{fb.purchasedSize}</strong> and it fit: <strong className="text-ink">{OUTCOMES.find((o) => o.v === fb.outcome)?.l.toLowerCase()}</strong>.</p>
-            ) : i.recommendedSize && open !== i.id ? (
-              <button className="btn btn-ghost !h-9 mt-3" onClick={() => setOpen(i.id)}>Report how it fit</button>
-            ) : open === i.id ? (
-              <form onSubmit={(e) => submit(e, i)} className="mt-4 border-t border-line pt-4 space-y-4">
-                <div><label className="label" htmlFor={`s-${i.id}`}>Size you bought</label><input id={`s-${i.id}`} name="size" className="input max-w-32" defaultValue={i.recommendedSize ?? ""} required maxLength={20} /></div>
+            {!editing && i.recommendedSize && (
+              <button type="button" className="btn btn-ghost btn-sm mt-4" onClick={() => { setOpen(i.id); setErr(null); }}>{fb ? "Change my report" : "Report how it fit"}</button>
+            )}
+            {editing && (
+              <form onSubmit={(e) => submit(e, i)} className="mt-5 grid gap-5 sm:grid-cols-[10rem_1fr] max-w-2xl border-t border-line pt-5" noValidate>
+                <div><label className="label" htmlFor={`s-${i.id}`}>Size you bought</label><input id={`s-${i.id}`} name="size" className="input" defaultValue={fb?.purchasedSize ?? i.recommendedSize ?? ""} required maxLength={20} /></div>
                 <fieldset><legend className="label">How did it fit?</legend>
-                  <div className="flex flex-wrap gap-2">{OUTCOMES.map((o) => <label key={o.v} className="cursor-pointer"><input type="radio" name="outcome" value={o.v} className="peer sr-only" /><span className="inline-block rounded-full border border-line px-4 py-2 text-sm peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:ring-2 ring-accent">{o.l}</span></label>)}</div></fieldset>
-                <div><label className="label" htmlFor={`r-${i.id}`}>Anything else? <span className="text-muted font-normal">(optional)</span></label><textarea id={`r-${i.id}`} name="review" className="input !h-24 py-2.5" maxLength={1000} /></div>
-                <div className="flex gap-2"><button className="btn btn-primary" disabled={busy}>{busy && <Loader2 size={16} className="animate-spin" />}Send feedback</button><button type="button" className="btn btn-quiet" onClick={() => setOpen(null)}>Cancel</button></div>
+                  <div className="seg" role="radiogroup">
+                    {OUTCOMES.map((o) => (
+                      <label key={o.v} className="cursor-pointer">
+                        <input type="radio" name="outcome" value={o.v} defaultChecked={fb?.outcome === o.v} className="peer sr-only" />
+                        <span className="block rounded-[2px] px-3.5 py-1.5 text-sm text-muted peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-primary">{o.l}</span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
+                <div className="sm:col-span-2"><label className="label" htmlFor={`r-${i.id}`}>Notes <span className="text-muted font-normal">(optional, only you and the FITSYNC team see this)</span></label><textarea id={`r-${i.id}`} name="review" defaultValue={fb?.review ?? ""} className="input !h-24 py-2.5" maxLength={1000} placeholder="For example: fine on the chest, sleeves a little long." /></div>
+                {err && <p role="alert" className="sm:col-span-2 field-error !mt-0">{err}</p>}
+                <div className="sm:col-span-2 flex gap-2"><button className="btn btn-primary" disabled={busy}>{busy && <Loader2 size={16} className="animate-spin" />}Save report</button><button type="button" className="btn btn-quiet" onClick={() => setOpen(null)}>Cancel</button></div>
               </form>
-            ) : null}
+            )}
           </li>
         );
       })}

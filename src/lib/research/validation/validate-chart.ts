@@ -5,7 +5,7 @@ export type Issue = { level: "error" | "warning"; message: string };
 export type Validation = { ok: boolean; issues: Issue[] };
 
 /** Consistency checks on a chart whose rows are in `unit`. Errors make the data INVALID; warnings need a human look. */
-export function validateChart(rows: ChartRow[], unit: Unit): Validation {
+export function validateChart(rows: ChartRow[], unit: Unit | "UNKNOWN"): Validation {
   const issues: Issue[] = [];
   const err = (m: string) => issues.push({ level: "error", message: m });
   const warn = (m: string) => issues.push({ level: "warning", message: m });
@@ -19,9 +19,10 @@ export function validateChart(rows: ChartRow[], unit: Unit): Validation {
     if (!vals.length) continue;
     const [lo, hi] = (LIMITS as Record<string, [number, number]>)[d] ?? (GARMENT_LIMITS as Record<string, [number, number]>)[d];
     for (const x of vals) {
+      if (x.max !== undefined && x.max < x.v) err(`${d} range for ${x.label} has min above max.`);
+      if (unit === "UNKNOWN") continue; // plausibility needs a unit; an unknown unit is reported separately
       const cm = toCm(x.v, unit), cmMax = x.max !== undefined ? toCm(x.max, unit) : cm;
       if (cm < lo * 0.7 || cmMax > hi * 1.6) err(`${d} for ${x.label} (${round1(cm)} cm) is outside any plausible range. Check the unit.`);
-      if (x.max !== undefined && x.max < x.v) err(`${d} range for ${x.label} has min above max.`);
     }
     if (vals.length >= 3) {
       if (new Set(vals.map((x) => x.v)).size === 1) warn(`${d} is identical for every size.`);

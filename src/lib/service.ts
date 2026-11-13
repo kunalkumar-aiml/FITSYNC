@@ -3,9 +3,12 @@ import { db } from "./db";
 import { ApiError } from "./api";
 import { selectChart } from "./chart-select";
 import {
-  getCategoryConfig, recommend,
-  type BodyMeasurements, type Dimension, type FitPreference, type Gender, type RecommendationResult, type SizeChart,
+  getCategoryConfig, parseSemantics, recommend,
+  type BodyMeasurements, type Dimension, type FitPreference, type GarmentCut, type Gender, type MeasurementType, type RecommendationResult, type SizeChart,
 } from "./engine";
+
+/** Only these statuses are ever used for recommendations. NEEDS_HUMAN_VERIFICATION, INVALID and DEPRECATED never are. */
+export const USABLE_STATUSES = ["VERIFIED", "UNVERIFIED"] as const;
 
 export function bodyFromRow(m: BodyMeasurement | null): BodyMeasurements {
   if (!m) return {};
@@ -31,9 +34,9 @@ export type LoadedChart = {
   /** a product chart exists for the requested product but is not verified, so a brand-level chart was used */
   pendingProductChart: boolean;
   version: {
-    id: string; version: number; status: "VERIFIED" | "UNVERIFIED" | "DEPRECATED";
+    id: string; version: number; status: "VERIFIED" | "UNVERIFIED";
     sourceUrl: string | null; sourceNote: string | null; sourceType: string; verifiedAt: Date | null; retrievedAt: Date | null;
-    measurementType: "GARMENT" | "BODY"; ambiguousDimensions: string[];
+    measurementType: MeasurementType; ambiguousDimensions: string[]; semantics: Record<string, string>;
   };
   chart: SizeChart;
   /** other charts this shopper could use for the same brand/category (other regions or product lines) */
@@ -52,7 +55,7 @@ export async function loadChart(
     include: {
       brand: true, category: true,
       product: { include: { listings: { include: { marketplace: true } } } },
-      versions: { where: { status: { not: "DEPRECATED" } }, orderBy: { version: "desc" } },
+      versions: { where: { status: { in: [...USABLE_STATUSES] } }, orderBy: { version: "desc" } },
     },
   });
   const cat = await db.clothingCategory.findUnique({ where: { slug: categorySlug } });
@@ -72,6 +75,8 @@ export async function loadChart(
   if (!pick) return { available: false, reason: "NO_CHART_FOR_GENDER", note };
   const c = pick.chart;
   const v = c.versions.find((x) => x.status === "VERIFIED") ?? c.versions[0];
+  const status = v.status as "VERIFIED" | "UNVERIFIED";
+  const semantics = parseSemantics(v.measurementSemantics);
   const ambiguous = (Array.isArray(v.ambiguousDimensions) ? v.ambiguousDimensions : []) as Dimension[];
   const pendingProductChart = !!productId && !c.productId && candidates.some((x) => x.productId === productId);
   return {
@@ -81,13 +86,13 @@ export async function loadChart(
     product: c.product ? { id: c.product.id, name: c.product.name, marketplaces: c.product.listings.map((l) => l.marketplace?.name ?? "Brand site") } : null,
     pendingProductChart,
     version: {
-      id: v.id, version: v.version, status: v.status, sourceUrl: v.sourceUrl, sourceNote: v.sourceNote,
+      id: v.id, version: v.version, status, sourceUrl: v.sourceUrl, sourceNote: v.sourceNote,
       sourceType: v.sourceType, verifiedAt: v.verifiedAt, retrievedAt: v.retrievedAt,
-      measurementType: v.measurementType as "GARMENT" | "BODY", ambiguousDimensions: ambiguous,
+      measurementType: v.measurementType as MeasurementType, ambiguousDimensions: ambiguous, semantics: semantics as Record<string, string>,
     },
     chart: {
-      rows: v.rows as SizeChart["rows"], measurementType: v.measurementType as "GARMENT" | "BODY", status: v.status,
-      garmentCut: c.fitCut as FitPreference, scope: c.productId ? "PRODUCT" : "BRAND", ambiguousDimensions: ambiguous,
+      rows: v.rows as SizeChart["rows"], measurementType: v.measurementType as MeasurementType, status,
+      garmentCut: c.fitCut as GarmentCut, scope: c.productId ? "PRODUCT" : "BRAND", ambiguousDimensions: ambiguous, semantics,
     },
     options: pick.options.map((o) => ({ region: o.region, productLine: o.productLine, gender: o.gender })),
   };

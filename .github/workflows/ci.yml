@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -17,9 +20,15 @@ jobs:
     env:
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/fitsync
       AUTH_SECRET: ci-secret-ci-secret-ci-secret-ci-secret-1234
-      ADMIN_EMAILS: admin@test.local
       SEED_DEMO: "true"
       SHOW_DEMO_BRANDS: "true"
+      # test-only settings for the integration run
+      TRUST_PROXY: "true"
+      EMAIL_PROVIDER: outbox
+      ALLOW_TEST_EMAIL_OUTBOX: "true"
+      EMAIL_OUTBOX_DIR: /tmp/fitsync-outbox
+      CRON_SECRET: ci-cron-secret-ci-cron-secret
+      ADMIN_BOOTSTRAP_PASSWORD: tailor-linen-meadow-42
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,14 +37,23 @@ jobs:
       - run: npm run typecheck
       - run: npm run research:validate
       - run: npm test
-      - name: Apply migrations and seed (test database)
-        run: npx prisma migrate deploy && npm run db:seed
+      - name: Schema and migrations agree (drift report; make blocking once it passes on your repo)
+        continue-on-error: true
+        run: |
+          PGPASSWORD=postgres psql -h localhost -U postgres -c "CREATE DATABASE fitsync_shadow"
+          npx prisma migrate diff --from-migrations prisma/migrations --to-schema-datamodel prisma/schema.prisma \
+            --shadow-database-url postgresql://postgres:postgres@localhost:5432/fitsync_shadow --exit-code
+      - name: Apply migrations, seed, bootstrap the test administrator
+        run: npx prisma migrate deploy && npm run db:seed && npm run admin:bootstrap -- --email admin@test.local
       - run: npm run build
       - name: API integration tests
         run: |
           npx next start -p 3100 &
           npx wait-on http-get://localhost:3100/api/health --timeout 60000
           TEST_SERVER_URL=http://localhost:3100 npx vitest run tests
+      - name: Dependency audit (report)
+        run: npm run audit:deps
+        continue-on-error: true
 
   migrate-production:
     # Runs only after checks pass on main. Needs repo secret PRODUCTION_DATABASE_URL.
