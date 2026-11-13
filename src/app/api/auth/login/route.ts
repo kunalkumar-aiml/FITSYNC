@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
-import { ApiError, ok, parseBody, route } from "@/lib/api";
+import { ApiError, ConfigError, ok, parseBody, route } from "@/lib/api";
+import { configProblems, PROBLEM_HELP } from "@/lib/readiness";
 import { burnPasswordCheck, hashPassword, verifyPassword } from "@/lib/security/password";
 import { clientIp } from "@/lib/security/request-meta";
 import { rateLimit } from "@/lib/rate-limit";
@@ -11,6 +12,11 @@ export const dynamic = "force-dynamic";
 const GENERIC = "Email or password is incorrect.";
 
 export const POST = route(async (req: Request) => {
+  const problems = configProblems();
+  if (problems.length) {
+    console.error("[login] refused: deployment is misconfigured:", problems.map((p) => PROBLEM_HELP[p]).join(" "));
+    throw new ConfigError(problems[0], "Login refused: deployment misconfigured");
+  }
   await rateLimit(`login:ip:${clientIp(req.headers)}`, 10, 60_000);
   const input = await parseBody(req, loginSchema);
   await rateLimit(`login:email:${input.email}`, 8, 15 * 60_000);

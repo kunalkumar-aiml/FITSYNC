@@ -2,13 +2,15 @@
  * Central place for environment-dependent settings. Nothing here grants privileges:
  * there is deliberately no ADMIN_EMAILS-style setting any more (see docs/SECURITY.md, "Administrator bootstrap").
  */
+import { ConfigError } from "./errors";
+
 export const isProduction = () => process.env.NODE_ENV === "production";
 
 /** Secret used for keyed hashes (IP addresses in security logs). Never used to sign sessions (sessions are server-side). */
 export function authSecret(): Uint8Array {
   const s = process.env.AUTH_SECRET;
   if (!s || s.length < 32) {
-    if (isProduction()) throw new Error("AUTH_SECRET must be set (min 32 chars)");
+    if (isProduction()) throw new ConfigError("AUTH_SECRET_MISSING", "AUTH_SECRET must be set (min 32 chars)");
     return new TextEncoder().encode("dev-only-insecure-secret-change-me-0123456789");
   }
   return new TextEncoder().encode(s);

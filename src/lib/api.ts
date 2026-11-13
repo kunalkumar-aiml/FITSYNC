@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { ZodError, type ZodTypeAny, type z } from "zod";
+import { ConfigError } from "./errors";
+export { ConfigError };
 
 export class ApiError extends Error {
   constructor(public status: number, message: string, public details?: unknown) {
@@ -8,6 +10,30 @@ export class ApiError extends Error {
 }
 
 export const ok = <T>(data: T, status = 200) => NextResponse.json({ data }, { status });
+
+export type ErrorKind = "config" | "db_unreachable" | "db_schema" | "conflict" | "unknown";
+
+/**
+ * Classify an unexpected error so the user gets an honest message instead of one generic sentence for everything.
+ * Prisma codes: P1001/P1002/P1008/P1017 connection problems, P2021 table missing, P2022 column missing, P2002 unique clash.
+ */
+export function errorKind(e: unknown): ErrorKind {
+  if (e instanceof ConfigError) return "config";
+  const code = (e as { code?: unknown } | null)?.code;
+  const msg = e instanceof Error ? `${e.message} ${String((e as { cause?: unknown }).cause ?? "")}` : "";
+  if (code === "P2002") return "conflict";
+  if (code === "P2021" || code === "P2022" || /does not exist in the current database|relation .* does not exist|column .* does not exist/i.test(msg)) return "db_schema";
+  if (["P1001", "P1002", "P1008", "P1017"].includes(String(code)) || /ECONNREFUSED|ENOTFOUND|ETIMEDOUT|ECONNRESET|Can't reach database|DatabaseNotReachable|Connection terminated|too many clients/i.test(msg)) return "db_unreachable";
+  return "unknown";
+}
+
+const SERVICE_MESSAGES: Record<Exclude<ErrorKind, "conflict" | "unknown">, string> = {
+  config: "FITSYNC is temporarily unavailable because of a server configuration problem. Please try again later.",
+  db_unreachable: "FITSYNC can’t reach its database right now. Please try again in a few minutes.",
+  db_schema: "FITSYNC is finishing an update. Please try again in a few minutes.",
+};
+
+const reference = () => Math.random().toString(36).slice(2, 8).toUpperCase();
 
 export function handleError(e: unknown) {
   if (e instanceof ApiError) {
@@ -20,9 +46,19 @@ export function handleError(e: unknown) {
       { status: 400 },
     );
   }
-  // Log the error server-side only. The response never contains stack traces or internal messages.
-  console.error("[api] unhandled error", e instanceof Error ? `${e.name}: ${e.message}` : "unknown");
-  return NextResponse.json({ error: { message: "Something went wrong on our side. Please try again." } }, { status: 500 });
+  // Log server-side only, with a short reference the user can quote. Responses never contain stack traces,
+  // SQL, connection strings or internal messages.
+  const kind = errorKind(e);
+  const ref = reference();
+  const code = (e as { code?: unknown } | null)?.code;
+  console.error(`[api] ${kind} error ref=${ref}`, e instanceof Error ? `${e.name}${code ? ` ${String(code)}` : ""}: ${e.message}` : "unknown");
+  if (kind === "conflict") {
+    return NextResponse.json({ error: { message: "That change clashed with another one made at the same moment. Please try again.", details: { ref } } }, { status: 409 });
+  }
+  if (kind !== "unknown") {
+    return NextResponse.json({ error: { message: SERVICE_MESSAGES[kind], details: { code: kind.toUpperCase(), ref } } }, { status: 503, headers: { "retry-after": "60" } });
+  }
+  return NextResponse.json({ error: { message: `Something went wrong on our side. Please try again. (Reference ${ref})`, details: { ref } } }, { status: 500 });
 }
 
 /** Wrap a route handler so thrown ApiErrors / ZodErrors become JSON responses. */
