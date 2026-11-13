@@ -152,7 +152,7 @@ describe("recommendations from real charts", () => {
     expect(c.unit).toBe("CM");
     const chart = toChart(c, "UNVERIFIED");
     const size = (chest: number, waist: number) => {
-      const r = recommend({ body: normalizeMeasurements({ chest, waist }), chart, category: tshirt, fitPreference: "REGULAR" });
+      const r = recommend({ body: normalizeMeasurements({ chest, waist }, "CM"), chart, category: tshirt, fitPreference: "REGULAR" });
       return r.status === "ok" ? r.recommendedSize : null;
     };
     expect(size(84, 72)).toBe("XS");
@@ -160,7 +160,7 @@ describe("recommendations from real charts", () => {
     expect(size(105, 92)).toBe("L");
     expect(size(125, 112)).toBe("2XL");
     // Unverified charts never claim verification
-    const r = recommend({ body: normalizeMeasurements({ chest: 96, waist: 84 }), chart, category: tshirt, fitPreference: "REGULAR" });
+    const r = recommend({ body: normalizeMeasurements({ chest: 96, waist: 84 }, "CM"), chart, category: tshirt, fitPreference: "REGULAR" });
     expect(r.status === "ok" && r.dataStatus).toBe("UNVERIFIED");
   });
 });
