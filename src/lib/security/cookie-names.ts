@@ -1,5 +1,5 @@
 /**
- * Cookie names. Edge-safe (no Node imports) because the middleware uses them too.
+ * Cookie names. Edge-safe (no Node imports) because the proxy (src/proxy.ts) uses them too.
  * In production the `__Host-` prefix makes the browser refuse the cookie unless it is Secure, host-only and Path=/,
  * so a sibling subdomain cannot plant or overwrite it.
  */

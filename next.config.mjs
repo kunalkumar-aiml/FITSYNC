@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-// The Content-Security-Policy is set per request (with a nonce) in src/middleware.ts.
+// The Content-Security-Policy is set per request (with a nonce) in src/proxy.ts (Next 16 "proxy", formerly middleware).
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
