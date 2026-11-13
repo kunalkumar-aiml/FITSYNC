@@ -6,7 +6,8 @@ import type { ChartRow } from "@/lib/engine";
 export const dynamic = "force-dynamic";
 
 // CSV preview/download of a stored version (cm). Re-importable through the CSV importer.
-export const GET = route(async (_req: Request, { params }: { params: { id: string } }) => {
+export const GET = route(async (_req: Request, ctx: { params: Promise<{ id: string }> }) => {
+  const params = await ctx.params;
   await requireAdmin();
   const v = await db.brandSizeChartVersion.findUnique({ where: { id: params.id } });
   if (!v) throw new ApiError(404, "Chart version not found.");

@@ -8,7 +8,10 @@ import { EmptyState } from "@/components/ui";
 export const metadata = { title: "Find my size" };
 export const dynamic = "force-dynamic";
 
-export default async function Page({ searchParams }: { searchParams: { brand?: string; category?: string; gender?: string } }) {
+export default async function Page(
+  props: { searchParams: Promise<{ brand?: string; category?: string; gender?: string }> }
+) {
+  const searchParams = await props.searchParams;
   const user = await requirePageUser("/recommend");
   const [m, profile, brands] = await Promise.all([
     db.bodyMeasurement.findUnique({ where: { userId: user.id } }),

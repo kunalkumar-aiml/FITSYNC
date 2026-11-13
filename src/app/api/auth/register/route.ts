@@ -52,7 +52,7 @@ export const POST = route(async (req: Request) => {
     throw e;
   }
   await revokePresentedSession().catch(() => {});
-  setSessionCookie(session.token);
+  await setSessionCookie(session.token);
   await logAuthEvent("REGISTER", { userId: user.id, headers: req.headers });
 
   // The account exists and the user is signed in. A failure to send the confirmation email must not turn that into an error.

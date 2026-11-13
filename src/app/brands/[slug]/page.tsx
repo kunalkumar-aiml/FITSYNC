@@ -8,7 +8,8 @@ import { PageHeader, Notice } from "@/components/ui";
 import { DIMENSIONS, GARMENT_ONLY_DIMENSIONS, parseSemantics, round1, semanticFor, type ChartRow, type MeasurementType } from "@/lib/engine";
 export const dynamic = "force-dynamic";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const b = await db.brand.findUnique({ where: { slug: params.slug } }).catch(() => null);
   return { title: b?.name ?? "Brand" };
 }
@@ -17,7 +18,8 @@ const fmtDate = (d: Date) => d.toLocaleDateString("en-IN", { day: "numeric", mon
 const MEANING = { BODY: "body", GARMENT: "garment", GARMENT_FLAT: "garment, laid flat", AMBIGUOUS: "not stated" } as const;
 const safeHref = (u: string | null) => { try { return u && new URL(u).protocol === "https:" ? u : null; } catch { return null; } };
 
-export default async function BrandPage({ params }: { params: { slug: string } }) {
+export default async function BrandPage(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const brand = await db.brand.findFirst({ where: { slug: params.slug, active: true } });
   if (!brand) notFound();
   const user = await getUser();

@@ -25,7 +25,7 @@ export const POST = route(async (req: Request) => {
   });
   await db.authToken.updateMany({ where: { userId: user.id, type: "PASSWORD_RESET", usedAt: null }, data: { usedAt: new Date() } });
   await revokeAllSessions(user.id);
-  clearSessionCookies();
+  await clearSessionCookies();
   await logAuthEvent("PASSWORD_RESET_COMPLETED", { userId: user.id, headers: req.headers });
   return ok({ reset: true });
 });

@@ -33,7 +33,7 @@ export const viewport: Viewport = {
 const themeScript = `try{var t=localStorage.getItem('theme');if(t!=='dark'&&t!=='light'){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}document.documentElement.dataset.theme=t}catch(e){}`;
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const nonce = headers().get("x-nonce") ?? undefined;
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   // A database outage should not take the public pages down with it.
   const user = await getUser().catch(() => null);
   return (

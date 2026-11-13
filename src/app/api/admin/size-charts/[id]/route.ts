@@ -14,7 +14,8 @@ const ACTION = { APPROVE: "APPROVED", REJECT: "REJECTED", FLAG: "FLAGGED", DEPRE
  * APPROVE needs a recorded source and refuses while any body-comparable measurement is still ambiguous or a flat width.
  * Every decision is stored in DataVerification and in the admin audit log.
  */
-export const PUT = route(async (req: Request, { params }: { params: { id: string } }) => {
+export const PUT = route(async (req: Request, ctx: { params: Promise<{ id: string }> }) => {
+  const params = await ctx.params;
   const admin = await requireAdmin();
   const input = await parseBody(req, decisionSchema);
   const v = await db.brandSizeChartVersion.findUnique({ where: { id: params.id } });
