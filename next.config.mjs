@@ -15,7 +15,15 @@ const nextConfig = {
   poweredByHeader: false,
   experimental: {
     // native module: keep it out of the server bundle
-    serverComponentsExternalPackages: ["@node-rs/argon2"],
+    serverComponentsExternalPackages: ["@node-rs/argon2", "@prisma/client", ".prisma/client"],
+    // Prisma loads its query compiler (.wasm) and schema at runtime; Next's file tracing misses them
+    outputFileTracingIncludes: {
+      "/**": [
+        "./node_modules/.prisma/client/**/*",
+        "./node_modules/@prisma/client/runtime/**/*",
+        "./prisma/schema.prisma",
+      ],
+    },
   },
   async headers() {
     return [
